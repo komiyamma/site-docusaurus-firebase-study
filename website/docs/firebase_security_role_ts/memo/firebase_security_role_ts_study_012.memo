@@ -1,0 +1,1 @@
+更新時のフィールド制限。createでは全キー、updateではdiffを用いた変更キー(affectedKeys)に対してhasOnlyで許可リストを適用し、権限昇格等の不正書き込みを防ぐ。

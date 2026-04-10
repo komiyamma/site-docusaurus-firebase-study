@@ -1,0 +1,1 @@
+第04章では、onAuthStateChangedによる状態監視とloading制御、AuthProviderによる状態管理、チラつき防止、ログイン状態の永続化について解説します。

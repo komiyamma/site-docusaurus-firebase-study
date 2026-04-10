@@ -1,0 +1,1 @@
+Genkit Flowのデプロイ先としてCloud Functions第2世代の`onCallGenkit`を推奨し、ランタイム（Node.js 22）や並列数・タイムアウト設定による安全運用を学ぶ。

@@ -1,0 +1,1 @@
+Emulatorと@firebase/rules-unit-testingでのRulesテスト。未ログイン・一般・管理者の3権限検証や、get/list区別、境界値を自動化して担保する。

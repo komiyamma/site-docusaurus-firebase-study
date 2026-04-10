@@ -1,0 +1,1 @@
+Firebase Hostingのキャッシュ設定詳解。SPA向けにHTMLはno-cache、ハッシュ付き資産は長期キャッシュするfirebase.jsonの鉄板構成と検証手順を解説。

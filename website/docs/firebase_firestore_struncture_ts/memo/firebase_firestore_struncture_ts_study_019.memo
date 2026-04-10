@@ -1,0 +1,1 @@
+FirestoreのデータモデルとUIモデルを分離し、Converterとガードを用いた型安全なCRUD実装を解説します。特にupdateDocの罠とsetDocによる更新手法を詳述します。

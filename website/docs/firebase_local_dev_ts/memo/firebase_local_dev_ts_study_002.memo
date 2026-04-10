@@ -1,0 +1,1 @@
+Node.jsとJDK21以上、Firebase CLIを導入し、`firebase init`コマンドを用いてエミュレータを含むプロジェクト初期設定を完了させる手順を詳細に解説。

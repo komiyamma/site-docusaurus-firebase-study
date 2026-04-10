@@ -1,0 +1,1 @@
+ロール設計の基本。操作と権限を明確化し、user/editor/adminの3役に集約するプロセスや、Custom ClaimsとRulesの実装、クライアント管理の危険性を学ぶ。

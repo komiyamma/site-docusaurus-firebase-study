@@ -1,0 +1,1 @@
+Firebase AI LogicのImagenを用いて、日報のサムネイル生成、プレビュー選択、Cloud Storageへの保存までの一連のUX実装と、エラー処理やレート制限の考慮点を学ぶ。

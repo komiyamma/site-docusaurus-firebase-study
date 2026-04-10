@@ -1,0 +1,277 @@
+まずは本日時点（2026-02-18）での公式ドキュメントを踏まえて、**Storage Rules を「いったん全部閉める→必要な分だけ開ける」**流れで、第15章を“手を動かして腹落ち”する形にします🛡️🚪（Rulesの罠＝**ゆるいルールが1つでも当たると通る**も先に潰します🔥）([Firebase][1])
+
+---
+
+### 第15章：Storage Rules入門（まず“閉じる”が正義）🚪🛡️
+
+#### この章のゴール🎯
+
+* 「**誰でも書ける事故**」を確実に防ぐ🧯
+* `users/{uid}/profile/**` を **本人だけ**アップロードできるようにする🔐
+* 読み取りを **本人のみ**にするか **公開**にするか、方針を決めてルールに落とす🤔✨
+* 変更したRulesを **Playground or エミュレーター**で“通る/弾かれる”を確認できる👀✅ ([Firebase][2])
+
+---
+
+![Rules Gatekeeper](./picture/firebase_storage_ts_study_015_01_gatekeeper.png)
+
+## 1) Rulesって何者？ざっくり理解🧠✨
+
+### ✅ Rulesは「入口の門番」🚧🧑‍✈️
+
+Cloud Storage for Firebase のRulesは、**どのパスのファイルに、誰が、何をしていいか**を決める“門番”です🛡️
+しかも **アプリの中じゃなく、サーバー側で強制**されます（クライアントがズルしても止まる）💪([Firebase][1])
+
+![OR Logic Warning](./picture/firebase_storage_ts_study_015_02_or_logic_warning.png)
+
+### ✅ ルールは AND じゃなくて OR になりやすい⚠️
+
+超重要ポイント👇
+**同じパスに複数ルールが当たったとき、どれか1つでも許可すると通る**（ORっぽい挙動）です。
+だから「広く許可するルール」を置くと、後から細かい禁止を書いても止められない…が起きます😇🔥([Firebase][1])
+
+→ なのでこの章は **“まず全部閉じる”**から入ります🚪💥
+
+![Flat Namespace](./picture/firebase_storage_ts_study_015_03_flat_namespace.png)
+
+### ✅ Storageは「フォルダがあるように見えて、実体はファイル名」📁（地味に大事）
+
+`users/uid/profile/xxx.png` みたいに `/` で区切っても、Storage的には **文字列の名前**です。
+だから Rules も「この文字列パターンに当たるか？」で判定します🧩([Firebase][3])
+
+---
+
+## 2) まず知るべき3つの変数（これだけで戦える）🥋✨
+
+### `request.auth`：ログインしてる？誰？🔐
+
+* ログイン済み → `request.auth` が入る
+* 未ログイン → `request.auth == null`
+* ユーザーIDは `request.auth.uid` 🪪([Firebase][4])
+
+### `match`：どのパスの話？🧭
+
+Rulesは **パスにマッチしたブロック**の `allow` を見ます。
+
+![Read/Write Granularity](./picture/firebase_storage_ts_study_015_04_read_write_breakdown.png)
+
+### `allow`：何を許可？（read/write だけじゃない）📌
+
+Cloud Storage のRulesは `read` / `write` をよく使いますが、実は `get` / `list` / `create` / `update` / `delete` みたいに分けて書けます✍️
+
+* `read` は `get` と `list` を含む
+* `write` は `create/update/delete` を含む
+  みたいなイメージです🧠([Firebase][5])
+
+---
+
+## 3) 手を動かす①：Rulesを開く👀🧰
+
+### Consoleで確認する手順（最短）🖱️
+
+Firebase Console → **Storage** → **Rules** を開く📌([Firebase][2])
+
+> Console と CLI の両方で編集できるけど、混ぜると「上書き事故」が起きがちなので、まずはこの章は Console で統一が安全です🧯
+> （Consoleには“直近デプロイされたRules”が表示されます）([Firebase][2])
+
+---
+
+![Full Lockdown](./picture/firebase_storage_ts_study_015_05_full_lockdown.png)
+
+## 4) 手を動かす②：いったん「全閉じ」ルールを入れる🚪🔒
+
+まずはこれ👇
+（**これをPublishすると、今まで動いてたアップ/ダウンロードが全部止まります**。止まるのが正しい👍）
+
+```txt
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // まず全部拒否（最強の安全スタート）
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+```
+
+### なんで最初に閉めるの？🤔
+
+* “うっかり公開”が一番ヤバい💥
+* 後から足すのは簡単、後から漏れを探すのは地獄😇
+* OR挙動のせいで、ゆるいルールが混ざると穴が空きやすい🕳️([Firebase][1])
+
+---
+
+## 5) 手を動かす③：プロフィール画像パスだけ、本人に開ける🔐📷
+
+ここからが本番✨
+あなたの設計は `users/{uid}/profile/**` なので、そこだけ許可します📁
+
+![Private vs Public Read](./picture/firebase_storage_ts_study_015_06_private_vs_public.png)
+
+### パターンA：読み取りも「本人だけ」🫥（まずは安全寄り）
+
+```txt
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // デフォは全部拒否（保険）
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // 本人だけ read/write OK
+    match /users/{uid}/profile/{fileId} {
+      allow read, write: if request.auth != null
+                         && request.auth.uid == uid;
+    }
+  }
+}
+```
+
+### パターンB：読み取りは「公開」でもOK（ただし list は閉めるのが無難）🌍🕵️‍♂️
+
+プロフィール画像って「他人に見せる前提」のことも多いので、その場合はこう👇
+**ポイント：`get` だけ公開、`list` は拒否**（一覧で全部抜かれるのを避ける）🧯([Firebase][5])
+
+```txt
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    match /users/{uid}/profile/{fileId} {
+      // アップロードや削除などは本人だけ
+      allow write: if request.auth != null
+                   && request.auth.uid == uid;
+
+      // 画像の「取得だけ」公開（URLを知っている人だけ見られる運用に寄せる）
+      allow get: if true;
+
+      // フォルダ一覧は公開しない（総当たり防止）
+      allow list: if false;
+    }
+  }
+}
+```
+
+---
+
+![Playground Testing](./picture/firebase_storage_ts_study_015_07_playground_testing.png)
+
+## 6) 手を動かす④：Rules Playground で即テスト🧪⚡
+
+Console編集なら、まずは Playground で「通る/弾かれる」を確認できます👀
+（ただし本番前は Emulator Suite のほうがガチで安心）([Firebase][2])
+
+### テストケース例（この章はこれだけやればOK）✅
+
+1. **未ログイン**で `users/someone/profile/x` に `write` → **拒否される**🙅‍♀️
+2. **ログイン（uid=AAA）**で `users/AAA/profile/x` に `write` → **許可される**🙆‍♂️
+3. **ログイン（uid=BBB）**で `users/AAA/profile/x` に `write` → **拒否される**🧨
+
+---
+
+## 7) Publishしたら「反映に少し時間」⏳（焦らない）
+
+Rulesはデプロイしてから、反映まで**数分かかる**ことがあります。
+「さっき変えたのに挙動変わらん！」って時は、まず深呼吸😮‍💨☕([Firebase][6])
+
+---
+
+## 8) AIでRules作りを爆速にする🤖🚀（ただし“最終レビューは人間”）
+
+### ✅ Gemini CLI / Antigravity で “下書き→穴チェック”が強い💪
+
+公式ドキュメントでも、**Gemini CLI などのAIアシスタントで Security Rules の生成を支援できる**と明記されています。([Firebase][1])
+
+さらに、**Firebase MCP server** を使うと、AIツールがFirebaseを直接扱う“道具箱”が増えます🧰
+
+* Antigravity / Gemini CLI などに対応
+* Firestore/Storage/Rulesの理解にも使える（公式に記載あり）([Firebase][7])
+
+#### MCPまわり（最低限の把握）🧩
+
+* Firebase MCP server は Antigravity / Gemini CLI などで使えるよ、と公式が書いてます。([Firebase][7])
+* Gemini CLI 側は公式の拡張を入れるのが推奨、という説明もあります。([Firebase][7])
+
+### ✅ Gemini in Firebase は「相談役」🧯
+
+Gemini in Firebase は **Rulesの質問には答えられる**けど、**コードベースにアクセスできないのでRules生成はできない**、という注意が公式にあります。
+生成したいなら Gemini CLI みたいにコードに触れるAIが向いてます。([Firebase][8])
+
+### 使えるプロンプト例（コピペOK）📋✨
+
+* 「Cloud Storage for Firebase の Security Rules を書いて。
+  仕様：`users/{uid}/profile/{fileId}` は **本人だけ write**、read は **(本人のみ or getだけ公開＋list禁止)** の2案を出して。
+  さらに、ルールが重なって穴が空かないように **“まず全拒否→例外で許可”** 形式にして。
+  最後に Playground 用テストケースも3つ作って。」
+
+---
+
+## 9) Firebase AI Logic と絡めると、Rulesはさらに重要🧠🤖
+
+画像をアップして、あとで **Geminiに画像説明（alt）やタグ付け**をさせる流れ（第20章寄り）をやると、Storage上のファイルをAI処理に渡す場面が出ます。
+そのときも **Security Rules が適切に許可/拒否**できてないと危険です⚠️
+公式のAI Logicガイドでも「public rulesはプロトタイプ向けで、本番は robust rules 推奨」と注意されています。([Firebase][9])
+
+---
+
+## ミニ課題🧩📝
+
+次のどっちにするか決めて、Rulesを書いて、Playgroundで3ケース確認してね✅
+
+1. **本人だけ見える**（プライバシー重視🫥）
+2. **getだけ公開＋list禁止**（プロフィールっぽい🌍）
+
+提出（自分用メモでOK）✍️
+
+* 選んだ方針（1 or 2）
+* なぜそれにしたか（1行でOK）
+* Playgroundの結果（通った/弾かれた）3つ
+
+---
+
+## チェック✅🎉（ここまでできたら勝ち）
+
+* [ ] デフォルトで全拒否になってる🚪🔒
+* [ ] `users/{uid}/profile/{fileId}` にだけ例外許可を作った🔓
+* [ ] 別ユーザーの書き込みが拒否される🧨
+* [ ] 未ログインが拒否される🙅‍♀️
+* [ ] read方針（本人のみ / get公開＋list禁止）を決めた🤔
+* [ ] OR挙動の罠（ゆるいルールが混ざると通る）を意識できた🧠([Firebase][1])
+
+---
+
+## よくある詰まり😵‍💫🧯（秒で潰す）
+
+### ❌ 403 / Permission denied
+
+* `uid` の変数名がズレてる（`{uid}` と `request.auth.uid` の比較が成立してない）
+* パスが設計と違う（`profile/` の階層が1個違うとか）
+* どこかに **ゆるい allow** が残ってる（OR罠）([Firebase][1])
+
+### ❌ Storageを有効化できない / 料金まわりで止まる
+
+デフォルトバケット関連で **2026-02-03 までに Blaze へ**等の要件が当たるケースがあります（プロジェクト条件による）。([Firebase][10])
+
+---
+
+次は **第16章（画像だけ＆サイズ上限をRulesで強制）**で、`request.resource.contentType` / `request.resource.size` を入れて「変なファイル完全排除」まで行こう🧯🖼️
+（Storage Rulesでメタデータ検証できるのも公式に明記ありだよ）([Firebase][4])
+
+[1]: https://firebase.google.com/docs/rules "Firebase Security Rules"
+[2]: https://firebase.google.com/docs/storage/security/get-started "Get started with Firebase Security Rules  |  Cloud Storage for Firebase"
+[3]: https://firebase.google.com/docs/storage/security/core-syntax "Learn the core syntax of the Firebase Security Rules for Cloud Storage language  |  Cloud Storage for Firebase"
+[4]: https://firebase.google.com/docs/storage/security?hl=ja "Cloud Storage 用の Firebase セキュリティ ルールを理解する  |  Cloud Storage for Firebase"
+[5]: https://firebase.google.com/docs/rules/rules-behavior "How Security Rules work  |  Firebase Security Rules"
+[6]: https://firebase.google.com/docs/rules/manage-deploy "Manage and deploy Firebase Security Rules"
+[7]: https://firebase.google.com/docs/ai-assistance/mcp-server "Firebase MCP server  |  Develop with AI assistance"
+[8]: https://firebase.google.com/docs/ai-assistance/gemini-in-firebase "Gemini in Firebase"
+[9]: https://firebase.google.com/docs/ai-logic/solutions/cloud-storage "Include large files in multimodal requests and manage files using Cloud Storage for Firebase  |  Firebase AI Logic"
+[10]: https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024 "FAQs about changes to Cloud Storage for Firebase pricing and default buckets"

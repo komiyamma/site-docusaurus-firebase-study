@@ -1,0 +1,1 @@
+AI機能の配置戦略として、クライアント側（Firebase AI Logic）とサーバー側（Genkit + Cloud Functions）の使い分け基準、開発支援AIツールの活用法を学ぶ。

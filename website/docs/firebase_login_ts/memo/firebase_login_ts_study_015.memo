@@ -1,0 +1,1 @@
+第15章では、Firebase Authenticationのセッション保持方式（local/session/none）の選択機能の実装、各方式の挙動の違い、実装時の注意点を解説します。

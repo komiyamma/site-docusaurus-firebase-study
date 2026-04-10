@@ -1,0 +1,1 @@
+Emulator UIを用いたSecurity Rulesのデバッグ手法を解説。評価トレースによる拒否理由の特定や、Rule Coverageを用いたテスト範囲の確認を学ぶ。

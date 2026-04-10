@@ -1,0 +1,1 @@
+GitHub Actionsを用いた、PR確認からmainマージによる本番自動デプロイの流れを解説。Secrets管理やNode.js推奨版、実機確認とトラブル対応を学ぶ。

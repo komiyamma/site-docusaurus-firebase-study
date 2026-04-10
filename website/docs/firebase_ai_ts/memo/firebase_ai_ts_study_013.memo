@@ -1,0 +1,1 @@
+ReactアプリからGenkit Flowを安全に呼び出すため、`onCallGenkit`の実装、App Checkや認証ポリシーによる保護、および判定結果に応じたUI分岐の手法を学ぶ。

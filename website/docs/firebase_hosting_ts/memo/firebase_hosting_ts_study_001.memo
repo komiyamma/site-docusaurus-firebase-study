@@ -1,0 +1,1 @@
+Firebase HostingとApp Hostingの使い分け基準を解説。SPAはHosting、SSRやNext.jsはApp Hostingという選択指針や、それぞれのコスト観点を整理します。

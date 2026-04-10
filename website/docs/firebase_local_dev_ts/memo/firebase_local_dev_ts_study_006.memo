@@ -1,0 +1,1 @@
+Firestore Emulatorを用いたCRUD実装を解説。エミュレータへの接続、リアルタイム更新の確認、およびREST APIによるデータ操作手法を学ぶ。

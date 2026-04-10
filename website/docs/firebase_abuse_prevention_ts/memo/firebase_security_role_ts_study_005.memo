@@ -1,0 +1,1 @@
+第5章はRulesの基本②を解説。resourceとrequest.resourceの違いを理解し、diffを用いて変更可能なフィールドを厳密に制限する安全な更新ルールを学ぶ。

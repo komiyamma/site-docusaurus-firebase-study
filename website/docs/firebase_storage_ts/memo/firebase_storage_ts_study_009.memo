@@ -1,0 +1,1 @@
+Storageメタデータの基本であるcontentTypeとcacheControlの設定方法を詳解。パス設計に応じた適切なキャッシュ戦略や更新手順を詳しく紹介。

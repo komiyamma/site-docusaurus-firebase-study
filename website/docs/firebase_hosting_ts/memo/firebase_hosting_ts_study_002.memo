@@ -1,0 +1,1 @@
+Hostingの初期設定と初回デプロイ手順を解説。firebase init hostingによる設定ファイル生成やpublicディレクトリの役割、Node.jsバージョンへの注意点を学びます。

@@ -1,0 +1,1 @@
+Custom ClaimsとFirestore Rulesを用いたRBAC実装。Admin SDKで権限付与し、Rulesでauth.tokenを検証して管理者と一般ユーザーのアクセス制御を安全に実現する。

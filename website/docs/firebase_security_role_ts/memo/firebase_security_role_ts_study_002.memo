@@ -1,0 +1,1 @@
+Firestoreのアクセス経路とSecurity Rulesの適用範囲。クライアントSDKはRulesで保護し、サーバーSDKやREST APIはRulesをバイパスするためIAM等で保護する。

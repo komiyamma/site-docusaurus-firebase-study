@@ -1,0 +1,1 @@
+write権限の分割。create/update/deleteを個別に定義し、特にdeleteの厳格化やupdate時のフィールド制限、なりすまし防止等の詳細な制御とテスト手法を学ぶ。

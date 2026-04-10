@@ -1,0 +1,223 @@
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
+import type * as Preset from '@docusaurus/preset-classic';
+import * as fs from 'fs';
+import * as path from 'path';
+
+// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
+
+const config: Config = {
+  title: 'Dockerの学習教材',
+  tagline: 'Dockerの学習教材',
+  favicon: 'img/docker_logo.svg',
+
+  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
+  future: {
+    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+  },
+
+  // Set the production url of your site here
+  url: 'https://docker-study.komiyamma.net',
+  // Set the /<baseUrl>/ pathname under which your site is served
+  // For GitHub pages deployment, it is often '/<projectName>/'
+  baseUrl: '/',
+
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
+  organizationName: 'komiyamma', // Usually your GitHub org/user name.
+  projectName: 'site-docker-study', // Usually your repo name.
+
+  onBrokenLinks: 'throw',
+
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+  },
+
+  markdown: {
+    format: 'detect',  // .md は CommonMark、.mdx は MDX として処理
+    mermaid: true,
+    // 外部の .memo ファイルからページの description を読み込む
+    parseFrontMatter: async (params) => {
+      // デフォルトのパーサーを使用
+      const result = await params.defaultParseFrontMatter(params);
+
+      // すでに description があれば何もしない
+      if (result.frontMatter.description) {
+        return result;
+      }
+
+      // 対応する .memo ファイルのパスを計算
+      // 以前: const memoPath = params.filePath.replace(/\.mdx?$/, '.memo');
+      // 変更: .md ファイルがあるディレクトリの memo サブフォルダ内を探す
+      const fileDir = path.dirname(params.filePath);
+      const fileName = path.basename(params.filePath).replace(/\.mdx?$/, '.memo');
+      const memoPath = path.join(fileDir, 'memo', fileName);
+
+      // .memo ファイルが存在すれば description として読み込む
+      if (fs.existsSync(memoPath)) {
+        const memoContent = fs.readFileSync(memoPath, 'utf-8').trim().replace(/[\r\n]+/g, ' ');
+        if (memoContent) {
+          result.frontMatter.description = memoContent;
+        }
+      }
+
+      return result;
+    },
+  },
+  themes: [
+    '@docusaurus/theme-mermaid',
+    [
+      "@easyops-cn/docusaurus-search-local",
+      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
+      ({
+        hashed: true,
+        language: ["ja"],
+        indexBlog: false,
+        indexPages: false,
+      }),
+    ],
+  ],
+
+  presets: [
+    [
+      'classic',
+      {
+        docs: {
+          sidebarPath: './sidebars.ts',
+          // Please change this to your repo.
+
+        },
+        blog: false, // Blog機能は無効化 (フォルダ削除済み)
+        /*
+        blog: {
+          showReadingTime: true,
+          feedOptions: {
+            type: ['rss', 'atom'],
+            xslt: true,
+          },
+          // Please change this to your repo.
+
+          // Useful options to enforce blogging best practices
+          onInlineTags: 'warn',
+          onInlineAuthors: 'warn',
+          onUntruncatedBlogPosts: 'warn',
+        },
+        */
+        theme: {
+          customCss: './src/css/custom.css',
+        },
+      } satisfies Preset.Options,
+    ],
+  ],
+
+  themeConfig: {
+    // Replace with your project's social card
+    image: 'img/docusaurus-social-card.jpg',
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: true,
+      respectPrefersColorScheme: false,
+    },
+    navbar: {
+      title: '',
+      logo: {
+        alt: 'Home',
+        src: 'img/docker_logo_white.svg',
+        srcDark: 'img/docker_logo_white.svg',
+      },
+      items: [
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerBaseTsSidebar',
+          position: 'left',
+          label: 'Docker基本',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerRuntimeFixTsSidebar',
+          position: 'left',
+          label: 'ランタイム固定',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerDevcomposeCmdTsSidebar',
+          position: 'left',
+          label: 'Compose活用',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerDeveloperExperienceTsSidebar',
+          position: 'left',
+          label: '開発体験強化',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerDependCacheTsSidebar',
+          position: 'left',
+          label: '依存とキャッシュ',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerDataHandlingTsSidebar',
+          position: 'left',
+          label: 'データ管理',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerSafeIsolationTsSidebar',
+          position: 'left',
+          label: '安全な隔離',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerLocalExposureTsSidebar',
+          position: 'left',
+          label: 'ローカル公開',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerDeployTsSidebar',
+          position: 'left',
+          label: 'デプロイ',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerObservabilityTsSidebar',
+          position: 'left',
+          label: '観測性',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'dockerMultiOrchTsSidebar',
+          position: 'left',
+          label: 'オーケストレーション',
+        },
+        // { to: '/blog', label: 'Blog', position: 'left' },
+        {
+          href: 'https://komiyamma.net',
+          label: 'komiyamma.net',
+          position: 'right',
+          className: 'navbar-link-site-home',
+          target: '_self',
+        },
+        {
+          href: 'https://github.com/komiyamma/site-docusaurus-docker-study',
+          label: 'GitHub',
+          position: 'right',
+        },
+      ],
+    },
+    footer: {
+      style: 'dark',
+      links: [],
+      copyright: `Copyright © ${new Date().getFullYear()} komiyamma, Inc. Built with Docusaurus.`,
+    },
+    prism: {
+      theme: prismThemes.github,
+      darkTheme: prismThemes.dracula,
+    },
+  } satisfies Preset.ThemeConfig,
+};
+
+export default config;

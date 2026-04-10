@@ -1,0 +1,1 @@
+SPAのリロード404問題は、Hosting設定のrewritesで全パスをindex.htmlに向けることで解決。firebase.jsonの記述順とAPI除外に注意が必要です。

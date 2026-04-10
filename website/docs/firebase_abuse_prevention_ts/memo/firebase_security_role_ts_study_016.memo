@@ -1,0 +1,1 @@
+第16章はCustom Claimsを用いたRBACを解説。特権環境で付与した役割をRulesのrequest.auth.tokenで判定し、Adminと一般ユーザーの権限を安全に分離する手法を学ぶ。

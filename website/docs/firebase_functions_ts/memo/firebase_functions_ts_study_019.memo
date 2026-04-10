@@ -1,0 +1,1 @@
+SlackのIncoming Webhookを作成し、Secret Managerに安全に格納する。FunctionsからSecretを読み出し、テスト通知を送信する一連の準備を行う。

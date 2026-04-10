@@ -1,0 +1,1 @@
+apphosting.yamlによる環境変数やVPC接続、Secret Manager連携を解説。ビルド時と実行時の設定分離や複数環境運用、AI支援の活用法を詳しく紹介。

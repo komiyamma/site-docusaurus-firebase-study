@@ -1,0 +1,1 @@
+Cloud Storageへの最小アップロード実装を解説。uploadBytesでの保存とgetDownloadURLでの表示URL取得を行い、Reactでのプレビュー機能やエラー処理も学びます。

@@ -1,0 +1,1 @@
+第20章では、認証機能の総仕上げとして、ルート構築、RequireAuthによるガード実装、Googleログイン（Popup/Redirect）、AIエラー説明機能を統合します。

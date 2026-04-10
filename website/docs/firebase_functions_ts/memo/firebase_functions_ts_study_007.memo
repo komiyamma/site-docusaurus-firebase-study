@@ -1,0 +1,1 @@
+onRequestでPOST APIを作成し、Content-Typeの確認、入力検証、ステータスコードの使い分けを学ぶ。JSON形式での統一的なレスポンス設計を行う。

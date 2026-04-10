@@ -1,0 +1,177 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  /* Desaturated Blue (Steel Blue style) */
+  --ifm-color-primary: #46769b;
+  --ifm-color-primary-dark: #3f6a8b;
+  --ifm-color-primary-darker: #3b6483;
+  --ifm-color-primary-darkest: #31526c;
+  --ifm-color-primary-light: #5282a7;
+  --ifm-color-primary-lighter: #5a88ad;
+  --ifm-color-primary-lightest: #709abd;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  
+  /* Sidebar width 400px -> 430px (Refined by user) */
+  --doc-sidebar-width: 430px;
+  
+  /* Cap the width at 1770px for readability on 4K screens */
+  --ifm-container-width: 1770px;
+}
+
+/* Force container to match the custom width on large screens */
+.container {
+  max-width: var(--ifm-container-width) !important;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  /* Lighter, softer blue for dark mode */
+  --ifm-color-primary: #6daccd;
+  --ifm-color-primary-dark: #56a2c6;
+  --ifm-color-primary-darker: #4a9cc2;
+  --ifm-color-primary-darkest: #3685a8;
+  --ifm-color-primary-light: #84b6d4;
+  --ifm-color-primary-lighter: #8fbbd7;
+  --ifm-color-primary-lightest: #b0cce1;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   Navbar - Custom Blue Background
+   ======================================== */
+.navbar {
+  background: #2563a7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.navbar__link {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar__link:hover {
+  color: white;
+}
+
+.navbar__link--active {
+  color: white;
+  font-weight: 600;
+}
+
+/* Navbar search box */
+.navbar .DocSearch-Button {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navbar .DocSearch-Button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ========================================
+   Navbar Horizontal Scroll (Simple)
+   ======================================== */
+
+/* Navbar inner is the positioning context */
+.navbar__inner {
+  position: relative;
+}
+
+/* Left navbar items (menu links) scroll horizontally */
+.navbar__items:not(.navbar__items--right) {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* Add left margin to make room for the fixed home icon */
+  margin-left: 48px;
+  
+  /* Subtle vertical lines on left and right edges */
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  
+  /* Visible thin scrollbar to indicate scrollability */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+}
+
+.navbar__items:not(.navbar__items--right)::-webkit-scrollbar {
+  height: 6px;
+}
+
+.navbar__items:not(.navbar__items--right)::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.navbar__items:not(.navbar__items--right)::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+}
+
+.navbar__items:not(.navbar__items--right)::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Home icon is positioned outside the scroll container */
+.navbar__brand {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+/* Mobile: reset absolute positioning so hamburger menu comes first (default Docusaurus order) */
+@media (max-width: 996px) {
+  .navbar__brand {
+    position: static;
+    transform: none;
+  }
+
+  .navbar__items:not(.navbar__items--right) {
+    margin-left: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+
+/* 三本線ボタン自体の色（アイコンの色） */
+.navbar__toggle {
+  color: white; /* ここで好きな色を指定 */
+}
+/* ホバーした時の色 */
+.navbar__toggle:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* Keep the right-side external links visually grouped on desktop */
+.navbar__items--right .navbar-link-site-home {
+  position: relative;
+  padding-right: 1rem;
+  margin-right: 0.35rem;
+}
+
+.navbar__items--right .navbar-link-site-home::after {
+  content: "|";
+  position: absolute;
+  right: 0;
+  color: rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+}
+
+/* ========================================
+   Mobile Menu - komiyamma.net の上に区切り線
+   ======================================== */
+@media (max-width: 996px) {
+  .menu .navbar-link-site-home {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+  }
+}

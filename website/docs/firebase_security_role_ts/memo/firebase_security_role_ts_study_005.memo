@@ -1,0 +1,1 @@
+Rulesでの更新制御。resourceとrequest.resourceの違いを理解し、diff関数を用いた変更フィールドの制限や、削除時の既存データ検証の重要性を学ぶ。
