@@ -62,7 +62,7 @@ const FeatureList: FeatureItem[] = [
         Firestoreにおける高度なデータモデリング、サブコレクションの活用、クエリの最適化について学びます。
       </>
     ),
-    link: '/docs/firebase_firestore_structure_ts/firebase_firestore_structure_ts_index',
+    link: '/docs/firebase_firestore_struncture_ts/firebase_firestore_struncture_ts_index',
   },
   {
     title: 'セキュリティ',
