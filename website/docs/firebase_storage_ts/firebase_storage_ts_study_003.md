@@ -9,6 +9,13 @@
 
 ![Image Picker UI](./picture/firebase_storage_ts_study_003_01_ui_mockup.png)
 
+```mermaid
+graph TD
+    UI["Input type='file'"] --> Click["Select Image"]
+    Click --> Preview["Show Image 🖼️"]
+    Preview --> Upload["Upload Button ☁️"]
+```
+
 ### ✅ 画像ファイルは `File` として取れる📄
 
 `<input type="file">` で選ばれたものはブラウザの `File` で受け取れるよ👀（後の章で **そのまま Storage の upload に渡せる**のが強い！） ([Firebase][1])
@@ -16,6 +23,12 @@
 ### ✅ プレビューは `URL.createObjectURL(file)` が速い⚡
 
 ![createObjectURL Flow](./picture/firebase_storage_ts_study_003_02_preview_logic.png)
+
+```mermaid
+graph LR
+    File["File Object"] -- URL.createObjectURL --> Blob["blob:http://localhost..."]
+    Blob -- src= --> IMG["<img src='...' />"]
+```
 
 画像を base64 に変換しなくても、**一時URL**を作って `img src` に置けるよ🧠✨
 使い終わったら `URL.revokeObjectURL()` で片付けるのが大事！（メモリリーク回避） ([MDN Web Docs][2])
@@ -41,6 +54,13 @@
 ### 実装：`ProfileImagePicker.tsx` を作る🧩
 
 ![Component Logic](./picture/firebase_storage_ts_study_003_03_component_structure.png)
+
+```mermaid
+graph TD
+    App["React Component"] --> State1["file: File|null"]
+    App --> State2["preview: string"]
+    State1 -- On change --> State2
+```
 
 ```tsx
 import React, { useEffect, useRef, useState } from "react";
@@ -285,6 +305,13 @@ export default function ProfilePage() {
 
 ![UI States](./picture/firebase_storage_ts_study_003_04_ui_states.png)
 
+```mermaid
+graph LR
+    Empty["No Image"] -- "Select" --> Preview["Image Shown"]
+    Preview -- "Cancel" --> Empty
+    Preview -- "Upload" --> Cloud["Sent to Firebase"]
+```
+
 どれも小さいけど、効きます😎
 
 * ✅ 未選択のときは「ここをクリックして選ぶ📷」を強調
@@ -313,6 +340,12 @@ export default function ProfilePage() {
 
 ![Memory Leak Prevention](./picture/firebase_storage_ts_study_003_05_memory_leak.png)
 
+```mermaid
+graph TD
+    Old["Old Preview Blob"] -- User picks new --> New["New Preview Blob"]
+    New -- cleanup --> Revoke["URL.revokeObjectURL('Old') 🧹"]
+```
+
 `createObjectURL()` は作りっぱなしだと残りやすいので、必ず `revokeObjectURL()` を cleanup で呼ぶのが安心✨ ([MDN Web Docs][2])
 
 ---
@@ -335,6 +368,13 @@ export default function ProfilePage() {
 ### B) おまけ：選んだ画像から “altテキスト” をAIで作る📝🤖
 
 ![Client-side AI Analysis](./picture/firebase_storage_ts_study_003_06_ai_analysis.png)
+
+```mermaid
+graph LR
+    Image["Preview Image"] --> WebAI["Transformers.js / WebNN"]
+    WebAI --> Tag["Detect: 'Cat'"]
+    Tag --> DB["Save tag to DB"]
+```
 
 「アップロード前」でも、ローカル `File` を base64 にして **画像解析**できるよ（Firebase AI Logic の公式サンプルがまさにこの形） ([Firebase][6])
 

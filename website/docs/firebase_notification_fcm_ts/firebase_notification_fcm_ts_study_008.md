@@ -1,4 +1,4 @@
-﻿# 第8章：トークン更新・無効化・重複（地味だけど超重要）🧯🌀
+# 第8章：トークン更新・無効化・重複（地味だけど超重要）🧯🌀
 
 この章、見た目は地味だけど「通知の成功率」と「運用コスト」を決める“心臓部”です🫀✨
 古いトークンを握り続けると、**届かない通知にお金と時間を溶かす**し、コンソールの配信率も“見かけ上”ガクッと落ちます📉😇（実際にそういう落ち方をするよ、という注意が公式にあります）([Firebase][1])
@@ -182,6 +182,17 @@ Webでも同じで、アプリ起動時や設定画面を開いた時に `ensure
 ## 送信側で“死んだトークンを消す”🧹⚡（これが最重要）
 
 ![Server-Side Token Cleanup](./picture/firebase_notification_fcm_ts_study_008_cleanup.png)
+
+```mermaid
+flowchart TD
+    Admin[Admin SDK / Functions] -- "sendEachForMulticast(tokens)" --> FCM[FCM Server]
+    FCM -- "Batch Response" --> Admin
+    Admin -- "Check responses[i].success" --> Results{Success?}
+    Results -- "No (Error: Not Registered)" --> Stale[Stale Token Found]
+    Results -- "Yes" --> Next[Next Token]
+    Stale --> DB[Delete doc from users/uid/fcmTokens/]
+    DB -- "Cleaned" --> OK[Complete]
+```
 
 複数トークンにまとめて送る場合、Admin SDKは **最大500トークン**まで一度に送れます📨（上限も明記）([Firebase][5])
 そしてレスポンスは「入力トークンの順番と対応」するので、失敗したトークンだけ拾えます。([Firebase][5])

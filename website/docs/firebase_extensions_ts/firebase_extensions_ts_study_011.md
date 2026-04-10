@@ -1,4 +1,4 @@
-﻿# 第11章：Resize Images実践（アップロード→サムネ→表示）📷➡️🖼️➡️🧑‍💻
+# 第11章：Resize Images実践（アップロード→サムネ→表示）📷➡️🖼️➡️🧑‍💻
 
 この章は「**画像をアップロードしたら、勝手にサムネが増えて、Reactで表示できる**」ところまで一気にやるよ〜😆✨
 できるようになること👇
@@ -12,6 +12,31 @@
 ## 1) まず“どう増えるか”を1分で理解🧠
 
 ![resize_factory](./picture/firebase_extensions_ts_study_011_resize_factory.png)
+
+```mermaid
+sequenceDiagram
+    participant User as 👤 ユーザー
+    participant React as ⚛️ React App
+    participant Storage as 📦 Storage
+    participant Ext as ⚙️ Resize Extension
+    
+    User->>React: 画像を選択
+    React->>Storage: upload (original.jpg)
+    Storage-->>Ext: 🚀 トリガー発火
+    React->>React: 画面で「生成待ち…」表示
+    
+    par Extension Logic
+        Ext->>Ext: リサイズ処理
+        Ext->>Storage: 保存 (original_200x200.jpg)
+    end
+    
+    loop URLチェック
+        React->>Storage: getDownloadURL
+        Storage-->>React: 404 (生成中) / 200 (完了!)
+    end
+    
+    React->>User: サムネを表示 🖼️✨
+```
 
 Resize Images は、指定したバケットに画像が上がると👇こう動くよ📦
 

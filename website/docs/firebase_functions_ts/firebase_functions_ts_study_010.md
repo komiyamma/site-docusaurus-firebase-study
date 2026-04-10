@@ -1,4 +1,4 @@
-﻿# 第10章：設定と秘密情報（APIキーをコードに書かない）🗝️🧯
+# 第10章：設定と秘密情報（APIキーをコードに書かない）🗝️🧯
 
 この章は「**事故りやすい秘密情報の扱い**」を最初に固めて、次章以降の **Slack通知** や **AI連携（Genkit / Gemini API）** を安全に進める土台を作ります😊✨
 
@@ -16,6 +16,14 @@
 ## 1) まず「秘密情報」って何？🧨
 
 ![Types of Secrets](./picture/firebase_functions_ts_study_010_01_secret_types.png)
+
+```mermaid
+graph TD
+    S["秘密情報"] --- K["APIキー"]
+    S --- W["Webhook URL"]
+    S --- T["トークン"]
+    S --- P["パスワード"]
+```
 
 秘密情報は、こういうの👇
 
@@ -76,6 +84,12 @@ Secret管理コマンドの一覧も公式にまとまってます（set / acces
 
 ![Code Pattern for Secrets](./picture/firebase_functions_ts_study_010_03_code_pattern.png)
 
+```mermaid
+graph LR
+    Def["defineSecret"] --> Op["onRequest オプション"]
+    Op -- secrets: [...] --> Use["value()"]
+```
+
 ポイントは2つだけ👇
 
 1. `defineSecret()` で Secret を定義
@@ -112,6 +126,14 @@ export const slackTest = onRequest(
 
 ![Console Log Leak](./picture/firebase_functions_ts_study_010_06_leak_pitfall.png)
 
+```mermaid
+graph TD
+    Code["コード内"] -- 露出 --> Log["ログに残る"]
+    Code -- 露出 --> Res["レスポンスで返る"]
+    Code -- 露出 --> Git["Git経由でバレる"]
+    style Code fill:#f99
+```
+
 * ❌ `console.log(url)` しない（ログは漏えい経路になりがち）
 * ❌ レスポンスに秘密を返さない（デバッグのつもりでやりがち）
 * ✅ 使う関数だけに `secrets` を付ける（付けない関数だと `undefined` になる、が仕様） ([Firebase][2])
@@ -133,8 +155,14 @@ firebase deploy --only functions:slackTest
 
 ![Local vs Cloud Secrets](./picture/firebase_functions_ts_study_010_04_local_vs_cloud.png)
 
+```mermaid
+graph TD
+    E["Emulator"] --> L[".secret.local"]
+    Cloud["Firebase Cloud"] --> SM["Secret Manager"]
+```
+
 Emulatorは、状況によっては本番のSecretを読みに行こうとします。で、権限がないとコケます😵
-そこで **`.secret.local`** でローカルだけ上書きできる、と公式に書かれています。 ([Firebase][2])
+そこで **.secret.local** でローカルだけ上書きできる、と公式に書かれています。 ([Firebase][2])
 
 * `.env.local`：環境変数の上書き ([Firebase][2])
 * `.secret.local`：Secretの上書き ([Firebase][2])

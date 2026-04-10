@@ -1,4 +1,4 @@
-﻿# 第11章：Timestamp入門（createdAt / updatedAt の基本）⏱️🧩
+# 第11章：Timestamp入門（createdAt / updatedAt の基本）⏱️🧩
 
 この章でやることはシンプルです👇
 **「追加した日時」「更新した日時」をFirestoreにちゃんと残して、画面に出せる**ようになります📅✨
@@ -8,7 +8,24 @@
 
 ---
 
-![Server vs Client Time](./picture/firebase_firestore_base_ts_study_011_01_server_vs_client.png)
+![Timestamp Concept](./picture/firebase_firestore_base_ts_study_011_01_timestamp.png)
+
+```mermaid
+sequenceDiagram
+    participant App as React App
+    participant SDK as Firestore SDK
+    participant Srv as Firebase Server
+    participant DB as Firestore DB
+
+    App->>SDK: addDoc({ ..., createdAt: serverTimestamp() })
+    SDK->>Srv: Send Request (Token)
+    Srv->>Srv: Determine Server Time
+    Srv->>DB: Write document with actual timestamp
+    DB-->>App: Success
+    App->>SDK: getDoc()
+    SDK->>App: Timestamp Object
+    App->>App: .toDate() (Local conversion)
+```
 
 ## 1) まず結論：時刻は「サーバー時刻」を使うのが安定⏱️🌍
 

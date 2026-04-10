@@ -1,4 +1,4 @@
-﻿# 第6章：Consoleからインストールしてみる（最短ルート）🧩🚀
+# 第6章：Consoleからインストールしてみる（最短ルート）🧩🚀
 
 この章はね、「拡張を“実際に入れて動かす”」が主役だよ✨
 しかも **Consoleだけ**でいける最短ルート！😆👍
@@ -32,6 +32,20 @@ Consoleで拡張を入れるには、ざっくりこの2つが必要👇
 ## 2) Consoleでのインストール手順（王道ルート）🧭✨
 
 ![install_flow](./picture/firebase_extensions_ts_study_006_install_flow.png)
+
+```mermaid
+sequenceDiagram
+    participant User as 👤 開発者
+    participant Console as 🖥️ Firebase Console
+    participant Project as 🏗️ クラウドプロジェクト
+    
+    User->>Console: 1. 拡張を選択 🧩
+    Console->>User: 2. 依存サービス・権限を表示
+    User->>Console: 3. 同意 & パラメータ入力 🎛️
+    Console->>Project: 4. リソース作成開始 (Functions等)
+    Project-->>Console: 5. インストール完了 ✅
+    Console->>User: 6. ダッシュボードに出現
+```
 
 ここからは「Resize Images」みたいな鉄板拡張を想定して説明するけど、流れはだいたい同じだよ😎
 

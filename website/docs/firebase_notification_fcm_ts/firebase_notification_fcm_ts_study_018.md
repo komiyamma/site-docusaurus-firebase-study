@@ -5,6 +5,16 @@
 
 ![Three Principles](./picture/firebase_notification_fcm_ts_study_018_three_principles.png)
 
+```mermaid
+graph LR
+    subgraph Principles [Goal: Clicked & Safe]
+        S[Short 🤏]
+        T[Targeted 🎯]
+        A[Safe 🔐]
+    end
+    S --- T --- A
+```
+
 ---
 
 ## この章のゴール🎯
@@ -27,6 +37,17 @@ FCMのメッセージは **notification**（表示される系）と **data**（
 
 ![Notification Structure Breakdown](./picture/firebase_notification_fcm_ts_study_018_structure_breakdown.png)
 
+```mermaid
+graph TD
+    subgraph Notification [Visible]
+        Title["Title (40 chars)"]
+        Body["Body (120 chars)"]
+    end
+    subgraph Data [App Logic]
+        IDs["IDs (commentId, postId)"]
+    end
+```
+
 * **タイトル**：～40文字くらい（見出し）
 * **本文**：～80〜120文字くらい（要点だけ）
 * **data**：画面遷移に必要なIDだけ（例：commentId, postId）🧩
@@ -37,6 +58,15 @@ FCMのメッセージは **notification**（表示される系）と **data**（
 つまり「**個人情報やNG表現が混ざると事故**」になりやすい⚠️
 
 ![Privacy Risk on Lock Screen](./picture/firebase_notification_fcm_ts_study_018_lockscreen_privacy.png)
+
+```mermaid
+graph LR
+    User[User]
+    Device[Locked Phone]
+    Device -- Show Notification --> Risk{PII Visible?!}
+    Risk -- Yes --> Leak[Privacy Incident ⚠️]
+    Risk -- No --> Safe[Safe Experience ✨]
+```
 
 だからAIにお願いするときも、必ずこう言う✅
 
@@ -53,6 +83,14 @@ FCMのメッセージは **notification**（表示される系）と **data**（
 今回の「コメント作成→自動で通知送信（第14章）」の流れに自然に混ぜるなら、**サーバー側（Functions）で整形**するのが王道です⚡🛠️
 
 ![AI Notification Processing Pipeline](./picture/firebase_notification_fcm_ts_study_018_ai_pipeline.png)
+
+```mermaid
+graph LR
+    Input[Original Text] --> Pre[Pre-masking 🧽]
+    Pre --> AI{AI / Gemini 🤖}
+    AI --> Post[Post-Check 🚧]
+    Post --> FCM[FCM Send 🚀]
+```
 一方で「通知ON前にプレビューしたい」みたいなUI側の体験には **AI Logic** が相性いい、って感じ🙂
 
 ---
@@ -86,6 +124,15 @@ FCMのメッセージは **notification**（表示される系）と **data**（
 
 ![Pre-masking Logic](./picture/firebase_notification_fcm_ts_study_018_premask_logic.png)
 
+```mermaid
+graph TD
+    Text[Raw Comment]
+    Text -- Regexp --> Masked[Masked Text]
+    Masked -- "aaa@bbb.com" --> M1["[email]"]
+    Masked -- "090-..." --> M2["[phone]"]
+    Masked -- "https://..." --> M3["[url]"]
+```
+
 **「AIに渡す前」**に、最低限これだけやると事故率が下がる👍
 
 ```ts
@@ -105,6 +152,15 @@ export function preMask(text: string): string {
 ## Step 3：AI整形（“短い・伝わる・安全” を指示する）🤖📝✨
 
 ![AI Prompt Rules](./picture/firebase_notification_fcm_ts_study_018_ai_prompt_rules.png)
+
+```mermaid
+graph TD
+    Prompt[AI Instruction]
+    Prompt --- R1[JSON Format Only]
+    Prompt --- R2[No PII Output]
+    Prompt --- R3[Length < 120]
+    Prompt --- R4[Fallback Flag]
+```
 
 ここが本体！ポイントは **「出力形式」と「禁止事項」** をめちゃ明確にすること👮‍♂️
 
@@ -148,6 +204,13 @@ export function buildSystemInstruction(maxBodyChars = 120) {
 ## Step 4：後処理（最後は“コードで守る”🚧）🧯
 
 ![Post-Check and Fallback](./picture/firebase_notification_fcm_ts_study_018_post_check_fallback.png)
+
+```mermaid
+graph TD
+    Res[AI Output] --> Logic{Is it Safe?}
+    Logic -- No / Error --> Fallback["'You have a new comment' 🛡️"]
+    Logic -- Yes --> Real["Use AI Generated Text ✨"]
+```
 
 AIの結果を受け取ったら、**最後に必ず検査**します✅
 （ここが“教材として超大事”ポイント！）

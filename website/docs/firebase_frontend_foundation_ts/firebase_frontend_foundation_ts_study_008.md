@@ -1,9 +1,18 @@
-﻿# 第08章：フォーム入力とバリデーション 📝🚦（プロフィール編集フォームを作る）
+# 第08章：フォーム入力とバリデーション 📝🚦（プロフィール編集フォームを作る）
 
 この章のゴールはコレです👇✨
 **「入力 → 検証 → エラー表示 → 保存」**が、気持ちよく一通りできるフォームを完成させます😆
 
 ![Form Validation Flow](./picture/firebase_frontend_foundation_ts_study_008_form_validation_flow.png)
+
+```mermaid
+flowchart TD
+    In[ユーザーの入力] --> V{バリデーション}
+    V -- エラーあり --> Disp[画面にエラー表示🚨]
+    V -- OK --> Pre[保存前処理⏳]
+    Pre --> Save[API/Firestore保存🚀]
+    Save --> Success[完了通知✅]
+```
 
 ---
 

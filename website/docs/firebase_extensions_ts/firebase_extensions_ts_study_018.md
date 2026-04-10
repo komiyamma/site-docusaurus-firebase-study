@@ -1,4 +1,4 @@
-﻿# 第18章：AI拡張を入れてみる（翻訳・要約・分類）🤖✨
+# 第18章：AI拡張を入れてみる（翻訳・要約・分類）🤖✨
 
 この章のゴールはこれ👇
 **「AIっぽい機能（翻訳・要約・分類）を “拡張で秒速導入” して、アプリに組み込める状態にする」** だよ🧩⚡
@@ -154,6 +154,15 @@ export function CommentViewer({ commentId }: { commentId: string }) {
 ## 3-1. ありがちな使い方（例）📌
 
 ![Multimodal Logic](./picture/firebase_extensions_ts_study_018_multimodal_logic.png)
+
+```mermaid
+graph LR
+    Input["📝 入力データ<br>(text/image)"] --> Trig["🔔 トリガー発火"]
+    Trig --> Gemini["🤖 Gemini API<br>(要約/分類)"]
+    Gemini --> Audit{"✅ 形式チェック"}
+    Audit -- OK --> Save["💾 結果を追記<br>(same document)"]
+    Audit -- NG --> Error["⚠️ エラーログ/丸め処理"]
+```
 
 * `notes/{id}` の `body` を
 

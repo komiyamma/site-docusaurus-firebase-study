@@ -1,4 +1,4 @@
-﻿# 第20章：運用の仕上げ「鍵・設定・コスト・停止スイッチ」💸🧯🔒
+# 第20章：運用の仕上げ「鍵・設定・コスト・停止スイッチ」💸🧯🔒
 
 この章はひとことで言うと、**「AI機能を“事故らせない仕組み”を完成させる回」**です😇✨
 AIは便利だけど、運用をなめると **財布🔥・信用🔥・API鍵🔥** が一気に燃えます…！なので、最後に“安全装置”を全部つけます🧰🛡️
@@ -82,6 +82,21 @@ export const myApi = onRequest(
 ## 3) 使いすぎ防止は「3段ブレーキ」🚦🚦🚦
 
 ![App Check・レート制限・予算アラートの3段構え](./picture/firebase_ai_ts_study_020_three_brakes.png)
+
+```mermaid
+flowchart TD
+  subgraph Hard ["1. ハードブレーキ🧱"]
+    AC["App Check🧿<br>(正規アプリ以外拒否)"]
+  end
+  subgraph Soft ["2. ソフトブレーキ🎛️"]
+    RC["Remote Config Switch🚨<br>(機能を即時OFF)"]
+  end
+  subgraph Financial ["3. 財務ブレーキ💸"]
+    Budget["予算アラート🚦<br>(50%/100%/150%)"]
+  end
+  
+  Hard --- Soft --- Financial
+```
 
 AIは“便利＝呼ばれやすい”ので、**ブレーキは多いほど良い**です😆
 

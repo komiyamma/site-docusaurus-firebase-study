@@ -1,4 +1,4 @@
-﻿# 第14章：Remote Config Experiments（A/B）を作る🎛️🧪
+# 第14章：Remote Config Experiments（A/B）を作る🎛️🧪
 
 この章は「Remote Configの値を2パターンに分けて配布して、**どっちが良いか数字で決める**」回だよ〜📊✨
 “勘”で直すのを卒業して、「勝った案だけを全員に配布」までやっちゃおう🏁
@@ -71,6 +71,23 @@ export async function loadCtaCopy(): Promise<string> {
 ## 5) 手を動かす②：A/Bで超重要な「2種類のイベント」を送る📣🎯
 
 ![Activation vs Goal Events](./picture/firebase_analytics_performance_ts_study_014_event_types.png)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant Firebase
+    
+    App->>Firebase: 1. fetchAndActivate()
+    Firebase-->>App: OK (Val: B)
+    App->>User: 2. UI表示 (案B)
+    App->>Firebase: 3. logEvent: exposure (Activation)📣
+    Note right of App: ここで「実験に参加」扱いになる
+    
+    User->>App: 4. ボタンポチ！
+    App->>Firebase: 5. logEvent: memo_save_success (Goal)🎯
+    Note right of App: 成果（コンバージョン）！
+```
 
 A/Bでつまずく人の9割はここ😇
 イベントはざっくり2種類あるよ👇

@@ -1,4 +1,4 @@
-﻿# 第02章：通知が“うざい”は設計で防げる😇🧯
+# 第02章：通知が“うざい”は設計で防げる😇🧯
 
 この章は「FCMの技術」より先に、**通知が嫌われないための設計**を固めます📣
 通知は「呼び戻し」じゃなくて「助け舟」になると最強です🚣‍♂️✨
@@ -8,6 +8,15 @@
 
 ## 2-1. まず結論：地雷はこの3つ💣💣💣
 ![Three Landmines of Bad Notifications](./picture/firebase_notification_fcm_ts_study_002_mines.png)
+
+```mermaid
+graph TD
+    subgraph Landmines [地雷💣]
+        M1["雑な許可の取り方"]
+        M2["過剰な頻度/夜中"]
+        M3["内容が曖昧・長い"]
+    end
+```
 
 1. **許可の取り方**（いきなり許可ダイアログ出す）
 2. **頻度**（連投・夜中・どうでもいい通知）
@@ -21,6 +30,15 @@
 
 ## 2-2. “うざくならない”通知の合言葉（設計の骨組み）🦴✨
 ![Three Pillars of Notification Design](./picture/firebase_notification_fcm_ts_study_002_tripod.png)
+
+```mermaid
+graph TD
+    subgraph Tripod [三本柱 ⚓]
+        W1["いつ: 価値ある今？⏰"]
+        W2["だれに: 関係者だけ？🎯"]
+        W3["なにを: 1行で要点？📌"]
+    end
+```
 
 通知を出す前に、毎回この3点を決めます🧠
 
@@ -49,6 +67,16 @@
 ## ✅ 良い例（同意が取りやすい）🙆‍♀️
 ![Bad vs Good Permission Flow](./picture/firebase_notification_fcm_ts_study_002_permission_flow.png)
 
+```mermaid
+graph LR
+    subgraph Bad [悪い例 🙅‍♂️]
+        B1["即ダイアログ"] --> B2["拒否 🚫"]
+    end
+    subgraph Good [良い例 🙆‍♀️]
+        G1["ソフト許可: 説明"] --> G2["ハード許可: 本物"]
+    end
+```
+
 * ユーザーが「通知が必要な場面」に到達した瞬間に：
 
   1. アプリ内で先に説明（**ソフト許可**）
@@ -65,6 +93,13 @@
 
 ## ① 画面遷移図（文章でOK）🗺️
 ![Notification Settings UI](./picture/firebase_notification_fcm_ts_study_002_settings_ui.png)
+
+```mermaid
+graph TD
+    subgraph Profile [Profile Settings ⚙️]
+        T["通知トグル: OFF"] -- Click --> Intro["/notifications/intro"]
+    end
+```
 
 こんな感じにします👇
 
@@ -91,6 +126,15 @@
 ## ② “ソフト許可”用のUI文言（まずは仮で置く）📝
 ![Soft Permission Explanation UI](./picture/firebase_notification_fcm_ts_study_002_soft_permission.png)
 
+```mermaid
+graph TD
+    subgraph Intro [Notification Value ✨]
+        V1["見逃さない📣"]
+        V2["夜中は控えめ🌙"]
+        Btn["通知をONにする 🔔"]
+    end
+```
+
 次の3行だけでOKです（短いほど強い）💪
 
 * 見逃したくない更新だけお知らせします📣
@@ -102,6 +146,12 @@
 
 ## ③（ミニ実装）許可リクエストは“ボタン押した時だけ”にする🔔
 ![User Action Triggers Permission](./picture/firebase_notification_fcm_ts_study_002_button_trigger.png)
+
+```mermaid
+graph LR
+    Click["ボタン押下 👆"] --> Req["requestPermission"]
+    Req --> OS["ブラウザダイアログ 📣"]
+```
 
 React側で、**押した時だけ** `Notification.requestPermission()` を呼ぶ形にします。
 
@@ -129,6 +179,12 @@ export async function requestNotificationPermission(): Promise<NotificationPermi
 
 ## ミニ課題（5分）🎯📝：「通知ONにする理由」をUI文言で作る（AIも使う🤖✨）
 ![AI Drafting Notification Text](./picture/firebase_notification_fcm_ts_study_002_ai_writer.png)
+
+```mermaid
+graph LR
+    Draft["長い説明文"] --> AI{"AI UX Writer 🤖"}
+    AI -- Gemini --> Clean["「短く・響く・圧なし」✨"]
+```
 
 ここはAIの出番です🔥
 **Firebase AI Logic**を使うと、アプリから安全にGeminiを呼んで「短い・伝わる・圧がない」文言を作りやすいです🤖🧩 ([Firebase][4])

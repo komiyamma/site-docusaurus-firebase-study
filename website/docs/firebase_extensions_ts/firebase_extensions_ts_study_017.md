@@ -1,4 +1,4 @@
-﻿# 第17章：環境分離（検証・本番で“同じ拡張”を安全に）🧪➡️🏭
+# 第17章：環境分離（検証・本番で“同じ拡張”を安全に）🧪➡️🏭
 
 この章はひとことで言うと👇
 **「拡張を“安全に試して→安全に本番へ運ぶ”ための型」**を身につける回だよ🧩✨
@@ -125,6 +125,18 @@ firebase ext:install <publisher>/<extension-name> --local
 ## ④ env/secret を「共通」「devだけ」「prodだけ」に分ける📂🔐
 
 ![Environment Variable Injection](./picture/firebase_extensions_ts_study_017_env_injection.png)
+
+```mermaid
+graph TD
+    subgraph Repo ["📜 コード管理 (GitHub等)"]
+      M["extensions.json<br>(拡張の定義)"]
+      E_D["dev.env<br>(検証用設定)"]
+      E_P["prod.env<br>(本番用設定)"]
+    end
+    
+    M & E_D -- deploy --> DevProj["🧪 Dev プロジェクト"]
+    M & E_P -- deploy --> ProdProj["🏭 Prod プロジェクト"]
+```
 
 マニフェストは **パラメータ値を env ファイルで管理**できる。さらに **プロジェクト別の env** も持てる。これが環境分離のコア🔥 ([Firebase][3])
 

@@ -1,4 +1,4 @@
-﻿# 第17章：ページング入門①（カーソルって何？）📜🧭
+# 第17章：ページング入門①（カーソルって何？）📜🧭
 
 この章でやるのはコレ👇
 **「ToDoを10件ずつ取って、`次へ` ボタンで次の10件を表示」**できるようにします✨
@@ -10,7 +10,14 @@ Firestoreのページングは「ページ番号」じゃなくて、**“しお
 
 ## 🔖 カーソルってなに？
 
-![Cursor Concept](./picture/firebase_firestore_base_ts_study_017_01_cursor_concept.png)
+![Cursor Logic](./picture/firebase_firestore_base_ts_study_017_01_cursor_logic.png)
+
+```mermaid
+graph LR
+    P1[Page 1] -- "lastDoc(Snapshot)" --> L[Cursor]
+    L --> Q["query(..., startAfter(lastDoc))"]
+    Q --> P2[Page 2]
+```
 
 Firestoreのページングは、**前のページの“最後のドキュメント”を覚えておいて、次はそこから先を取る**スタイルです📌
 この「どこから先を取るか」を決めるのが **クエリカーソル**です。([Firebase][1])

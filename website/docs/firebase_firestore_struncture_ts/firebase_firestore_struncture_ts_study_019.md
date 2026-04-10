@@ -1,4 +1,4 @@
-﻿# 第19章：TypeScriptで型安全CRUD　DTO・Converter・ガード🧱✨
+# 第19章：TypeScriptで型安全CRUD　DTO・Converter・ガード🧱✨
 
 この章のゴールはシンプルです👇😄
 **「Firestoreに保存する形」と「UIで使う形」を分けて、読み書きの事故を減らす**こと！
@@ -17,6 +17,23 @@ Firestore は **DB側でスキーマ（型）を強制しません**。なので
 そこで登場するのがこの3点セット👇
 
 ![firebase_firestore_struncture_ts_study_019_01_dto_bridge.png](./picture/firebase_firestore_struncture_ts_study_019_01_dto_bridge.png)
+
+```mermaid
+graph LR
+    subgraph UI["App / React ⚛️"]
+        A["Post モデル"]
+        A -.- Note_A["Date型を使用"]
+    end
+    subgraph Conv["Converter 🌉"]
+        C["withConverter"]
+    end
+    subgraph DB["Firestore 🧱"]
+        D["PostDTO / DBデータ"]
+        D -.- Note_D["Timestamp型を使用"]
+    end
+    A <--> C
+    C <--> D
+```
 
 * **DTO（DbModel）**：Firestore に保存する “生の形” 🧱
 * **UIモデル（AppModel）**：React が気持ちよく使える形 💖

@@ -1,4 +1,4 @@
-﻿# 第9章：ホットスポットと書き込み衝突（地味に重要）🔥
+# 第9章：ホットスポットと書き込み衝突（地味に重要）🔥
 
 この章のゴールはシンプルです👇
 **「アクセスが増えても、1点集中で詰まらないFirestore設計」にできる**ようになること！💪✨
@@ -18,6 +18,16 @@
 Firestoreの書き込みは、**ドキュメント本体 + インデックス**を“まとめて”更新します。だから、1点集中が起きると待ちが発生しやすいんですね😇 ([Firebase][1])
 
 ![Document vs Collection Hotspot](./picture/firebase_firestore_struncture_ts_study_009_01_hotspot_types.png)
+
+```mermaid
+graph TD
+    subgraph Doc_Hotspot
+    Many[Many Users] -- "increment likesCount" --> OneDoc[Single Document]
+    end
+    subgraph Col_Hotspot
+    Log[Many Logs] -- "sequential createdAt" --> Index[Sequential Index Range]
+    end
+```
 
 ### ② 連番っぽい値でインデックスがホット（コレクション・ホットスポット）🔥
 

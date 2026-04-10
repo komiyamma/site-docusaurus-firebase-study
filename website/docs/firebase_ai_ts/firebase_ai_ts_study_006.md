@@ -1,4 +1,4 @@
-﻿# 第06章：画像生成（Imagen）を“アプリ体験”に混ぜる🖼️✨
+# 第06章：画像生成（Imagen）を“アプリ体験”に混ぜる🖼️✨
 
 この章のゴールはこれです👇😆
 **「日報のサムネをAIで作る」→「プレビューして選ぶ」→「保存して次回も表示」** を、気持ちよく一連の体験にすること🎯
@@ -128,6 +128,13 @@ export function ThumbnailGenerator() {
 ## 3) 生成した画像を Cloud Storage に保存する📦🧷
 
 ![Saving generated image to Cloud Storage](./picture/firebase_ai_ts_study_006_storage_save.png)
+
+```mermaid
+flowchart LR
+    Imagen["Imagen 3🤖"] -->|Base64| App["Reactアプリ📱<br>(プロンプト作成)"]
+    App -->|Blob変換| Storage["Cloud Storage📦<br>(users/uid/...)"]
+    Storage -->|URL取得| Firestore["Firestore📝<br>(thumbnailUrl保存)"]
+```
 
 ここからが「アプリ体験」になります😆
 生成した画像を **Storageへアップロード**して、あとで同じサムネを表示できるようにします。

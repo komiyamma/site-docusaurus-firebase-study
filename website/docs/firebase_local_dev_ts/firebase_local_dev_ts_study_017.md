@@ -1,4 +1,4 @@
-﻿# 第17章　サーバーSDKでもエミュにつなぐ：Admin SDK視点🧠🧰
+# 第17章　サーバーSDKでもエミュにつなぐ：Admin SDK視点🧠🧰
 
 ## この章のゴール🎯
 
@@ -170,6 +170,17 @@ main().catch((e) => {
 ```
 
 ![_seed_logic](./picture/firebase_local_dev_ts_study_017_seed_logic.png)
+
+```mermaid
+flowchart TD
+    Start([Start Seed]) --> CheckAuth{User Exists?}
+    CheckAuth -- No --o Create[auth.createUser]
+    CheckAuth -- Yes --o Get[auth.getUser]
+    Create --> Memo[upsertMemo]
+    Get --> Memo
+    Memo --> Upsert[db.collection.doc.set with merge: true]
+    Upsert --> End([Done])
+```
 
 ---
 

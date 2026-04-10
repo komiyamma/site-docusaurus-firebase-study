@@ -1,4 +1,4 @@
-﻿# 第7章：参照の持ち方（id文字列 vs DocumentReference）🔗
+# 第7章：参照の持ち方（id文字列 vs DocumentReference）🔗
 
 この章は「投稿（post）やコメント（comment）が、作者（user）をどう指すか？」を**設計で迷わない**ようにする回です😄✨
 参照の持ち方は、**UIの落ち方（退会ユーザー表示）**や、**Rulesの書きやすさ**や、**移行のしやすさ**に直結します⚠️
@@ -8,6 +8,12 @@
 ## 0) まずは超ざっくり結論🧠💡
 
 ![String ID vs Document Reference](./picture/firebase_firestore_struncture_ts_study_007_01_string_id_vs_ref_obj.png)
+
+```mermaid
+graph LR
+    A[String ID] -- "manual doc(path)" --> Target[Target Doc]
+    B[DocRef Object] -- "direct getDoc(ref)" --> Target
+```
 
 * **迷ったら `authorId: string`（UID文字列）**が最強にラクです💪✨
   → Rulesが書きやすい、データ移行が楽、参照切れ対応もシンプル😊

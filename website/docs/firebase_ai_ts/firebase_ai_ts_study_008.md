@@ -1,4 +1,4 @@
-﻿# 第08章：使いすぎ防止（レート制限＋段階解放）🎛️🚦
+# 第08章：使いすぎ防止（レート制限＋段階解放）🎛️🚦
 
 この章はひとことで言うと「**AI機能で、コスト事故💸と乱用🤖を起こさない仕組み**を作る回」です😊✨
 “便利なボタン”ほど、放置すると秒で燃えます🔥（マジで…）
@@ -19,6 +19,21 @@
 ## まず“3段バリア”で考える 🧱🧱🧱
 
 ![The 3-Layer Defense against AI Overuse](./picture/firebase_ai_ts_study_008_three_barriers.png)
+
+```mermaid
+flowchart TD
+  subgraph L1 ["第1層: ハード制限🛡️"]
+    AI["AI Logic Quotas🚦<br>(100 RPM/user)"]
+  end
+  subgraph L2 ["第2層: ソフト制限🎛️"]
+    RC["Remote Config⚙️<br>(機能ON/OFF・配分率)"]
+  end
+  subgraph L3 ["第3層: UI制御🧁"]
+    UI["アプリ側ブレーキ🔘<br>(残り回数表示・Cooldown)"]
+  end
+  
+  L1 --- L2 --- L3
+```
 
 ## ① ハード制限（最強）🛡️
 

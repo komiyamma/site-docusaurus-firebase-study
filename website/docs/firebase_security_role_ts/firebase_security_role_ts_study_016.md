@@ -1,4 +1,4 @@
-﻿# 第16章：Custom Claims × RulesでRBAC（王道パターン）👑🛡️
+# 第16章：Custom Claims × RulesでRBAC（王道パターン）👑🛡️
 
 この章のゴールはこれ👇✨
 **「一般ユーザーは自分のデータだけ」＆「管理者は全部」** を、**Security Rulesだけで機械的に守れる**状態にするよ🙂🔐
@@ -21,6 +21,13 @@
 
 ![RBAC Concept with Royalty Metaphor.](./picture/firebase_security_role_ts_study_016_01_rbac_royal.png)
 
+```mermaid
+graph TD
+    King["Admin 👑"] --> Knight["Editor ⚔️"]
+    Knight --> Citizen["User 🙂"]
+    style King fill:#f9d,stroke:#333,stroke-width:4px
+```
+
 ---
 
 ## 1) 読む📖：Custom Claimsの超重要ポイント3つ⚠️
@@ -31,6 +38,17 @@
 * 予約語（OIDC / Firebase reserved names）もあるので、変なキー名は避ける([Firebase][5])
 * 「プロフィール」みたいな頻繁に変わる情報は **DBに置く**のが正解🧺（claimsは“権限”専用）
 ![Appropriate data for Claims.](./picture/firebase_security_role_ts_study_016_02_claims_weight.png)
+
+```mermaid
+graph TD
+    subgraph Token["Token (Under 1000B)"]
+        admin["admin: true"]
+        role["role: 'editor'"]
+    end
+    subgraph Firestore["Firestore (Large/Dynamic)"]
+        Profile["{ name, photo, bio... }"]
+    end
+```
 
 ## 1-2. 付与は“特権サーバー環境”だけでやる🧨
 
@@ -55,6 +73,14 @@ claims は **次に新しいIDトークンが発行**されたタイミングで
 4. React側で **admin UI を出し分け** 🖥️✨
 5. Emulatorで **admin/user/未ログインをテスト** 🧪
 ![Implementation Roadmap.](./picture/firebase_security_role_ts_study_016_03_roadmap.png)
+
+```mermaid
+graph LR
+    S1["Set Admin 👑"] --> S2["Function ⚙️"]
+    S2 --> S3["Rules 🛡️"]
+    S3 --> S4["UI 🖥️"]
+    S4 --> S5["Test 🧪"]
+```
 
 ---
 
@@ -125,6 +151,14 @@ export const setAdmin = onCall(async (req) => {
 > なので、こういうFunctions経由が王道だよ🙂✨
 ![Flowchart of setAdmin function.](./picture/firebase_security_role_ts_study_016_04_set_admin_flow.png)
 
+```mermaid
+graph TD
+    Call["Call setAdmin"] --> Auth{"Caller is Admin?"}
+    Auth -- No --> Deny["Reject 🛑"]
+    Auth -- Yes --> Merge["Merge & Set Claims 🎫"]
+    Merge --> Success["OK ✅"]
+```
+
 ---
 
 ## 5) 実装②：（初回だけ）最初のadminをどう作る？👑🧨
@@ -183,6 +217,15 @@ service cloud.firestore {
 🎉 これで完成！
 クライアントでURLを書き換えて他人の `{uid}` を読もうとしても、**Rulesが門番して落とす**🚪🛡️
 ![Rules Logic Gate.](./picture/firebase_security_role_ts_study_016_05_rules_gate.png)
+
+```mermaid
+graph TD
+    Req["Access Request"] --> Owner{"isOwner?"}
+    Owner -- Yes --> Allow["Allow ✅"]
+    Owner -- No --> Admin{"isAdmin?"}
+    Admin -- Yes --> Allow
+    Admin -- No --> Deny["Deny 🛑"]
+```
 
 ---
 
@@ -254,6 +297,15 @@ test("RBAC: adminだけadminOnlyLogsに書ける", async () => {
 });
 ```
 ![Testing RBAC scenarios.](./picture/firebase_security_role_ts_study_016_06_testing_tubes.png)
+
+```mermaid
+graph TD
+    subgraph Test_Chamber["Test Scenarios"]
+        T1["Guest -> Deny ❌"]
+        T2["User -> Owner OK ✅"]
+        T3["Admin -> Any OK ✅"]
+    end
+```
 
 ---
 

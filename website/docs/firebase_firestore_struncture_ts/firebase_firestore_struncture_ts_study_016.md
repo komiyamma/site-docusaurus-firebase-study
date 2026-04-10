@@ -1,4 +1,4 @@
-﻿# 第16章：`orderBy` の罠（存在しないフィールドは落ちる）🕳️
+# 第16章：`orderBy` の罠（存在しないフィールドは落ちる）🕳️
 
 ## この章でできるようになること🎯
 
@@ -12,6 +12,21 @@
 ## 1) まず読む：`orderBy` は「並べ替え」だけじゃない⚠️
 
 ![Missing Field Exclusion](./picture/firebase_firestore_struncture_ts_study_016_01_missing_field_exclusion.png)
+
+```mermaid
+graph TD
+    subgraph Data ["ドキュメント群"]
+        D1[記事A: createdAtあり]
+        D2[記事B: createdAtなし]
+        D3[記事C: createdAtあり]
+    end
+    subgraph Query ["orderBy('createdAt') 実行"]
+        D1 --> Result
+        D2 -- "除外される❌" --> Out
+        D3 --> Result
+    end
+    Result[結果セット: A, C]
+```
 
 Firestore の `orderBy()` は、ただ並べ替えるだけ…に見えるけど、実は**そのフィールドが存在するドキュメントしか返さない**という性質があるよ😵‍💫
 つまり「`createdAt` が無い投稿」は、他の条件に合っていても**検索結果から消える**！ ([Firebase][1])

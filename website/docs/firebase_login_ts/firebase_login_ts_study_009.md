@@ -1,6 +1,12 @@
-﻿# 第09章：エラー設計①：Firebaseエラーを人間の言葉に翻訳する😇
+# 第09章：エラー設計①：Firebaseエラーを人間の言葉に翻訳する😇
 
 ![Error Translation](./picture/firebase_login_ts_study_009_01_translation_machine.png)
+
+```mermaid
+graph LR
+    Raw[auth/invalid-email 💥] --> Dict{翻訳辞書 📘}
+    Dict --> Friendly["形式が変だよ！<br>もう一回見てみて🙂"]
+```
 
 この章は、**「エラーが出たときにユーザーが次に何をすればいいか分かる」**ようにする回だよ💪✨
 やることはシンプルで、**`auth/xxxx` みたいなエラーコードを、日本語の“やさしい文”に変換する辞書**を作ります📘
@@ -22,6 +28,13 @@
 
 ![Email Enumeration Protection](./picture/firebase_login_ts_study_009_02_enumeration_protection.png)
 
+```mermaid
+graph TD
+    Cause1[ユーザー未登録] --> Mask[抽象化 🛡️]
+    Cause2[パスワード違い] --> Mask
+    Mask --> Msg["メールかパスワードが違うよ"]
+```
+
 * メール列挙保護を有効にすると、**エラーが“より曖昧”になる**ことがあるよ（＝攻撃者がメール登録有無を推測しにくくする）([Firebase][1])
 * 2023-09-15以降に作ったプロジェクトは、**デフォルトで有効**になっているケースがあるよ（`fetchSignInMethodsForEmail()` が無効化される、など）([Firebase][2])
 
@@ -34,6 +47,15 @@
 ## まず決める：エラーの出し方ルール✨
 
 ![Error UI Placement](./picture/firebase_login_ts_study_009_03_ui_placement.png)
+
+```mermaid
+graph TD
+    subgraph UI [エラーの置き場所]
+    F[入力フィールド付近] --- E1[入力ミス 🧾]
+    B[画面上部バナー] --- E2[認証失敗 🔐]
+    L[ログ出力のみ] --- E3[設定ミス 🧯]
+    end
+```
 
 おすすめの型はこれ👇（迷いが減るやつ！）
 
@@ -56,6 +78,13 @@
 ## Step 1) まずは「Authっぽいエラーか？」判定関数を作る🔎
 
 ![Type Guard Logic](./picture/firebase_login_ts_study_009_04_type_guard.png)
+
+```mermaid
+graph LR
+    E[unknown error] --> Guard{isAuthErrorLike}
+    Guard -- Yes --> Code[code を取得]
+    Guard -- No --> Default[不明なエラー扱いに]
+```
 
 ```ts
 // src/lib/authError.ts
@@ -80,6 +109,15 @@ export function getAuthErrorCode(e: unknown): string | null {
 ## Step 2) “翻訳辞書” を作る📘✨
 
 ![Translation Dictionary](./picture/firebase_login_ts_study_009_05_dictionary_map.png)
+
+```mermaid
+graph LR
+    Dictionary[AUTH_MESSAGE_JA]
+    Dictionary --- K1[invalid-email]
+    Dictionary --- K2[weak-password]
+    Dictionary --- K3[user-not-found]
+    Dictionary --- K4[...]
+```
 
 最初は「よくあるやつ」だけでOK！増やすのは後でいける🙂
 
@@ -132,6 +170,21 @@ export function toFriendlyAuthMessage(e: unknown): string {
 ## Step 3) ログイン画面で使う（catchして表示）🚪
 
 ![Login Error Flow](./picture/firebase_login_ts_study_009_06_login_flow.png)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App
+    participant SDK as Firebase
+    participant Lib as authError.ts
+
+    User ->> App: ログインボタン押下
+    App ->> SDK: signInWithEmailAndPassword
+    SDK -->> App: Error (e)
+    App ->> Lib: toFriendlyAuthMessage(e)
+    Lib -->> App: 日本語メッセージ
+    App ->> User: エラー文を表示 ⚠️
+```
 
 例：`setUiError(...)` でバナー表示する感じ。
 
@@ -230,6 +283,14 @@ export function LoginPage() {
 ## 🤖AIちょい足し（この章でもう使えるやつ）
 
 ![AI Error Copywriting](./picture/firebase_login_ts_study_009_07_ai_copywriting.png)
+
+```mermaid
+graph LR
+    Dev[開発者] -- Prompt --> AI{AI 🤖}
+    AI -- Option 1 --> Msg1[やさしい文]
+    AI -- Option 2 --> Msg2[短い文]
+    AI -- Option 3 --> Msg3[丁寧な文]
+```
 
 ## Google の Antigravity：辞書の叩き台を作らせる🧠
 

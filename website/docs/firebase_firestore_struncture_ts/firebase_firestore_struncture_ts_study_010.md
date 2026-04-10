@@ -1,10 +1,17 @@
-﻿# 第10章：集計の全体像（いつ計算する？いつ保存する？）🧮✨
+# 第10章：集計の全体像（いつ計算する？いつ保存する？）🧮✨
 
 この章のテーマはめちゃシンプル👇
 **「数は、毎回その場で数える？ それとも、あらかじめ保存しておく？」**
 この判断ができるようになると、Firestore設計が一気にプロっぽくなります😎🔥
 
 ![Aggregation Balance Scale](./picture/firebase_firestore_struncture_ts_study_010_01_aggregation_balance.png)
+
+```mermaid
+graph LR
+    C[Cost] <--> S[Speed]
+    A[Aggregation Query] -- "Low Cost / Slower" --> C
+    B[Stored Counter] -- "Higher Cost / Faster" --> S
+```
 
 ---
 

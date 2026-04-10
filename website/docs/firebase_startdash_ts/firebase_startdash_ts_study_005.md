@@ -1,4 +1,4 @@
-﻿# 第05章：Antigravityで作業場を作る：Mission Controlに慣れる🕹️🛸
+# 第05章：Antigravityで作業場を作る：Mission Controlに慣れる🕹️🛸
 
 この章では「Antigravity上で、**エージェント＋エディタ＋ターミナル＋ブラウザ**を1つの作業場として回せる状態」を作ります✨
 （次章以降でReactやFirebaseを乗せるための“土台づくり”だよ🧱）
@@ -10,6 +10,13 @@
 普通のIDEは「ファイルを開いて書く」が中心だけど、Antigravityは最初に **Agent Manager（Mission Control）** が前面に来ます🚦
 
 ![Mission Control Metaphor](./picture/firebase_startdash_ts_study_005_01_mission_control.png)
+
+```mermaid
+graph TD
+    Cursor[Cursor / IDE 💻] --> Terminal[Terminal: Commands]
+    Cursor --> Code[Editor: UI/Logic]
+    Cursor --> Agent[AI Agent: Gen/Fix]
+```
 
 ここで複数エージェントを並行に動かし、成果物（Artifacts）や差分をレビューしながら進める感じです🧠✨ ([Google Codelabs][1])
 
@@ -34,6 +41,13 @@ Chromeも必要になります🌐 ([Google Codelabs][1])
 
 ![Security Policy Settings](./picture/firebase_startdash_ts_study_005_02_security_policies.png)
 
+```mermaid
+graph LR
+    P[Execution Policy] -- Default --> R[Restricted ❌]
+    P -- Set-ExecutionPolicy --> U[RemoteSigned ✅]
+    U --> Run[Run npm/firebase 🚀]
+```
+
 初回に「AIにどこまでやらせる？」が出ます。ここはビビってOKです😆
 設定はあとで変えられるけど、最初は安全寄りがラク！
 
@@ -57,6 +71,14 @@ Chromeも必要になります🌐 ([Google Codelabs][1])
 ## 2) Workspacesを作る：プロジェクト置き場を決める📁🧭
 
 ![Workspace Folder Structure](./picture/firebase_startdash_ts_study_005_03_workspace_folder.png)
+
+```mermaid
+graph TD
+    Root[Desktop] --> W[Workspace Folder]
+    W --> P1[project-a]
+    W --> P2[project-b]
+    style W fill:#f9f,stroke:#333
+```
 
 AntigravityのWorkspaceは、ざっくり言うと「このフォルダで作業するよ」という拠点です🏠
 初回に“Workspaceを開く”流れが出たら、そこでプロジェクト用フォルダを選びます📂
@@ -91,6 +113,14 @@ Editor側で見たいのはこの3つ👇
 
 ![Editor Layout](./picture/firebase_startdash_ts_study_005_04_editor_layout.png)
 
+```mermaid
+graph TD
+    Win[Cursor Window] --> Tree[Left: File Explorer]
+    Win --> Code[Center: Code Editor]
+    Win --> Term[Bottom: Terminal]
+    Win --> Chat[Right: AI Chat/Composer]
+```
+
 * 🧾 エディタ（ファイル）
 * 💻 ターミナル
 * 🤖 エージェントパネル（右側チャット）
@@ -118,6 +148,12 @@ pwd
 
 ![Browser Bridge](./picture/firebase_startdash_ts_study_005_05_browser_bridge.png)
 
+```mermaid
+graph LR
+    IDE[Editor] -- Cmd + Click --> Brow[Browser 🌍]
+    Brow -- Inspect/Docs --> IDE
+```
+
 Antigravityの強みは「エージェントがブラウザを見に行って確認できる」ことです👀🤖
 そのために **Chrome拡張** を入れます。
 
@@ -140,6 +176,13 @@ Antigravityの強みは「エージェントがブラウザを見に行って確
 
 ![Artifacts Workflow](./picture/firebase_startdash_ts_study_005_06_artifacts_flow.png)
 
+```mermaid
+graph TD
+    Req[Req: 'Fetch DB'] --> Agent[Agent writes code]
+    Agent --> Art[Artifact Viewer]
+    Art -- Approve --> Apply[Auto-Merge]
+```
+
 Antigravityは、エージェントが作ったものを **Artifacts** として残します📌
 スクショ、動画、計画、差分…が出てくるので「あとで検証しやすい」のが良さ✨
 
@@ -152,6 +195,11 @@ Antigravityは、エージェントが作ったものを **Artifacts** として
 ## 7) エージェントに任せる / 自分でやる：切り分けのコツ🧠🫱🫲
 
 ![Task Division](./picture/firebase_startdash_ts_study_005_07_task_division.png)
+
+```mermaid
+graph LR
+    H[Human 🧑‍💻: Design/Check] --- AI[AI 🤖: Write/Scan]
+```
 
 ## エージェントに任せると気持ちいいやつ🎉
 

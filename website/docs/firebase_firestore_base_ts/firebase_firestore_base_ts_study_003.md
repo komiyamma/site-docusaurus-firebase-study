@@ -1,4 +1,4 @@
-﻿# 第03章：ConsoleでFirestoreを有効化＆触ってみる🧰👀
+# 第03章：ConsoleでFirestoreを有効化＆触ってみる🧰👀
 
 この章は「コード書く前に、まず“本物のDB”に触って怖さを消す回」だよ〜😌✨
 Consoleで **Firestoreを有効化 → `todos` コレクションを作る → ToDoを手で3件入れる → どこに何があるか迷子にならない** までやります🗺️🧭
@@ -48,6 +48,19 @@ Consoleで **Firestoreを有効化 → `todos` コレクションを作る → T
 * **近い場所ほど速い**（だいたい）⚡
 * **一度作るとロケーションは変更できない** ので、ここだけは丁寧に🧠
 * 日本向けなら、代表例として **Tokyo（asia-northeast1）** が選択肢になることが多いよ🗼（他にも選択肢あり）([Google Cloud Documentation][2])
+
+```mermaid
+graph TD
+    Start["🚀 データベース作成"] --> Mode{"モード選択"}
+    Mode -- "テストモード" --> ModeMsg["🐣 開発初期はラク<br>(30日で切れる)"]
+    Mode -- "本番モード" --> ModeMsg2["🔐 最初からカチカチ<br>(Rules設定必須)"]
+    
+    ModeMsg & ModeMsg2 --> Region{"リージョン選択"}
+    Region -- "asia-northeast1" --> RegMsg["🗼 東京 (最速)"]
+    Region -- "asia-northeast2" --> RegMsg2["🐙 大阪 (DR用など)"]
+    
+    RegMsg & RegMsg2 --> Done["✅ 作成開始!"]
+```
 
 > もし「ロケーションが選べない/固定されてる」場合：
 > そのプロジェクトで既に“デフォルトの場所”が決まってる可能性が高いです（変更できません）😵‍💫

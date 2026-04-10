@@ -1,4 +1,4 @@
-﻿# 第20章　ローカル→本番へ昇華：移行手順書を完成させる🧾🏁
+# 第20章　ローカル→本番へ昇華：移行手順書を完成させる🧾🏁
 
 ## この章でできるようになること🎯
 
@@ -38,6 +38,13 @@
 ## 2) “検証→本番”の2段階を作る🚦🚦
 
 ![Deployment Stages](./picture/firebase_local_dev_ts_study_020_deploy_stages.png)
+
+```mermaid
+graph LR
+    Local[Local Emulator] -- "Success" --> Staging[Staging Project]
+    Staging -- "Validation" --> Prod[Production Project]
+    style Prod fill:#f96,stroke:#333
+```
 
 ## Step 2-1. プロジェクトを2つ用意する🧪➡️🔥
 

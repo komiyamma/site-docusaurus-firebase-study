@@ -1,4 +1,4 @@
-﻿# 第16章：サーバー側もからめる（計測/制御の“裏側”）⚙️📦
+# 第16章：サーバー側もからめる（計測/制御の“裏側”）⚙️📦
 
 この章は「フロントだけで頑張る」から一歩進んで、**サーバー側をちょい足し**して **“正しく測れる・守れる・育てられる”** 状態にする回だよ〜📊🛡️✨
 特に **AI機能**って、便利なぶん **連打・コスト・悪用**が起きやすいので、ここで“裏側の守り”を覚えるのがめちゃ大事🤖💸
@@ -40,10 +40,28 @@
 
 ---
 
-## 3) ハンズオン①：Callable関数で「AI連打ガード」🛡️🤖（最重要）
-
-ここは“実務の匂い”が一気に出るところ😎
+ここからは“実務の匂い”が一気に出るところ😎
 ポイントは **サーバーが最終判断者**になること！
+
+```mermaid
+sequenceDiagram
+    participant App
+    participant Func as Cloud Functions
+    participant AC as App Check
+    participant DB as Firestore
+    
+    App->>AC: トークン取得🧿
+    App->>Func: callableRequest (with token) 🚀
+    Func->>AC: トークン検証🧿
+    Func->>DB: 今日の使用回数を引く📉
+    DB-->>Func: 残り 1回
+    alt 制限OK
+        Func->>DB: +1 更新
+        Func-->>App: allowed: true ✅
+    else 制限NG
+        Func-->>App: allowed: false ❌
+    end
+```
 
 ## 3-1. 仕組み（超ざっくり図）🗺️
 

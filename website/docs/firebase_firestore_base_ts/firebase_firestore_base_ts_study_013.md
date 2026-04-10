@@ -1,4 +1,4 @@
-﻿# 第13章：リアルタイム購読②（Reactで安全に扱う）⚛️🧯
+# 第13章：リアルタイム購読②（Reactで安全に扱う）⚛️🧯
 
 この章はひとことで言うと、**「onSnapshotを“安全に”Reactへ組み込む」**回です✨
 リアルタイム購読って気持ちいいんだけど、やり方をミスると **二重購読** や **メモリリーク** になりがち…😇 なので、ここで「型・hooks・後片付け」まで“型崩れなく”固めます💪
@@ -12,7 +12,22 @@
 Firestoreは `onSnapshot()` で変更を監視できます。**最初に即スナップショットが届いて**、その後も変更のたびに届きます⚡👀 ([Firebase][1])
 そして大事なのが、`onSnapshot()` が **購読解除用の関数（unsubscribe）を返す**こと。これを呼ぶと監視が止まります🧯 ([modularfirebase.web.app][2])
 
-![Cleanup Action](./picture/firebase_firestore_base_ts_study_013_02_cleanup.png)
+![useEffect Subscription](./picture/firebase_firestore_base_ts_study_013_01_useeffect_subscription.png)
+
+```mermaid
+sequenceDiagram
+    participant UI as Component
+    participant Hook as useEffect
+    participant SDK as onSnapshot
+
+    UI->>Hook: Mount
+    Hook->>SDK: subscribe (onSnapshot)
+    SDK-->>UI: Initial Data
+    Note over SDK,UI: Wait for server updates...
+    SDK-->>UI: New Data Push (State update)
+    UI->>Hook: Unmount
+    Hook->>SDK: unsubscribe (cleanup function)
+```
 
 ## ✅ Reactは「画面が消える」「条件が変わる」たびに後片付けが必要
 

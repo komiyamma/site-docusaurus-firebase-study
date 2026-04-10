@@ -1,4 +1,4 @@
-﻿# 第6章：正規化 vs 非正規化（Firestore流の割り切り）⚖️
+# 第6章：正規化 vs 非正規化（Firestore流の割り切り）⚖️
 
 この章はズバリ、Firestore設計のいちばん悩むところ――
 **「同じ情報を複製していいの？ダメなの？😵」**をスッキリさせます✨
@@ -13,6 +13,16 @@ Firestoreは **大量の“小さいドキュメント”を高速に扱う**の
 ## ✅ 正規化 / 非正規化って超ざっくり何？
 
 ![Normalization vs Denormalization](./picture/firebase_firestore_struncture_ts_study_006_01_normalization_vs_denorm.png)
+
+```mermaid
+graph LR
+    subgraph Norm [Normalization]
+    P1[Post] -- "authorId" --> U1[User]
+    end
+    subgraph DeNorm [Denormalization]
+    P2[Post + authorName]
+    end
+```
 
 * **正規化**：情報は1か所に集約（例：ユーザー名は `users/{uid}` にだけ保存）🗄️
 * **非正規化**：表示のために必要な情報を複製（例：`posts/{postId}` にも `authorName` を持つ）🪞

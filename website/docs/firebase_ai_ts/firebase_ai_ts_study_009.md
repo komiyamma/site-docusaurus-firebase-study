@@ -1,4 +1,4 @@
-﻿# 第09章：Genkitの基本「Flow＝一連の処理の台本」🎬🧠
+# 第09章：Genkitの基本「Flow＝一連の処理の台本」🎬🧠
 
 ## この章でできるようになること✅
 
@@ -84,6 +84,15 @@ Genkitの入門では、TypeScript用ツール（`typescript`, `tsx`）＋Genkit
 ## 5-2) `src/index.ts` にFlowを書く✍️
 
 ![Anatomy of a Genkit Flow Code](./picture/firebase_ai_ts_study_009_code_parts.png)
+
+```mermaid
+flowchart LR
+  Input["Input Schema🧾"] --> Flow{{"defineFlow🎬"}}
+  subgraph Processing ["Flow 内部"]
+    Step1["Step 1: 変換 (run)🧷"] --> Step2["Step 2: AI生成 (generate)🤖"]
+  end
+  Flow --> Output["Output Schema🧾"]
+```
 
 ```ts
 import { genkit, z } from "genkit";

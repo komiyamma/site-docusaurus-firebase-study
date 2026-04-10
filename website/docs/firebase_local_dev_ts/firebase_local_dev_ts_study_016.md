@@ -1,4 +1,4 @@
-﻿# 第16章　テスト実行を自動化：`emulators:exec` で一気通貫🏃‍♂️💨🧪
+# 第16章　テスト実行を自動化：`emulators:exec` で一気通貫🏃‍♂️💨🧪
 
 この章は「**エミュ起動 → テスト実行 → 自動終了**」をワンコマンド化して、**“毎回同じ手順で安全に検証できる”**状態を作ります✨
 `firebase emulators:exec` は、指定したスクリプトを走らせ終わったらエミュを止めてくれるので、CI（自動テスト）にも相性がいいです🤖✅ ([Firebase][1])
@@ -123,6 +123,16 @@ main().catch((e) => {
 ### 3) 実行してみよう🚀（PowerShellでもOK）
 
 ![_exec_timeline](./picture/firebase_local_dev_ts_study_016_exec_timeline.png)
+
+```markdown
+timeline
+    title emulators:exec Lifecycle
+    section Lifecycle
+    Start : Initialize Emulators (Firestore, Functions, etc.)
+    Running : Execute Script (npm run test:e2e)
+    Finish : Script finish (exit 0/1)
+    Cleanup : Automatic Stop all Emulators
+```
 
 ```bash
 npm run emulators:e2e

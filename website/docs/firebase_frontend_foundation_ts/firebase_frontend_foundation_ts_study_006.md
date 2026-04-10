@@ -1,4 +1,4 @@
-﻿# 第06章：コンポーネント分割のルールを決める 📦✨
+# 第06章：コンポーネント分割のルールを決める 📦✨
 
 この章のゴールはシンプルです👇
 **「コピペ地獄を防ぐための“置き場所ルール”を決めて、共通UI（Button / Input / Card）を作る」**です😆🧱
@@ -18,6 +18,26 @@
 ## 6-1 まず決める「4つの箱」ルール 🧺🧠
 
 迷ったらこの4つに分類します👇
+
+```mermaid
+graph TD
+    subgraph Pages ["pages/ (画面)"]
+        P[そのURLで表示するページ]
+    end
+    subgraph Components ["components/ (部品)"]
+        C[再利用するUI部品]
+    end
+    subgraph Hooks ["hooks/ (ロジック)"]
+        H[状態や副作用の管理]
+    end
+    subgraph Services ["services/ (外部連携)"]
+        S[Firebase / AI 通信]
+    end
+    
+    P --> C
+    P --> H
+    H --> S
+```
 
 ## ① pages（ページ）📄
 

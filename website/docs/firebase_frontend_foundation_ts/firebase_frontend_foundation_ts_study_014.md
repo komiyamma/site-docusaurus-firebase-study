@@ -1,4 +1,4 @@
-﻿# 第14章：リアルタイム更新の気持ちよさを入れる ⚡👀（Firestore購読 onSnapshot 編）
+# 第14章：リアルタイム更新の気持ちよさを入れる ⚡👀（Firestore購読 onSnapshot 編）
 
 この章では、Firestoreの「リアルタイム購読」をReactに入れて、**別タブで更新したら画面が勝手に追従する**“気持ちよさ”を作ります😆✨
 Firestoreのリアルタイムは「スナップショットリスナー（snapshot listener）」で、**接続は長時間開きっぱなしになり、アプリが明示的に閉じるまで維持**されます。だからこそ「解除（cleanup）」が超重要です🧹🔥 ([Firebase][1])
@@ -8,6 +8,18 @@ Firestoreのリアルタイムは「スナップショットリスナー（snaps
 ## 1) まずイメージ：購読（subscribe）ってなに？📡
 
 ![Fetch vs Realtime Comparison](./picture/firebase_frontend_foundation_ts_study_014_01_fetch_vs_stream.png)
+
+```mermaid
+flowchart LR
+    subgraph Fetch ["1回取得 (getDocs)"]
+        F1["Request"] --> F2["Response"]
+    end
+    subgraph Stream ["購読 (onSnapshot)"]
+        S1["Listen"] --> S2["Data 1"]
+        S2 --> S3["Data 2 (自動)"]
+        S3 --> S4["Data 3 (自動)"]
+    end
+```
 
 * **1回だけ取得**：必要な時に取りに行って終わり（例：設定画面の初期表示）
 * **購読（onSnapshot）**：最初に現在のデータが届いて、その後も更新があるたびに届く📬✨
@@ -59,6 +71,15 @@ export type UserRow = {
 ## 4-2. 「購読をまとめるhook」を作る（おすすめ）🪝✨
 
 ![Realtime Hook Structure](./picture/firebase_frontend_foundation_ts_study_014_03_hook_structure.png)
+
+```mermaid
+graph TD
+    UI["Component"] -- Use --> H["useUsersRealtime"]
+    H -- onSnapshot --> F["(#quot;Firestore#quot;)"]
+    F -- Snapshot --> H
+    H -- setState --> UI
+    UI -- cleanup --> Unsub["unsubscribe"]
+```
 
 `useUsersRealtime.ts`（例）
 

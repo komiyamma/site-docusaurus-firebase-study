@@ -1,4 +1,4 @@
-﻿# 第17章：Functionsを呼ぶUIを作る ⚙️📨
+# 第17章：Functionsを呼ぶUIを作る ⚙️📨
 
 この章では「フロントからボタン1発でサーバー処理（Functions）を呼んで、その結果をUIに気持ちよく返す」体験を作ります😆✨
 やることはシンプルで、でも実戦力が一気に上がる章です🔥
@@ -18,6 +18,18 @@
 ## 1) まず結論：UIから呼ぶなら「Callable」が最強 🥇✨
 
 ![Callable vs HTTP Functions](./picture/firebase_frontend_foundation_ts_study_017_01_callable_vs_http.png)
+
+```mermaid
+flowchart TD
+    subgraph HTTP ["HTTP Function"]
+        H1[fetch URL] --> H2[CORSチェック]
+        H2 --> H3[Authトークン検証]
+        H3 --> H4[データ整形/パース]
+    end
+    subgraph Callable ["Callable Function"]
+        C1[httpsCallable 実行] --> C2[Firebaseが自動処理<br/>CORS/Auth/JSON]
+    end
+```
 
 Functionsの呼び方は大きく2つあります👇
 
@@ -139,6 +151,15 @@ export async function callFormatText(input: FormatTextInput): Promise<FormatText
 ## 4) UI：ボタン → 実行中 → 成功 → 失敗 を気持ちよく作る 🎮✨
 
 ![UI State Machine](./picture/firebase_frontend_foundation_ts_study_017_04_ui_states.png)
+
+```mermaid
+flowchart TD
+    Idle[待機中] -- Click --> Loading[実行中...]
+    Loading -- 成功 --> Success[結果表示 ✨]
+    Loading -- 失敗 --> Error[エラー通知 🚨]
+    Success -- 再開 --> Idle
+    Error -- 再開 --> Idle
+```
 
 例として「文章を貼って整形ボタンを押す」と、整形結果が返ってくる画面を作ります📝✨
 

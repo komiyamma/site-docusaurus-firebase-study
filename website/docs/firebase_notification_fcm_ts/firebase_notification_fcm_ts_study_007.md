@@ -1,4 +1,4 @@
-﻿# 第7章：FCMトークン取得→Firestore保存（端末IDを預かる）🗃️🔑
+# 第7章：FCMトークン取得→Firestore保存（端末IDを預かる）🗃️🔑
 
 この章の主役は **FCMトークン**（＝「この端末（このブラウザ）に送ってね」の宛先ID）です📮✨
 通知って“人”に送ってる気がするけど、実際はまず **端末（ブラウザ）** に送るんだよね。だから **同じユーザーでも複数トークン** を持つのが普通です（スマホ＋PC＋別ブラウザ…）📱💻🧩
@@ -42,6 +42,26 @@
 ## 3) 実装：トークン取得 → Firestoreへ保存 🛠️🔥
 
 ![Token Save Logic Flow](./picture/firebase_notification_fcm_ts_study_007_save_logic.png)
+
+```mermaid
+sequenceDiagram
+    participant U as User/Browser
+    participant SDK as Messaging SDK
+    participant F as FCM Server
+    participant App as app.ts (Client)
+    participant FS as Firestore
+
+    U->>App: Click "Enable Notification"
+    App->>SDK: getToken(vapidKey)
+    alt First Time
+        SDK->>F: Request new token
+        F-->>SDK: fcm_token_string
+    end
+    SDK-->>App: token
+    App->>App: sha256(token) -> tokenId
+    App->>FS: setDoc(users/uid/fcmTokens/tokenId)
+    FS-->>App: Success
+```
 
 ここから「手を動かす」パートだよ💪😄
 （React/TS想定、Firebase JS SDKのMessaging/Firestoreを使う）

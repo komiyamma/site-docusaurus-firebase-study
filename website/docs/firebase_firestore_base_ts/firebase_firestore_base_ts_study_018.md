@@ -1,4 +1,4 @@
-﻿# 第18章：ページング入門②（無限スクロールの考え方）♾️📱
+# 第18章：ページング入門②（無限スクロールの考え方）♾️📱
 
 この章は「次へボタンのページング」を、スマホっぽい **無限スクロール** に進化させます😎✨
 コツはシンプルで、**Firestoreのカーソル（startAfter）** と、**IntersectionObserver（画面下に来たら読む）** を合体させるだけです💪📜
@@ -31,7 +31,15 @@ Firestore側は前章と同じで、基本はこれ👇
 
 ## 2) 設計：無限スクロールで死ぬポイント3つ 💥（先に潰す）
 
-![Infinite Scroll Pitfalls](./picture/firebase_firestore_base_ts_study_018_02_crash_points.png)
+![Infinite Scroll Mechanism](./picture/firebase_firestore_base_ts_study_018_01_scroll_mech.png)
+
+```mermaid
+graph TD
+    S[Scroll Down] --> V{Sentinel Visible?}
+    V -- "Yes (IntersectionObserver)" --> Fetch[fetchMore]
+    Fetch --> Append[Append to List]
+    Append --> S
+```
 
 無限スクロールは実装自体は簡単なんだけど、事故るのはここ👇
 

@@ -1,4 +1,4 @@
-﻿# 第10章：裏側の仕組み（Functions/イベント/リソース作成）⚙️🧩
+# 第10章：裏側の仕組み（Functions/イベント/リソース作成）⚙️🧩
 
 この章は「Extensionsって便利だけど、裏で何が起きてるの？」をスッキリさせる回だよ😆
 **“黒箱”を“見える箱”に変える**と、トラブル時に強くなる🔥
@@ -48,6 +48,21 @@ Extensions を入れる＝あなたの Firebase プロジェクトに、**いく
 
 * 形式：`ext-<extension-instance-id>-<paramName>`
 * 例：`ext-awesome-task-simplifier-API_KEY`([Firebase][1])
+
+```mermaid
+graph TD
+    ID["🆔 インスタンスID<br>(storage-resize-images)"]
+    
+    ID --> Func["⚙️ Functions<br>ext-ID-thumbnail"]
+    ID --> Secret["🔐 Secret Manager<br>ext-ID-API_KEY"]
+    ID --> Schedule["⏰ Scheduler<br>firebase-ext-ID-doTask"]
+    
+    subgraph Rules ["命名規則 (一発で追える!)"]
+      Func
+      Secret
+      Schedule
+    end
+```
 
 **✅ extension.yaml（設計図）📄**
 拡張の設計図側でも、最終的にデプロイされる関数名が `ext-<instance-id>-<name>` になること、そして **1st-gen / 2nd-gen の Functions リソース型がある**ことが明記されてるよ。([Firebase][2])

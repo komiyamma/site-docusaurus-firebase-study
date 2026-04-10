@@ -1,4 +1,4 @@
-﻿# 第4章：まずは鉄板！画像リサイズ拡張で“それっぽさ”爆上げ📷🖼️
+# 第4章：まずは鉄板！画像リサイズ拡張で“それっぽさ”爆上げ📷🖼️
 
 ![Automated Resizing](./picture/firebase_extensions_ts_study_004_auto_factory.png)
 
@@ -20,6 +20,17 @@
 * ファイル名は「元ファイル名 + `_幅x高さ`」みたいに**サフィックス**が付く🪪
 
 …という“自動工場”です🏭✨ ([extensions.dev][1])
+
+```mermaid
+graph LR
+    User["👤 ユーザー"] -- upload --> Orig["📦 元画像<br>(original.jpg)"]
+    Orig -- trigger --> Ext["⚙️ Resize Extension"]
+    
+    subgraph Process ["リサイズ自動生成"]
+      Ext --> T1["🖼️ サムネ小<br>(..._200x200.jpg)"]
+      Ext --> T2["🖼️ サムネ中<br>(..._600x600.jpg)"]
+    end
+```
 
 しかも、サムネは **200x200 / 400x400 / 680x680**みたいに複数サイズを一気に作れます📐📐📐 ([extensions.dev][1])
 

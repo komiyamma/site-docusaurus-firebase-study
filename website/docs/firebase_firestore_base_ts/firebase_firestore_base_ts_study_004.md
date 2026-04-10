@@ -1,4 +1,4 @@
-﻿# 第04章：ReactからFirestoreへ接続（最初の配線）🔌⚛️🗃️
+# 第04章：ReactからFirestoreへ接続（最初の配線）🔌⚛️🗃️
 
 この章は「**React → Firestore に“つながった！”を最速で体感する**」回だよ〜😆✨
 ゴールはシンプルにこれ👇
@@ -146,6 +146,23 @@ export function TodoList() {
       }
     })();
   }, []);
+
+```mermaid
+sequenceDiagram
+    participant React as ⚛️ React (useEffect)
+    participant SDK as 📦 Firebase SDK
+    participant DB as 🗃️ Firestore
+    
+    rect rgb(240, 240, 240)
+    Note over React, SDK: 初期化済みの db を用意
+    end
+    
+    React->>SDK: getDocs(collection(db, "todos"))
+    SDK->>DB: 📡 データ要求
+    DB-->>SDK: QuerySnapshot (docs配列)
+    SDK-->>React: データを返す
+    React->>React: setTodos(items) で画面更新 ✨
+```
 
   if (loading) return <p>読み込み中…⏳</p>;
   if (error) return <p>エラー😵‍💫：{error}</p>;

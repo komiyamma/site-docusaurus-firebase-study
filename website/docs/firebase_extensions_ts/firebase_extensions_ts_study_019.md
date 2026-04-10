@@ -1,4 +1,4 @@
-﻿# 第19章：AIで開発も運用もラクにする（Antigravity / Gemini CLI / Console AI）🛸💻🧯
+# 第19章：AIで開発も運用もラクにする（Antigravity / Gemini CLI / Console AI）🛸💻🧯
 
 この章のゴールはこれ👇
 **Extensions を「入れて終わり」にせず、AIで“調査・判断・運用”まで秒速化する**ことです😎✨
@@ -109,6 +109,13 @@ Extensions は結局「設定（パラメータ）」が命🎛️
 ## 3-2. エラー調査を“3段階”に分けてAIに振る🧯🔍
 
 ![Error Triage](./picture/firebase_extensions_ts_study_019_error_handling_triage.png)
+
+```mermaid
+graph TD
+    Log["🚨 エラーログ発生"] --> Translate["🗣️ Console AI<br>(意味と原因を翻訳)"]
+    Translate --> Collect["⌨️ Gemini CLI + MCP<br>(周りの情報・設定回収)"]
+    Collect --> Summary["📋 人間が判断<br>(再発防止策の確定)"]
+```
 
 エラーが出たとき、初心者が詰まるのはだいたいここ👇
 

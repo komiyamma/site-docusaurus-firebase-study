@@ -1,4 +1,4 @@
-﻿# 第12章：Webアプリ登録：SDKの“名札”を作る🏷️🌐
+# 第12章：Webアプリ登録：SDKの“名札”を作る🏷️🌐
 
 この章でやることはシンプル！
 Firebaseに「このWebアプリ、うちのプロジェクトの子ですよ〜」って登録して、**Web用の設定（firebaseConfig）**をもらいます🙌✨
@@ -21,6 +21,12 @@ Firebaseに「このWebアプリ、うちのプロジェクトの子ですよ〜
 
 ![Web App Registration Metaphor](./picture/firebase_startdash_ts_study_012_01_room_nametag.png)
 
+```mermaid
+graph TD
+    Project[Firebase Project 📦<br/>'Room'] --> App[Web App Registration 🌐<br/>'Name Tag']
+    App --> Code[Credentials<br/>'Keys to the Room']
+```
+
 * **Firebaseプロジェクト**＝“建物”🏢
 * **Webアプリ登録**＝“部屋の名札を作る”🏷️
 * **firebaseConfig**＝“その名札に書かれた情報”🪪
@@ -33,6 +39,15 @@ Firebaseに「このWebアプリ、うちのプロジェクトの子ですよ〜
 ## 2) 手を動かす：Firebase ConsoleでWebアプリを追加🏗️🌐
 
 ![Web App Registration Flow](./picture/firebase_startdash_ts_study_012_02_register_flow.png)
+
+```mermaid
+graph TD
+    Click[1. Click </> Web Icon] --> Name[2. Register App Name]
+    Name --> Check{3. Firebase Hosting?}
+    Check -- Yes --> Later[Set up later 🌐]
+    Check -- No --> Skip[Leave unchecked]
+    Later & Skip --> SDK[4. Get Firebase SDK snippet]
+```
 
 ## 手順（迷わない版）🧭
 
@@ -57,6 +72,12 @@ Firebaseに「このWebアプリ、うちのプロジェクトの子ですよ〜
 
 ![Config Safekeeping](./picture/firebase_startdash_ts_study_012_03_config_safekeeping.png)
 
+```mermaid
+graph LR
+    Dev[Copy config snippet 📋] --> Store[Paste somewhere safe]
+    Store -- Don't commit yet! --> Git[Wait for .env setup 🛑]
+```
+
 最低限、これだけやればOK👌
 
 * ① **コピペしたfirebaseConfigをメモ帳に保存**（まず最優先）📝
@@ -72,6 +93,13 @@ Firebase公式も「登録するとconfigオブジェクトが手に入る」前
 
 ![Config Retrieval Path](./picture/firebase_startdash_ts_study_012_04_config_retrieval.png)
 
+```mermaid
+graph LR
+    Gear[⚙️ Gear Icon] --> Proj[Project settings]
+    Proj --> Gen[General tab]
+    Gen --> Apps[Your apps section 👇]
+```
+
 「どこに置いたか忘れた😇」は、あるあるです。大丈夫！
 
 **Firebase Console → 歯車（Project settings）→ General → Your apps → 対象のWebアプリ → Firebase SDK snippet → Config**
@@ -82,6 +110,15 @@ Firebase公式も「登録するとconfigオブジェクトが手に入る」前
 ## 5) firebaseConfigの中身を“超ざっくり”理解しよう🧩✨
 
 ![Anatomy of firebaseConfig](./picture/firebase_startdash_ts_study_012_05_config_anatomy.png)
+
+```mermaid
+graph TD
+    Config[firebaseConfig Object] --> AK[apiKey: Auth/API access🔑]
+    Config --> PD[projectId: The Project you target📌]
+    Config --> SB[storageBucket: Storage origin🖼️]
+    Config --> MS[messagingSenderId: Push API📱]
+    Config --> AI[appId: App identifier🔖]
+```
 
 コンソールで出てくるのは、だいたいこんな形👇（値はダミーです）
 
@@ -124,6 +161,12 @@ export const firebaseConfig = {
 ## 6) 🤖AIと一緒に爆速理解：Gemini CLI / Antigravity の使いどころ💬⚡
 
 ![AI Explaining Config](./picture/firebase_startdash_ts_study_012_06_ai_explanation.png)
+
+```mermaid
+graph LR
+    User[Ask AI about field] --> Explain[AI explains safety]
+    Explain --> Result[apiKey is public ✅<br/>Server keys are private ❌]
+```
 
 この章は「理解」と「迷子回避」が勝ちなので、AIがめちゃ役立ちます✨
 
@@ -176,6 +219,13 @@ export const firebaseConfig = {
 ## ミニ課題B（余力があれば）🧪
 
 ![Multiple Apps in Project](./picture/firebase_startdash_ts_study_012_07_multiple_apps.png)
+
+```mermaid
+graph TD
+    Project[Firebase Project 'awesome-service'] --> Web[Web App 🌐<br/>For users]
+    Project --> Admin[Web App 💻<br/>For internal admin]
+    Project --> DB[(Shared Firestore)]
+```
 
 同じプロジェクトに、もう1つWebアプリを登録してみて👇
 

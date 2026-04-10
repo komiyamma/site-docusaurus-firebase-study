@@ -12,6 +12,13 @@
 
 ![Simple Upload Flow](./picture/firebase_storage_ts_study_005_01_simple_flow.png)
 
+```mermaid
+graph TD
+    Pick["Select Image File"] --> Target["Create Storage Ref 📍"]
+    Target --> Up["uploadBytes(ref, file) ☁️"]
+    Up --> Result["Success ✅ or Error 🛑"]
+```
+
 1. 画像ファイル（`File`）を受け取る📎
 2. 保存先のパス（`users/{uid}/profile/{fileId}`）を作る📁
 3. `uploadBytes(ref, file, metadata)` でアップロード⬆️ ([Firebase][1])
@@ -30,6 +37,12 @@
 #### 2-1. `uploadProfileImage.ts`（アップロードしてURLを返す）
 
 ![Upload Function Concept](./picture/firebase_storage_ts_study_005_02_upload_function.png)
+
+```mermaid
+graph LR
+    File["File Data"] --> func["uploadBytes()"]
+    func --> Cloud["Firebase Storage 🪣"]
+```
 
 ```ts
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -72,6 +85,13 @@ export async function uploadProfileImage(file: File, uid: string): Promise<Uploa
 #### 3-1. `ProfileImageUploader.tsx`
 
 ![React UI States](./picture/firebase_storage_ts_study_005_03_ui_states.png)
+
+```mermaid
+graph TD
+    Default["Idle"] -- Click Upload --> Uploading["Status: 'Uploading... ⏳'<br/>Button disabled"]
+    Uploading -- Success --> Done["Status: 'Success! ✅'"]
+    Uploading -- Fail --> Err["Status: 'Error ❌'"]
+```
 
 ```tsx
 import { useEffect, useMemo, useState } from "react";
@@ -170,6 +190,13 @@ export function ProfileImageUploader({ uid }: Props) {
 
 ![Common Upload Errors](./picture/firebase_storage_ts_study_005_04_errors.png)
 
+```mermaid
+graph LR
+    Err["Upload Fails 🛑"] --> Auth["No Auth? <br/>Rules block it"]
+    Err --> Size["Too Big? <br/>Rules block it"]
+    Err --> Net["No Wi-Fi? <br/>Network Error"]
+```
+
 ### 4-1. `storage/unauthenticated` / `storage/unauthorized`
 
 * ログインしてない or ルールで弾かれてる系です🔐
@@ -208,6 +235,13 @@ export function ProfileImageUploader({ uid }: Props) {
 ## 7) おまけ：AIで「画像の説明（altテキスト）」を自動生成🤖🖼️✨
 
 ![AI Alt Text Generation](./picture/firebase_storage_ts_study_005_05_ai_alt_text.png)
+
+```mermaid
+graph TD
+    File["Uploaded Image"] --> GCP["Cloud Functions"]
+    GCP --> API["Gemini API"]
+    API -- "Alt: Smiling Cat" --> Store["Update Firestore"]
+```
 
 ここ、めちゃ“現実アプリ感”が出ます😎
 アップロード前に、選んだ画像を **Firebase AI Logic（Gemini）** に渡して「短い説明文」を作らせます✍️

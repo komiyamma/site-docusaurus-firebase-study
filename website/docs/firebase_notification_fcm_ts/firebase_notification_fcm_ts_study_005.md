@@ -1,4 +1,4 @@
-﻿# 第5章：権限リクエストのUX（押した時だけ出す）🙆‍♀️🔔
+# 第5章：権限リクエストのUX（押した時だけ出す）🙆‍♀️🔔
 
 この章のゴールはこれ👇
 
@@ -14,11 +14,28 @@
 ## 1) “ページ開いた瞬間に許可”は嫌われやすい🙅‍♂️
 ![Permission on Load vs Action](./picture/firebase_notification_fcm_ts_study_005_load_vs_action.png)
 
+```mermaid
+graph TD
+    subgraph Bad["負荷時: 即ダイアログ ❌"]
+        L["ロード"] --> P1["許可要求"] --> R1["反射的にブロック 🛡️"]
+    end
+    subgraph Good["アクション時: 納得ダイアログ ✅"]
+        A["スイッチON"] --> P2["許可要求"] --> R2["納得して許可 🙆‍♀️"]
+    end
+```
+
 * ブラウザのベストプラクティスとしても「**ユーザーが欲しいと思ったタイミングで**」が推奨です🧠([web.dev][2])
 * Web Push の流れとしても「ユーザーの**クリック等の操作（ジェスチャー）**で許可を取る」が基本です🖱️([web.dev][3])
 
 ## 2) 許可状態は3つだけ（まずこれ覚える）🧩
 ![Three Permission States](./picture/firebase_notification_fcm_ts_study_005_states.png)
+
+```mermaid
+graph LR
+    S1["default: 未選択"] --- S["許可状態"]
+    S2["granted: 許可済み"] --- S
+    S3["denied: 拒否/制限"] --- S
+```
 
 * `default`：まだ決めてない（未選択）
 * `granted`：許可✅
@@ -27,6 +44,13 @@
 
 ## 3) 「拒否された時の復帰導線」があるだけで優しい🥹
 ![Recovering from Denied State](./picture/firebase_notification_fcm_ts_study_005_denied_recovery.png)
+
+```mermaid
+graph LR
+    D["Denied ⛔"] --> E["説明: 設定が必要"]
+    E --> G["ガイド: ブラウザ設定へ"]
+    G --> B["Granted ✅"]
+```
 
 拒否って、**悪意**じゃなくて「よく分からないから怖い」だけのことが多いです😅
 だから、拒否後にこうする👇
@@ -47,6 +71,15 @@
 ## 0) UIの状態設計（いちばん大事）🎛️
 ![Notification UI State Transition](./picture/firebase_notification_fcm_ts_study_005_ui_flow.png)
 
+```mermaid
+stateDiagram-v2
+    [*] --> Def : 開始
+    Def --> Asking : ボタン押下
+    Asking --> Granted : 許可
+    Asking --> Denied : 拒否
+    Denied --> Def : 設定から解除
+```
+
 通知スイッチは、こういう状態遷移にすると迷子になりにくいです🧭
 
 * **OFF（default）** →（説明を読んで）→ **有効化ボタン押す**
@@ -59,6 +92,14 @@
 
 ## 1) まず「許可状態」を読むフックを作る🪝
 ![Permission Hook Logic](./picture/firebase_notification_fcm_ts_study_005_hook_logic.png)
+
+```mermaid
+graph TD
+    subgraph Hook["useNotificationPermission"]
+        Init["初期化: permission 読込"]
+        Req["request(): ダイアログ表示"]
+    end
+```
 
 ```tsx
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -106,6 +147,15 @@ export function useNotificationPermission() {
 
 ## 2) 設定画面に「有効化ボタン」を置く（ここが第5章の主役）🥇
 ![Notification Settings Card Variations](./picture/firebase_notification_fcm_ts_study_005_card_states.png)
+
+```mermaid
+graph TD
+    subgraph Variations["カードの出し分け"]
+        C1["未選択: 有効化ボタン"]
+        C2["許可済: 完了メッセージ"]
+        C3["拒否済: 復帰ガイド"]
+    end
+```
 
 ```tsx
 import React, { useMemo, useState } from "react";
@@ -199,6 +249,12 @@ function DeniedHelp() {
 
 最強パターンはこれ👇
 ![Value-First Permission Flow](./picture/firebase_notification_fcm_ts_study_005_value_sandwich.png)
+
+```mermaid
+graph LR
+    V["価値を説明"] --> Action["アクション (納得)"]
+    Action --> Real["ブラウザ許可 (本番)"]
+```
 
 1. まずアプリ内で「通知ONにすると何が得？」を説明（ミニポップアップでもOK）
 2. “いいね、ONにする” を押したら

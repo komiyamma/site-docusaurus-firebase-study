@@ -16,6 +16,13 @@ FirebaseのStorage（正確には *Cloud Storage for Firebase*）は、写真・
 
 ![Storage Hierarchy](./picture/firebase_storage_ts_study_001_02_hierarchy.png)
 
+```mermaid
+graph LR
+    Bucket["(#quot;Bucket🪣<br/>Limit ~5M objs#quot;)"] --> F1["users/uid/avatar.png"]
+    Bucket --> F2["posts/pid/image.jpg"]
+    F1 -.- Note_F1["Max 5TB per object"]
+```
+
 Storageの世界は、ざっくりこの3点セットです👇
 
 * **バケット（bucket）**🪣
@@ -34,6 +41,13 @@ Storageの世界は、ざっくりこの3点セットです👇
 ## 3) Firestoreとの役割分担が“現実アプリ感”の正体😎✨
 
 ![Storage vs Firestore](./picture/firebase_storage_ts_study_001_01_role_separation.png)
+
+```mermaid
+graph TD
+    Data["User Data Input"] --> Condition{"Is it a File?"}
+    Condition -- "Image/Video/PDF<br/>(Blob data)" --> Storage["(#quot;Cloud Storage 🪣#quot;)"]
+    Condition -- "Name/Age/URL<br/>(JSON data)" --> Firestore["(#quot;Firestore 📄#quot;)"]
+```
 
 ここ、めちゃ大事です🧠
 
@@ -75,6 +89,13 @@ Web SDKは `getBlob()` / `getBytes()` みたいに **URLを経由せずSDKで取
 
 ![Rules Gatekeeper](./picture/firebase_storage_ts_study_001_03_rules_gate.png)
 
+```mermaid
+graph TD
+    Upload["Upload 'avatar.png'"] --> Rules{"Security Rules 🛡️"}
+    Rules -- "Is size < 5MB?<br/>Is type 'image/*'?" --> Allow["Allow ✅"]
+    Rules -- Else --> Block["Block 🛑"]
+```
+
 Storageは、**Rules（ルール）**で守ります🛡️
 Rulesはサーバー側で動くので、クライアント側でズルしても通しません😤
 
@@ -93,6 +114,13 @@ Rulesはサーバー側で動くので、クライアント側でズルしても
 
 ![2026 Plan Warning](./picture/firebase_storage_ts_study_001_04_plan_warning.png)
 
+```mermaid
+graph LR
+    Check{"Need Storage API?"}
+    Check -- Yes --> Blaze["Blaze Plan Required 💳"]
+    Check -- No --> Spark["Spark Plan OK 🆓"]
+```
+
 ここは“章2”で本格的にやるけど、**第1章でも地雷だけ先に回避**します😇
 
 * 2024-10-30以降：新しくデフォルトバケットを用意するには **Blaze必須**💳([Firebase][5])
@@ -107,6 +135,13 @@ Rulesはサーバー側で動くので、クライアント側でズルしても
 ## 7) AIを最初から絡める：画像アップロードは“AIの入口”🤖🖼️
 
 ![AI Vision](./picture/firebase_storage_ts_study_001_05_ai_vision.png)
+
+```mermaid
+graph LR
+    Image["Image URL"] --> Ext["Firebase Extension 🤖"]
+    Ext --> Vertex["Gemini API"]
+    Vertex -- "Output: 'A cat sleeping'" --> DB["Firestore Text"]
+```
 
 画像が置けると、次の一手が一気に増えます🔥
 

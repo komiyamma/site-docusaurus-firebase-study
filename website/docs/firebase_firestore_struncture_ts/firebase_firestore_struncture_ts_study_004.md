@@ -1,4 +1,4 @@
-﻿# 第4章：サブコレクションの使いどころ（親子関係に強い）🧩
+# 第4章：サブコレクションの使いどころ（親子関係に強い）🧩
 
 この章のゴールは、「**親子でぶら下がる大量データはサブコレが強い**」を体感しつつ、**トップレベル案との比較**まで自分でできるようになることです💪✨
 （題材：`posts` と `comments`）
@@ -8,6 +8,14 @@
 ## 1) まず結論：サブコレがハマる“3つの型”🧠✨
 
 ![Subcollection Tree Structure](./picture/firebase_firestore_struncture_ts_study_004_01_subcollection_tree.png)
+
+```mermaid
+graph TD
+    Posts[Posts Collection] --> P1[Post ID doc]
+    P1 --> Comments[Comments Subcollection]
+    Comments --> C1[Comment ID doc]
+    Comments --> C2[Comment ID doc]
+```
 
 Firestoreはドキュメントの中に**サブコレクション**を持てます。つまり、`posts/{postId}/comments/{commentId}` みたいな階層でデータを置けるんだね📚 ([Firebase][1])
 

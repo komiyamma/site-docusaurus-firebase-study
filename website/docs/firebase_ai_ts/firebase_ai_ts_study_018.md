@@ -1,4 +1,4 @@
-﻿# 第18章：Firebase Studioで“環境を再現可能”にする🧰🧊
+# 第18章：Firebase Studioで“環境を再現可能”にする🧰🧊
 
 この章はひとことで言うと、**「誰が開いても、同じ開発環境が“自動で”立ち上がる状態」**を作る回です😆✨
 合言葉は **`dev.nix = 環境のレシピ`** 🍳📦（これをGitに入れるのが勝ち筋）
@@ -16,6 +16,13 @@
 ## 読む📖：Firebase Studioの“再現可能”ってこういうこと
 
 ![dev.nix = 環境のレシピ](./picture/firebase_ai_ts_study_018_dev_nix_concept.png)
+
+```mermaid
+flowchart LR
+    Nix["dev.nix🧾<br>(Packages/Env/Rules)"] --> Builder["Idx Builder🏗️"]
+    Builder --> VM["共通開発環境📦<br>(Node/Port/Preview)"]
+    VM --> People["チーム全員👥<br>(再現性100%)"]
+```
 
 Firebase Studioは、ワークスペースの環境を **`.idx/dev.nix`** で定義できます。
 このファイルに **使うパッケージ・環境変数・VS Code拡張・プレビューコマンド**などを書いて、**環境をRebuild**すると反映されます🔁✨

@@ -1,4 +1,4 @@
-﻿# 第17章：Performance Monitoring導入（遅いを“見える化”）⚡👀
+# 第17章：Performance Monitoring導入（遅いを“見える化”）⚡👀
 
 この章はひとことで言うと、**「遅い」を“気合い”じゃなく“証拠”で語れるようになる回**です🕵️‍♂️📊
 Analyticsが「使われ方（行動）」を見るなら、Performance Monitoringは「速さ（体感）」を見る感じです🏃‍♀️💨
@@ -41,6 +41,25 @@ Webでは、いわゆる “Web Vitals” 系も見えます（**LCP / INP / CLS
 * **LCP**：メインの表示が終わるまで（体感の“重さ”）🧱
 * **INP**：操作に対する反応の良さ（“もっさり”検知）🕹️
 * **CLS**：レイアウトがガタガタ動く（“画面が揺れる”）🫨
+
+```mermaid
+graph LR
+    subgraph Core ["Web Vitals (主要3指標)"]
+      LCP["✨ LCP<br>(読み込み速度)"]
+      INP["🕹️ INP<br>(応答性)"]
+      CLS["🫨 CLS<br>(視覚的安定性)"]
+    end
+    
+    subgraph Score ["改善のゴール"]
+      Good["🟢 Good (快適)"]
+      NeedImp["🟡 Needs Imp (やや遅)"]
+      Poor["🔴 Poor (不満)"]
+    end
+    
+    LCP --> Score
+    INP --> Score
+    CLS --> Score
+```
 
 ## 2-2. 通信（HTTP/S network request）📡⏱️
 

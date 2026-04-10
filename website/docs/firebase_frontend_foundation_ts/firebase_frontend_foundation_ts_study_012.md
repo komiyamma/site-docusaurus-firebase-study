@@ -1,4 +1,4 @@
-﻿# 第12章：Firestore一覧を“管理画面の表”で出す 🗃️📋✨
+# 第12章：Firestore一覧を“管理画面の表”で出す 🗃️📋✨
 
 この章は「**管理画面っぽさ**」が一気に出る回です😆
 やることはシンプル👇
@@ -13,6 +13,16 @@
 ## 1) まず “Firestoreの形” をイメージしよう 🧠🧩
 
 ![Users Collection Structure](./picture/firebase_frontend_foundation_ts_study_012_01_structure.png)
+
+```mermaid
+graph LR
+    subgraph Firestore
+        C["users (Collection)"] --> D1["user_A (Doc)"]
+        C --> D2["user_B (Doc)"]
+        C --> D3["user_C (Doc)"]
+    end
+    D1 --> F1["displayName: 'Alice'<br/>role: 'admin'<br/>updatedAt: Timestamp"]
+```
 
 Firestoreは **ドキュメント** が **コレクション** に入ってる感じです📦
 （SQLのテーブル/行とは考え方が違うよ〜）🗂️ ([Firebase][1])
@@ -95,6 +105,14 @@ export type UserRow = {
 ## 4-2) 取得サービスを書く（servicesに寄せる）🧰
 
 ![Fetch Logic Flow](./picture/firebase_frontend_foundation_ts_study_012_03_fetch_logic.png)
+
+```mermaid
+flowchart LR
+    Service[Service関数] --> Q[Query作成 orderBy/limit]
+    Q --> Get[getDocs]
+    Get --> Map[Row型に変換 toDate]
+    Map --> UI[React component]
+```
 
 `src/services/users.ts`
 

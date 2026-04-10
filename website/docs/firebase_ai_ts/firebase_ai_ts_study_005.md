@@ -1,4 +1,4 @@
-﻿# 第05章：JSONで返してもらう（構造化の入口）🧾🔎
+# 第05章：JSONで返してもらう（構造化の入口）🧾🔎
 
 この章はひとことで言うと、**AIの返事を“文章”じゃなくて“データ”として受け取れるようにする**回です😆✨
 （UIに出す・Firestoreに保存する・あとで集計する…が一気にラクになります！）
@@ -53,6 +53,13 @@ Firebase AI Logicでも、JSONを含む構造化出力は `responseMimeType` と
 ---
 
 ![Extraction Flow](./picture/firebase_ai_ts_study_005_extraction_flow.png)
+
+```mermaid
+flowchart TD
+  AI["Gemini AI🤖"] -->|JSON文字列| SDK["1. SDK (Schema等)🔧<br>MimeType指定"]
+  SDK -->|JSON.parse| App["2. アプリ内検証 (Zod)🧷<br>型安全の最終ガード"]
+  App -->|clamp/slice| UI["3. UI表示📇<br>加工済みデータ"]
+```
 
 ## ② `responseMimeType` と `responseSchema` をセットする🔧
 

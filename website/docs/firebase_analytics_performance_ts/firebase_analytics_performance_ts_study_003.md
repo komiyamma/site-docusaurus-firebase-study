@@ -1,4 +1,4 @@
-﻿# 第03章：イベント設計のコツ（名前・粒度・パラメータ）🧩📝
+# 第03章：イベント設計のコツ（名前・粒度・パラメータ）🧩📝
 
 この章のゴールはシンプルです🙂✨
 **「イベント表」を1枚つくって、迷いなく実装に進める状態**にします📊➡️🛠️
@@ -76,6 +76,19 @@
 ## ステップ3：分岐は “イベント名” ではなく “パラメータ” に寄せる 🎛️
 
 ![firebase_analytics_performance_ts_study_003_parameter_grouping.png](./picture/firebase_analytics_performance_ts_study_003_parameter_grouping.png)
+
+```mermaid
+graph TD
+    subgraph Bad ["❌ イベント名を分けてしまう (管理大変)"]
+        E1["memo_save_success"]
+        E2["memo_save_fail"]
+    end
+    
+    subgraph Good ["✅ パラメータで分ける (管理しやすい)"]
+        E3["memo_save"] --> P1["result = success"]
+        E3 --> P2["result = fail"]
+    end
+```
 
 例えば「成功/失敗」を分けたくなりますが…
 

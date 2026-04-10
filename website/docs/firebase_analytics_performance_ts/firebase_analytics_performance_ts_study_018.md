@@ -1,4 +1,4 @@
-﻿# 第18章：遅い原因の当たりをつける（画面/通信）🕵️‍♂️🌐
+# 第18章：遅い原因の当たりをつける（画面/通信）🕵️‍♂️🌐
 
 この章は「**直す前に、まず“どこが遅いのか”を当てる**」回だよ🎯
 Performance Monitoring を使って、遅さを **①画面（ロード）** と **②通信（API）** に分解して、**改善対象を“1つ”に絞る**ところまでやろう💪✨
@@ -19,6 +19,19 @@ Performance Monitoring を使って、遅さを **①画面（ロード）** と
 
 1. **画面が遅い**（表示・操作できるまでが長い）🖥️🐢
 2. **通信が遅い**（API待ち、画像待ち、AI待ち）📡🐢
+
+```mermaid
+graph TD
+    Start["🐢 遅い！ (体感)"] --> Root{主犯はどっち?}
+    
+    Root --> Screen["🖥️ 画面ロード (Page Load)"]
+    Screen --> S1["🖼️ 画像がデカすぎ (LCP)"]
+    Screen --> S2["🧠 JSが重すぎ (INP)"]
+    
+    Root --> Network["📡 通信 (Network Request)"]
+    Network --> N1["☁️ APIが遅い (AI/Functions)"]
+    Network --> N2["📦 データ量がデカすぎ"]
+```
 
 Firebase Performance Monitoring だと、この2つは **別タブ**で見れるのが強い💡
 

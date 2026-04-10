@@ -1,4 +1,4 @@
-﻿# 第19章　AIサービスも絡める：AI Logic/Genkitを“壊さず試す”🧩🤖
+# 第19章　AIサービスも絡める：AI Logic/Genkitを“壊さず試す”🧩🤖
 
 この章はひとことで言うと――
 **「ローカルは“安全に速く”、AIは“切り替え可能に”して、開発とテストを爆速にする」**回です🧪⚡
@@ -245,7 +245,16 @@ export const formatMemoAI = onCallGenkit(
 
 ## 19-6）最終的に「入口は formatMemo のまま」にする🔁✨
 
-![Mode Routing Logic](./picture/firebase_local_dev_ts_study_019_mode_routing.png)
+![_mode_routing_logic](./picture/firebase_local_dev_ts_study_019_mode_routing.png)
+
+```mermaid
+graph TD
+    Entry["formatMemo Callable"] --> Check{"AI_MODE?"}
+    Check -- "stub (Default/Local)" --> Stub["StubFormatter: Return Mock JSON"]
+    Check -- "genkit (Prod/Staging)" --> Genkit["GenkitFlow: Call Gemini API"]
+    Stub --> Res["Return {title, body, reason}"]
+    Genkit --> Res
+```
 
 今は `formatMemo`（stub）と `formatMemoAI`（Genkit）で2つありますが、運用ではこうすると気持ちいいです👇
 

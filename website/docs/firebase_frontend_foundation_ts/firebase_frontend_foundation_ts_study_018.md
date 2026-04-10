@@ -1,4 +1,4 @@
-﻿# 第18章：AIボタンをUIに組み込む 🤖✨
+# 第18章：AIボタンをUIに組み込む 🤖✨
 
 この章では、管理画面の「詳細フォーム」に **“AIで整形”ボタン** を付けて、文章を読みやすく整えてから **ユーザーが確認して反映** できるUIを作ります📝➡️🤖➡️✅
 （※「AIの出力を勝手に保存しない」設計がポイントだよ〜😆）
@@ -10,6 +10,17 @@
 ## なんで“ブラウザからGemini直呼び”は危ないの？😱
 
 ![Direct API Call Risk](./picture/firebase_frontend_foundation_ts_study_018_01_direct_call_risk.png)
+
+```mermaid
+flowchart TD
+    subgraph Danger ["危険 (直呼び)"]
+        Browser["ブラウザ"] -- APIキー露出 --> Gemini["Gemini API"]
+    end
+    subgraph Safe ["安全 (AI Logic)"]
+        Browser2["ブラウザ"] -- App Check守護 --> Logic["Firebase AI Logic"]
+        Logic -- 秘密裏に渡す --> Gemini2["Gemini API"]
+    end
+```
 
 WebでGemini APIを直接呼ぶやり方は **プロトタイプ向け** で、**キー露出や悪用** のリスクが出やすいです⚠️
 公式の学習資料でも「本番を見据えるなら Firebase AI Logic に移行してね」と案内されています。([Google for Developers][1])
@@ -26,6 +37,14 @@ Firebaseの **Firebase AI Logic** は、Web/モバイルのクライアントSDK
 ## 1) この章の完成イメージ 🏁✨
 
 ![AI Suggestion Workflow](./picture/firebase_frontend_foundation_ts_study_018_03_ui_workflow.png)
+
+```mermaid
+flowchart LR
+    Input["ユーザー入力"] --> AI["AIで整形 🤖"]
+    AI --> Suggest["整形案の提示"]
+    Suggest -- 確認 --> Done["✅反映する"]
+    Done --> Save["💾保存 (Firestore)"]
+```
 
 * 詳細フォームに「🤖 AIで整形」ボタン
 * 押すと **整形案** が出る（保存しない）

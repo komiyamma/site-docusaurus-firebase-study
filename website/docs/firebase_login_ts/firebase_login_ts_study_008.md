@@ -1,4 +1,4 @@
-﻿# 第08章：フォームUX：バリデーション＆“読み込み中”の作法🧼
+# 第08章：フォームUX：バリデーション＆“読み込み中”の作法🧼
 
 この章は「ログイン/サインアップは動くけど、なんか雑い…😇」を卒業して、**“気持ちいいフォーム”**に仕上げる回だよ〜！🎉
 ポイントは **①入力チェック（バリデーション）** と **②送信中UI（ローディング/二重送信防止）** の2つ✅
@@ -57,9 +57,28 @@
 
 ![Validation Flow](./picture/firebase_login_ts_study_008_01_validation_logic.png)
 
+```mermaid
+graph TD
+    Input[ユーザー入力] --> Logic[バリデーションロジック]
+    Logic -- "Error ❌" --> UI[エラー文表示]
+    Logic -- "OK ✅" --> Ready[送信準備完了]
+```
+
 ## ✅ フォームに必要なstate
 
 ![Form State Object](./picture/firebase_login_ts_study_008_02_form_state.png)
+
+```mermaid
+graph LR
+    Values[values: 入力値]
+    Touched[touched: 触ったフラグ]
+    Errors[errors: 検証結果]
+    Submitting[isSubmitting: 送信中]
+    Values --- Form[Form State 🧩]
+    Touched --- Form
+    Errors --- Form
+    Submitting --- Form
+```
 
 * `values`（email/password）
 * `touched`（触ったかどうか：最初から赤文字だらけを避ける😇）
@@ -98,6 +117,15 @@ export function validateConfirmPassword(password: string, confirm: string): stri
 ## 3) 送信中UI：二重送信を“確実に止める”🛑⏳
 
 ![Double Submit Guard](./picture/firebase_login_ts_study_008_03_double_submit.png)
+
+```mermaid
+graph TD
+    Click[ボタンクリック] --> State{isSubmitting?}
+    State -- true --> Ignore[無視 🛑]
+    State -- false --> SetTrue[isSubmitting = true ⏳]
+    SetTrue --> API[Firebase Auth API 🚀]
+    API --> Final[isSubmitting = false ✅/❌]
+```
 
 ポイントは2段構え👇
 
@@ -256,6 +284,12 @@ export function LoginForm() {
 
 ![AI Form Assistant](./picture/firebase_login_ts_study_008_04_ai_hint.png)
 
+```mermaid
+graph LR
+    Err["パスワードが短い😵"] --> Btn[AIヒント 🤖]
+    Btn -- Gemini --> Tip["8文字以上にすると安全ですよ🙂"]
+```
+
 Firebase AI Logic は、アプリからGeminiを呼べる仕組みだよ（公式）([Firebase][3])
 しかも `firebase/ai` で **Webからの初期化例**が出てる（Firebase公式ブログのコード）([The Firebase Blog][4])
 
@@ -309,6 +343,12 @@ export async function buildSignupHint(params: {
 ## Antigravity / Gemini CLI の使いどころ🚀🧠
 
 ![AI Tools for Forms](./picture/firebase_login_ts_study_008_05_tools.png)
+
+```mermaid
+graph LR
+    Anti[Antigravity 🚀] -- "Component Design" --> UI[Form UI]
+    CLI[Gemini CLI 💻] -- "Code Review" --> Logic[Validation Logic]
+```
 
 * Antigravity：フォームUIの叩き台（コンポーネント分割＋状態設計）を作らせるのに向いてる✨
 * Gemini CLI：リポジトリ全体を見せて「二重送信になりうる箇所」「`finally` 漏れ」みたいな**レビュー**に使うのが強い🔎

@@ -1,4 +1,4 @@
-﻿# 第13章：ローカル開発：Debug Provider（ローカルでも詰まらない）🧪🧿
+# 第13章：ローカル開発：Debug Provider（ローカルでも詰まらない）🧪🧿
 
 この章は「App Check の **強制（enforce）** をONにした途端、`localhost` 開発が止まる😇」を **スムーズに解決**する回です✨
 結論：**ローカルでは Debug Provider を使う**のが公式ルートです✅ ([Firebase][1])
@@ -11,6 +11,16 @@
 
 * 本番：`reCAPTCHA v3 / Enterprise` で **正規クライアント証明**🧿
 * ローカル：`Debug Provider` で **例外的に通す**🧪
+
+```mermaid
+flowchart TD
+  subgraph Production["本番環境🌐"]
+    ProdApp["正規アプリ"] -- "reCAPTCHA" --> ProdCheck{"App Check"}
+  end
+  subgraph Local["ローカル開発環境💻"]
+    LocalApp["開発アプリ"] -- "Debug Token" --> LocalCheck{"App Check<br>(Consoleで許可済み)"}
+  end
+```
 
   * その代わり、**デバッグトークンを Firebase Console に登録（allowlist）**する🔐 ([Firebase][1])
 
@@ -53,13 +63,27 @@ export const appCheck = initializeAppCheck(app, {
 ```
 
 > 「ローカルなのに reCAPTCHA の Provider を書いていいの？」
-> → OK。デバッグモードをONにすると、ローカルでは Debug Provider 側の挙動になるのが公式の流れです。 ([Firebase][1])
+> → OK。デバッグモードをONにすると、ローカルでは Debug Provider 側の挙動になるのが公式の流れです。![Conditional Logic](./picture/firebase_abuse_prevention_ts_study_013_02_code_setup.png)
+
+```mermaid
+graph LR
+    Dev{"is DEV?"}
+    Dev -- Yes --> Debug["Enable DEBUG_TOKEN"]
+    Dev -- No --> Prod["Skip (Normal reCAPTCHA)"]
+```
 
 ---
 
 ## 2-2. ローカル起動して、ブラウザのConsoleで「デバッグトークン」を拾う👀🧪
 
 ![Token Extraction](./picture/firebase_abuse_prevention_ts_study_013_03_browser_console.png)
+
+```mermaid
+graph TD
+    Store["npm run dev"] --> Browser["Browser"]
+    Browser --> Console["DevTools Console"]
+    Console -- "AppCheck debug token: '...'" --> Copy["Copy ✂️"]
+```
 
 1. `npm run dev` で起動（例：`http://localhost:5173`）
 2. Chrome/Edge で DevTools を開く（Windows：`F12` or `Ctrl + Shift + I`）🪟
@@ -72,6 +96,14 @@ export const appCheck = initializeAppCheck(app, {
 ## 2-3. Firebase Console に登録（allowlist）する🔐🧿
 
 ![Whitelisting](./picture/firebase_abuse_prevention_ts_study_013_04_console_registration.png)
+
+```mermaid
+graph LR
+    Copy["Token"] --> Console["Firebase Console"]
+    Console --> AppCheck["App Check"]
+    AppCheck --> Manage["Manage Tokens"]
+    Manage --> Reg["Register Token ✅"]
+```
 
 Firebase Console → App Check → 対象アプリ（Web）→ メニュー → **Manage debug tokens** → さっきのトークンを登録✅ ([Firebase][1])
 
@@ -91,13 +123,31 @@ Firebase Console → App Check → 対象アプリ（Web）→ メニュー → 
 * AI：**「AI整形ボタン」**を押して、応答が返る🤖✨
 
 特に AI は「直叩きAPI」が悪用されやすいので、**開発の早い段階から App Check を入れるのが強く推奨**されてます。
-そして **“開発中でも” App Check 前提で進める**のが推奨、って明言されています✅ ([Firebase][2])
+そして **“開発中でも” App Check 前提で進める**のが推奨、って明言されています✅![Service Check](./picture/firebase_abuse_prevention_ts_study_013_05_verification.png)
+
+```mermaid
+graph TD
+    Local["Localhost"] -- Test --> S1["Firestore 📄"]
+    Local -- Test --> S2["Storage 📷"]
+    Local -- Test --> S3["Functions 🧑‍💼"]
+    Local -- Test --> S4["AI Logic 🤖"]
+```
 
 ---
 
 ## 4) Debug Provider の“運用ルール”🔐（ミスると事故るやつ）
 
 ![Security Rules](./picture/firebase_abuse_prevention_ts_study_013_06_best_practices.png)
+
+```mermaid
+graph TD
+    Rule1["Git コミット禁止 🚫"]
+    Rule2["漏れたら即 Revoke 🧯"]
+    Rule3["DEVフラグで切替 🎛️"]
+    Rule1 --- R["安全運用"]
+    Rule2 --- R
+    Rule3 --- R
+```
 
 Debug Provider は便利だけど、**「本人確認なしで通れる鍵」**みたいなものです🔑😱
 公式も「本番で使うな」「漏れたら即 revoke」と強く言ってます。 ([Firebase][1])
@@ -137,6 +187,13 @@ App Check を通しても、Rules で止まったら普通に落ちます🙂
 ## 6) もっとラクする：Antigravity / Gemini CLI で“詰まり潰し”🤖🧰
 
 ![AI Debugging](./picture/firebase_abuse_prevention_ts_study_013_07_ai_troubleshooting.png)
+
+```mermaid
+graph LR
+    AI["AI Assistant"] -- Audit --> Code["Setup Logic"]
+    Code -- Check --> Order["Initialization Order"]
+    Code -- Check --> Env["Env Var Check"]
+```
 
 最近は **Firebase MCP server** があって、いろんなAIツールから Firebase を触れる/調べられる世界になってます。
 しかも対応クライアントに **Antigravity** や **Gemini CLI** が明記されています✅ ([Firebase][3])

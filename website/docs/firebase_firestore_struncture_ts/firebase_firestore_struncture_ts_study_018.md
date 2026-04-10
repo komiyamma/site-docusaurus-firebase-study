@@ -1,4 +1,4 @@
-﻿# 第18章：ページング設計（無限スクロールの作法）📜✨
+# 第18章：ページング設計（無限スクロールの作法）📜✨
 
 この章では「記事一覧を無限スクロールにしたい！」を **壊れにくく・安く・速く** 実現するための “設計の型” を作ります😄🔥
 Firestoreのページングは、基本 **`limit` + カーソル（`startAfter` など）** でやるのが王道です✅
@@ -9,7 +9,21 @@ Firestoreのページングは、基本 **`limit` + カーソル（`startAfter` 
 
 **✅オフセット（n件スキップ）は避ける
 
-![firebase_firestore_struncture_ts_study_018_01_offset_vs_cursor.png](./picture/firebase_firestore_struncture_ts_study_018_01_offset_vs_cursor.png)**
+![firebase_firestore_struncture_ts_study_018_01_offset_vs_cursor.png](./picture/firebase_firestore_struncture_ts_study_018_01_offset_vs_cursor.png)
+
+```mermaid
+graph LR
+    subgraph Offset["オフセット方式 (非推奨) 💸"]
+        O1["ページ1"] --> O2["ページ2 (スキップ10)"]
+        O2 -.- Note_O2["スキップ分も課金される！"]
+    end
+    subgraph Cursor["カーソル方式 (推奨) ⚡"]
+        C1["ページ1"] --> L["最後のドキュメント"]
+        L --> C2["ページ2 (startAfter使用)"]
+        C2 -.- Note_C2["前の続きから読むだけ！"]
+    end
+```
+
 Firestoreは `offset` を使うと、**スキップした分も読み取り課金**されます💸（例：offset10で1件返っても11 reads）
 なので **カーソル（cursors）を使う**のが推奨です✨ ([Firebase][1])
 

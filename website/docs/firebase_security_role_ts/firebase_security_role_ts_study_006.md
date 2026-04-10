@@ -1,4 +1,4 @@
-﻿# 第6章：認証チェックの基本（ログインしてない人を入れない）🔐✨
+# 第6章：認証チェックの基本（ログインしてない人を入れない）🔐✨
 
 今日やることは超シンプルです🙂
 **「ログインしてない人は、Firestoreを1文字も読めない・書けない」** を Rules で実現します🚪🛡️
@@ -9,6 +9,14 @@
 ## 6-0. まず“脳内モデル”を1枚で🧠🗺️
 
 ![Authentication Check Flow](./picture/firebase_security_role_ts_study_006_01_auth_check_flow.png)
+
+```mermaid
+graph LR
+    Client[Web App 📱] -- Request --> Rules{Security Rules 🛡️}
+    Rules -- "request.auth == null" --> Deny[Reject 🛑]
+    Rules -- "request.auth != null" --> Allow[Approve ✅]
+    Allow --> DB[(Firestore)]
+```
 
 * アプリ（Reactなど）から Firestore にアクセスするとき、**最終的に判定するのは Firestore Security Rules** です🛡️
 * Rules では「このアクセスはログイン済み？」を **request.auth** で見ます👀
@@ -22,11 +30,23 @@
 
 ![Admin SDK Bypasses Rules](./picture/firebase_security_role_ts_study_006_02_server_bypass.png)
 
+```mermaid
+graph TD
+    Wall[Security Rules 🧱]
+    Client[Client Browser 🧑‍💻] -- Blocked --x Wall
+    Admin[Server / Admin SDK ✈️] -- Bypass --> DB[(Firestore)]
+```
+
 ---
 
 ## 6-1. ルールの最小形：ログイン必須チェック✅🔐
 
 ![Basic Auth Rule Syntax](./picture/firebase_security_role_ts_study_006_03_basic_auth_rule.png)
+
+```mermaid
+graph LR
+    Rule["allow read, write: if request.auth != null;"]
+```
 
 Rulesの“ログイン必須”は、まずこれだけ覚えればOKです👇
 
@@ -39,6 +59,14 @@ Rulesの“ログイン必須”は、まずこれだけ覚えればOKです👇
 ## 6-2. 手を動かす：privateNotes を“ログイン必須”にする🧑‍💻🧯
 
 ![Specific Collection Locking](./picture/firebase_security_role_ts_study_006_04_collection_lock.png)
+
+```mermaid
+graph TD
+    DB[(Firestore)]
+    DB --> Public[Public Data 🔓]
+    DB --> Private[privateNotes 🔐]
+    style Private fill:#f9f,stroke:#333
+```
 
 例として、こういうコレクションを作ったことにします👇
 
@@ -64,6 +92,13 @@ service cloud.firestore {
 
 ![Default Deny Security](./picture/firebase_security_role_ts_study_006_05_default_deny.png)
 
+```mermaid
+graph TD
+    Req[Any Request] --> Rules{Found 'allow'?}
+    Rules -- No --> Deny[Deny by default 🛑]
+    Rules -- Yes --> Check[Check Condition]
+```
+
 ポイント🙂✨
 
 * Rules は **allow が1個も成立しなければ拒否** です（つまり “書かない＝拒否” が基本で安全）([Firebase][4])
@@ -78,6 +113,15 @@ service cloud.firestore {
 ### ① React側：ログイン状態で画面を切り替える（最小）🪟✨
 
 ![UI State based on Auth](./picture/firebase_security_role_ts_study_006_06_ui_state_transition.png)
+
+```mermaid
+stateDiagram-v2
+    [*] --> Loading: onAuthStateChanged
+    Loading --> Guest: null
+    Loading --> User: exists
+    Guest --> User: signIn
+    User --> Guest: signOut
+```
 
 やりたいことはこれ👇
 
@@ -199,6 +243,13 @@ export default function PrivateNotesDemo() {
 ## 6-4. 未ログイン時のUXを1行で決めよう🙂📝
 
 ![Authentication UX Patterns](./picture/firebase_security_role_ts_study_006_07_ux_patterns.png)
+
+```mermaid
+graph TD
+    P1[Login Prompt 🔑]
+    P2[Partial Public 🌍]
+    P3[Full Lock 🙈]
+```
 
 Rulesで弾いても、ユーザー体験はあなたが作れます✨
 おすすめはこの3つのどれか👇

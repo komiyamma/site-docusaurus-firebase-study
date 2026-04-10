@@ -1,4 +1,4 @@
-﻿# 第18章：料金・クォータ事故を避ける：最初に付ける“安全装置”💸🧯
+# 第18章：料金・クォータ事故を避ける：最初に付ける“安全装置”💸🧯
 
 この章は「**気づいたら課金が増えてた😱**」を防ぐための、**最初の安全装置3点セット**を入れます🔧✨
 （あとでFirestore/Storage/Functions/AIを触るほど、この章の価値が効いてきます💪）
@@ -8,6 +8,13 @@
 ## この章のゴール🎯
 
 ![Billing Safety Trio](./picture/firebase_startdash_ts_study_018_01_safety_trio.png)
+
+```mermaid
+graph TD
+    Safe["Safety Measures"] --> B["Budgets & Alerts 💸"]
+    Safe --> Q["Quotas / Usage Limits 🚧"]
+    Safe --> L["Security Rules 🛡️<br/>(Block bad access)"]
+```
 
 * Spark / Blaze の違いを「課金事故目線」で説明できる🙂
 * **予算アラート（Budget）**を作って、通知が飛ぶ状態にする🔔
@@ -27,6 +34,13 @@
 
 ![Plan Comparison](./picture/firebase_startdash_ts_study_018_02_spark_vs_blaze.png)
 
+```mermaid
+graph LR
+    Plan["Firebase Plans"] --> Spark["Spark 🆓<br/>Free / Limits apply"]
+    Plan --> Blaze["Blaze 💳<br/>Pay-as-you-go / Reqs Card"]
+    Blaze --> Free["Includes Free Tier ✅"]
+```
+
 * **Spark**：支払い情報なしで開始できる無料プラン🌱
 * **Blaze**：課金アカウント（Cloud Billing）を紐づけて、従量課金で広く使える🔥
 
@@ -38,6 +52,12 @@
 ## 2) 2026/2 時点での「ここが罠！」早見⚠️🧨
 
 ![Storage Pricing Trap](./picture/firebase_startdash_ts_study_018_03_storage_trap.png)
+
+```mermaid
+graph TD
+    Spark["Spark Plan"] -- Storage limits hit --> Stop["App Breaks 🛑"]
+    Blaze["Blaze Plan"] -- Uses 3GB Free --> Free["Cost: $0 / month"]
+```
 
 ## ✅ Blaze が必要になりやすい代表例
 
@@ -60,12 +80,26 @@
 
 ![Budget Navigation Map](./picture/firebase_startdash_ts_study_018_04_budget_setup.png)
 
+```mermaid
+graph LR
+    FB["Firebase Console"] --> Proj["⚙️ Usage & Billing"]
+    Proj --> GCP["GCP Console ☁️<br/>Billing section"]
+    GCP --> Budget["Create Budget 💰"]
+```
+
 * Firebase コンソール → プロジェクト → **Usage & billing**（課金まわり）へ
 * そこから **Google Cloud の Billing（課金）画面**へ飛ぶのが王道ルート🛣️([Firebase][1])
 
 ## 3-2. 作成手順（初心者向けの型）🧩
 
 ![Alert Levels](./picture/firebase_startdash_ts_study_018_05_alert_thresholds.png)
+
+```mermaid
+graph TD
+    Budget["$10 / month limit"] --> 50["50% ($5) 🔔"]
+    Budget --> 90["90% ($9) 🚨"]
+    Budget --> 100["100% ($10) 🔥"]
+```
 
 1. **Billing（課金）アカウント**を確認👀
 2. **Budgets & alerts（予算とアラート）**を開く🔔
@@ -82,6 +116,13 @@
 ## 3-3. 重要な注意（ここで事故が減る）🧯
 
 ![Budget != Stop](./picture/firebase_startdash_ts_study_018_06_stop_vs_notify.png)
+
+```mermaid
+graph LR
+    Usage["Usage exceeds $10"] --> Alert["Sends Email 📧"]
+    Usage --> Continue["App Keeps Running 🏃‍♂️💨"]
+    Continue -.- Note_Continue["GCP does NOT auto-stop by default"]
+```
 
 * 予算は **勝手に利用や請求を止めません**✋（通知だけ）([Google Cloud Documentation][5])
 * 通知はリアルタイムではなく **遅れがありうる**ので、予算は「上限ジャスト」じゃなく余裕を持つのが安全⏳([Firebase][1])
@@ -119,6 +160,13 @@
 ## 6) 典型的な“課金事故”パターン6選🧨😇
 
 ![Top Accident Sources](./picture/firebase_startdash_ts_study_018_07_accident_sources.png)
+
+```mermaid
+graph TD
+    Traffic["Unintended Traffic"] --> AI["AI APIs like Gemini<br/>Token explosion 📈"]
+    Traffic --> Read["Firestore Infinite Loop<br/>React useEffect bug 🔄"]
+    Traffic --> Func["Functions Loop<br/>Triggers itself 🔃"]
+```
 
 1. **Storageを使ったらBlaze必須だった**（2026/2/3以降の要件に注意）🪣([Firebase][4])
 2. **Firestoreの読み書きが想定以上に増える**（無料枠は日次でリセット、プロジェクトごと、DBは1つだけ等）📚([Firebase][7])

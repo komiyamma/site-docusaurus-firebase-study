@@ -1,4 +1,4 @@
-﻿# 第2章 エンティティ分解 User Report Post Comment 🧩🧠✨
+# 第2章 エンティティ分解 User Report Post Comment 🧩🧠✨
 
 この章のゴールはこれ👇
 「どの単位が **Firestoreのドキュメント** になるべきか？」を、**更新頻度（＝後で非正規化判断に使う）**まで含めて決められる状態にすることだよ😄📝
@@ -8,6 +8,16 @@
 ## 1 まず大前提 ドキュメントは小さく育てる感覚 🌱📄
 
 ![Document Granularity](./picture/firebase_firestore_struncture_ts_study_002_01_granularity.png)
+
+```mermaid
+graph TD
+    Root[Firestore Root] --> Users[Users Collection]
+    Users --> U1[User Doc A]
+    Users --> U2[User Doc B]
+    U1 --> Profile[Profile field]
+    U1 --> Settings[Settings field]
+    style U1 fill:#fff5e6
+```
 
 Firestoreは「**大量の小さめドキュメント**を、コレクションにいっぱい並べる」のが得意な設計だよ📚✨ ([Firebase][1])
 しかもドキュメントは **最大 1 MiB** まで（意外とすぐ効いてくる！）([Firebase][2])

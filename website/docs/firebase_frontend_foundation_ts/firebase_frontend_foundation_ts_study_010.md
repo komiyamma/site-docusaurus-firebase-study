@@ -1,4 +1,4 @@
-﻿# 第10章：Firebaseの接続口を1ファイルにまとめる 🔌🔥
+# 第10章：Firebaseの接続口を1ファイルにまとめる 🔌🔥
 
 ## 今日のゴール 🎯
 
@@ -6,6 +6,15 @@
 これができると、Auth/Firestore/Storage/Functions/AI などを **安全にスッキリ追加**していけます！🚀
 
 ![Centralized Config](./picture/firebase_frontend_foundation_ts_study_010_centralized_config.png)
+
+```mermaid
+graph TD
+    App[各コンポーネント] --> FI[lib/firebase.ts]
+    FI --> Auth[Firebase Auth]
+    FI --> DB[Firestore]
+    FI --> AI[Firebase AI]
+    style FI fill:#f96,stroke:#333,stroke-width:4px
+```
 
 ---
 

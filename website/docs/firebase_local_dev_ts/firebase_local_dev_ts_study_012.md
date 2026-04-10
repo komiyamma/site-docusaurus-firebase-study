@@ -1,4 +1,4 @@
-﻿# 第12章　TypeScript Functionsの罠：ビルドと起動の流れ🧱😵‍💫➡️😄
+# 第12章　TypeScript Functionsの罠：ビルドと起動の流れ🧱😵‍💫➡️😄
 
 この章は「TypeScriptで書いたFunctionsを、ローカルで確実に動かす」ための **“つまずき回避マニュアル”** だよ〜🧯✨
 結論から言うと、**TSはそのままでは動かない → いったんJSにしてから起動**、これだけ覚えればOK🙆‍♂️
@@ -17,6 +17,14 @@
 ## 読む📖：まず“罠”の正体（頭の中の図）🧠🗺️
 
 ![ts_flow](./picture/firebase_local_dev_ts_study_012_ts_flow.png)
+
+```mermaid
+flowchart LR
+    TS["src/index.ts (TypeScript)"] -- "npm run build / tsc" --> JS["lib/index.js (JavaScript)"]
+    JS -- "Loaded by" --> Emu["Functions Emulator"]
+    style TS fill:#3178C6,color:#fff
+    style JS fill:#f7df1e,color:#000
+```
 
 TypeScriptのFunctionsは、だいたいこんな形になるよ👇
 （テンプレ生成でもこの考え方は同じ！） ([Firebase][2])

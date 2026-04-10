@@ -1,4 +1,4 @@
-﻿# 第05章：ユーザープロパティで“層”を見る👥🔎
+# 第05章：ユーザープロパティで“層”を見る👥🔎
 
 この章は「イベントは見えてきたけど、**誰が**やってるの？」を分けられるようになる回です📊✨
 ざっくり言うと、ユーザープロパティはユーザーに付ける“タグ”🏷️で、**同じイベントでも「初心者」「課金」「アバター設定済み」みたいに層別**して見られます👀
@@ -8,6 +8,19 @@
 ## 1) ユーザープロパティって何？🏷️🙂
 
 ![firebase_analytics_performance_ts_study_005_user_properties.png](./picture/firebase_analytics_performance_ts_study_005_user_properties.png)
+
+```mermaid
+graph LR
+    User["👤 ユーザー"] -->|セット| Prop["🏷️ User Properties<br>(ユーザー属性)"]
+    
+    subgraph Segmentation ["セグメント・層別"]
+        Prop -->|plan = pro| SegA["💎 課金ユーザー層"]
+        Prop -->|plan = free| SegB["🌱 無料ユーザー層"]
+    end
+    
+    Event["📢 Event (memo_save)"] --- Segmentation
+    Note["同じイベントでも<br>「誰が」やったかで見分けられる！"]
+```
 
 * **ユーザーに紐づく属性**（例：`plan` / `role` / `has_avatar`）を送る仕組みです👤
 * レポートの比較（Comparisons）や、オーディエンス（Audiences）の条件に使えます🎯

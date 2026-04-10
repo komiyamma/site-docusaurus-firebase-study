@@ -1,4 +1,4 @@
-﻿# 第19章：AIで開発を加速する 🛸💻🤖✨（Antigravity / Gemini CLI / Firebase AIも総動員！）
+# 第19章：AIで開発を加速する 🛸💻🤖✨（Antigravity / Gemini CLI / Firebase AIも総動員！）
 
 この章は「**AIに“作業を任せる”→人間が“判断する”**」の型を作る回です🙂✨
 1回ここを体験すると、以後の章ぜんぶが速くなります🚀💨
@@ -38,9 +38,24 @@ AIって万能そうに見えるけど、得意・不得意がハッキリして
 
 ![AI Development Tools Triad](./picture/firebase_frontend_foundation_ts_study_019_01_ai_tools_triad.png)
 
+```mermaid
+graph TD
+    A[Antigravity] -- "ミッション (計画・実行)" --> W[Workspace]
+    G[Gemini CLI] -- "差分作業 (ReAct)" --> W
+    F[Firebase Studio] -- "環境固定 (Nix)" --> W
+```
+
 ## A. Google Antigravity：ミッションで「まとめて作らせる」🎮🤖
 
 ![Antigravity Workflow](./picture/firebase_frontend_foundation_ts_study_019_02_antigravity_flow.png)
+
+```mermaid
+flowchart LR
+    P[計画 Planning] --> E[実行 Execution]
+    E --> V[検証 Verification]
+    V -- 未達成 --> P
+    V -- 達成 --> D[完了 Done]
+```
 
 Antigravityは、エージェントを管理する **Mission Control** を持っていて、計画→実装→検証までをまとめて進めやすい設計です。ブラウザで調べ物しながら作業もできます。([Google Codelabs][1])
 （Windows向けも用意されています。([Google Codelabs][1])）
@@ -49,6 +64,13 @@ Antigravityは、エージェントを管理する **Mission Control** を持っ
 ## B. Gemini CLI：ターミナルで「差分作業＆自動化」⌨️🧠
 
 ![Gemini CLI ReAct Loop](./picture/firebase_frontend_foundation_ts_study_019_03_gemini_cli_loop.png)
+
+```mermaid
+graph TD
+    T[Thought: 考える] --> A[Action: 実行・検索]
+    A --> O[Observation: 結果確認]
+    O --> T
+```
 
 Gemini CLIは、ターミナルから使える **オープンソースAIエージェント**で、ReActループ（考える→実行→検証）で作業します。MCPサーバーにも対応しています。([Google Cloud Documentation][2])
 Cloud Shellでは追加セットアップ無しでも使える案内があります。([Google Cloud Documentation][2])

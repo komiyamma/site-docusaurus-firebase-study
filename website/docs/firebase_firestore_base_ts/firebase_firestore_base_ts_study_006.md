@@ -1,4 +1,4 @@
-﻿# 第06章：Read① 1件読む（getDoc）🔎📄
+# 第06章：Read① 1件読む（getDoc）🔎📄
 
 この章は「一覧 → 1件の詳細」に進んだときに、**指定IDのToDoを1件だけ読む**流れを作ります😊✨
 ポイントは **`getDoc()` → `exists()` で分岐**です！公式ドキュメントでもこの形が基本になってます。([Firebase][1])
@@ -23,6 +23,15 @@ Firestoreで「1件読む」はこの4ステップです👇
 2. **`getDoc()` で取得**
 3. **`snapshot.exists()` で存在チェック**
 4. **`snapshot.data()` で中身を取り出す**
+
+```mermaid
+graph TD
+    Req["🔍 getDoc(ref)"] --> Snap["📦 Snapshot 取得"]
+    Snap --> Exist{"exists() ?"}
+    
+    Exist -- "false" --> NotFound["🙅‍♂️ 見つからない<br>(404的な処理)"]
+    Exist -- "true" --> Data["✅ data() を取り出し<br>UIを表示!"]
+```
 
 公式のサンプルも、`getDoc()` と `exists()` をセットで使う形です。([Firebase][1])
 

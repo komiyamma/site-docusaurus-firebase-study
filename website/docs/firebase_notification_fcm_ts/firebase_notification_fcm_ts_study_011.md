@@ -1,4 +1,4 @@
-﻿# 第11章：通知の種類（notification/data）を使い分ける🧩⚖️
+# 第11章：通知の種類（notification/data）を使い分ける🧩⚖️
 
 この章はひとことで言うと、**「通知を“勝手に出してほしい”のか、アプリで“握って制御したい”のか**を決めて、FCMの `notification` と `data` を上手に混ぜる回です🔔🧠
 
@@ -7,6 +7,15 @@
 ## 1) まず結論：迷ったら「notification + data」からでOK🙆‍♀️✨
 
 ![Notification vs Data Message](./picture/firebase_notification_fcm_ts_study_011_message_types.png)
+
+```mermaid
+graph LR
+    subgraph Msg [FCM Message Types]
+        N[Notification 🔔<br/>楽ちん・自動表示]
+        D[Data 🧩<br/>自由・アプリで制御]
+        ND[Notification + Data 🎁<br/>おすすめの欲張りセット]
+    end
+```
 
 FCMのメッセージは大きく2種類です👇
 
@@ -26,6 +35,14 @@ FCMのメッセージは大きく2種類です👇
 ## 2) Web（React）での挙動：ここだけは覚えて勝ち🏆🌐
 
 ![Web Behavior by State](./picture/firebase_notification_fcm_ts_study_011_foreground_background.png)
+
+```mermaid
+graph TD
+    Tab[Web Tab State]
+    Tab -- Foreground 🌞 --> P[Page Context<br/>onMessage📩]
+    Tab -- Background 🌙 --> SW[Service Worker Context<br/>onBackgroundMessage🧑‍🚒]
+    SW -- Click --> Link[fcm_options.link 🔗]
+```
 
 Webは「タブが前にあるかどうか」で挙動が分かれます👀
 
@@ -49,6 +66,15 @@ Webは「タブが前にあるかどうか」で挙動が分かれます👀
 
 ![Message Type Decision Matrix](./picture/firebase_notification_fcm_ts_study_011_decision_matrix.png)
 
+```mermaid
+graph TD
+    Goal{何がしたい?}
+    Goal -- シンプルに通知 --> N[Notification 🔔]
+    Goal -- 特定ページへ誘導 --> ND[Notification + Data 🔗]
+    Goal -- UI/データも更新 --> D[Data Included 📦]
+    Goal -- 完全に自前表示 --> DO[Data ONLY ⚙️]
+```
+
 | やりたいこと                         | おすすめ                                             | 理由                           |
 | ------------------------------ | ------------------------------------------------ | ---------------------------- |
 | とにかく通知を出したい（最短）                | notificationのみ                                   | 表示はおまかせで楽🔔                  |
@@ -61,6 +87,14 @@ Webは「タブが前にあるかどうか」で挙動が分かれます👀
 ## 4) payload設計のコツ：4KBに勝つ🥊📦
 
 ![Payload Size Limit (4KB)](./picture/firebase_notification_fcm_ts_study_011_payload_size.png)
+
+```mermaid
+graph LR
+    subgraph Limit [Payload Limit]
+        Size[4096 Bytes 📦]
+        Size --- Tip["IDだけ渡して<br/>詳細はFirestoreへ 🚪🗃️"]
+    end
+```
 
 **通知は短距離走**です🏃💨
 4KB制限があるので（しかもJSONは意外と膨らむ）、やることはだいたいこれ👇
@@ -78,6 +112,15 @@ Webは「タブが前にあるかどうか」で挙動が分かれます👀
 ## 5) 今回の題材：コメント通知の“いい感じpayload”例📝🔔
 
 ![Ideal Comment Payload Structure](./picture/firebase_notification_fcm_ts_study_011_comment_payload.png)
+
+```mermaid
+graph TD
+    Payload[Payload Data 📦]
+    Payload --- T[type: 'comment_created']
+    Payload --- ID[commentId / postId]
+    Payload --- URL[url: '/posts/123']
+    Payload --- A[actorName: 'Alice']
+```
 
 **目標**：「通知として見える」＋「アプリがわかる情報も持ってる」✨
 
@@ -113,6 +156,16 @@ export type CommentNotifyData = {
 ## 7) 手を動かす②：React（フォアグラウンド）で受け取ってUI更新📲✨
 
 ![Foreground UI Update Flow](./picture/firebase_notification_fcm_ts_study_011_ui_update.png)
+
+```mermaid
+sequenceDiagram
+    participant F as FCM
+    participant P as Page (React)
+    participant UI as Toast/Badge
+    F ->> P: onMessage (payload)📩
+    P ->> UI: Update UI 🎨
+    Note over P,UI: No OS notification<br/>displayed automatically
+```
 
 フォアグラウンドでは `onMessage` が来ます📩([Firebase][2])
 やりたいのはこの2つ👇
@@ -180,6 +233,12 @@ Webだと **`webpush.fcm_options.link`** がかなり効きます（通知クリ
 ## 11) AI活用：4KBと“短く伝わる通知文”の最強コンボ🤖✂️✨
 
 ![AI Text Compression](./picture/firebase_notification_fcm_ts_study_011_ai_compress.png)
+
+```mermaid
+graph LR
+    Long[Long Original Text 📜] --> AI{AI Logic 🤖}
+    AI -- Gemini --> Short["Short & Safe Text ✂️✨<br/>(Personal info masked)"]
+```
 
 通知文って、長いと読まれないし、4KBも食います😇
 ここはAIがめちゃ得意です🔥

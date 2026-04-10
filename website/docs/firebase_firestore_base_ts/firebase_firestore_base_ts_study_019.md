@@ -1,4 +1,4 @@
-﻿# 第19章：安全に壊して練習する（Emulator + サーバー側投入）🧪🧯
+# 第19章：安全に壊して練習する（Emulator + サーバー側投入）🧪🧯
 
 この章は「本番DBを一切汚さずに、思いっきりCRUDして壊して直す」回です💪✨
 さらに、サーバー側（Admin SDK）から **seedデータをドバッと投入**して、開発スピードを上げます🚀
@@ -7,7 +7,15 @@
 
 ## 📖 読む：Emulatorって何が嬉しいの？😆
 
-![Emulator Concept](./picture/firebase_firestore_base_ts_study_019_01_emulator_shield.png)
+![Local Emulator Shield](./picture/firebase_firestore_base_ts_study_019_01_emulator_shield.png)
+
+```mermaid
+graph LR
+    App["React App"] -- connectFirestoreEmulator --> Em["Emulator (Local:8080)"]
+    Em -.-> UI["Emulator UI"]
+    App -- (No Emulator Connect) --> Cloud["(#quot;Firestore Cloud#quot;)"]
+    style Em fill:#dfd
+```
 
 * **Firestore Emulator** はローカルPCで動く “擬似Firestore” です🧪
   → 追加/更新/削除をミスっても、本番に傷がつかない！🛡️

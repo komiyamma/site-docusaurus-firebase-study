@@ -1,4 +1,4 @@
-﻿# 第14章　連携テスト①：Auth × Firestore（本人だけ読める）👮‍♂️🗃️
+# 第14章　連携テスト①：Auth × Firestore（本人だけ読める）👮‍♂️🗃️
 
 この章は「**ログインしてる人だけが、自分のメモだけ見られる**」を、**ローカルで安全に**作って確かめます🧪✨
 ポイントはこれ👇
@@ -21,6 +21,17 @@
 ## 1) まず “二重ガード” の考え方🧠🔐
 
 ![_double_guard](./picture/firebase_local_dev_ts_study_014_double_guard.png)
+
+```mermaid
+flowchart TD
+    User["User Action"] --> UI["1st Guard: UI/UX Logic (React)"]
+    UI -- "Show/Hide Button" --> Request["Firestore Request"]
+    Request --> Rules["2nd Guard: Security Rules (Engine)"]
+    Rules -- "request.auth.uid == resource.data.uid" --> Valid{Validated?}
+    Valid -- "Yes" --> Data["Access Granted"]
+    Valid -- "No" --> Error["PERM_DENIED"]
+    style Rules fill:#ff9,stroke:#333
+```
 
 「本人だけ読める」を本当に強くするには、ガードを2枚にします👇
 

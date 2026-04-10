@@ -1,4 +1,4 @@
-﻿# 第12章：Remote Configで“AIを安全に運用”する🤖🛡️
+# 第12章：Remote Configで“AIを安全に運用”する🤖🛡️
 
 この章はひとことで言うと、**「AI機能を、あとから安全に“止める・弱める・変える”ためのリモコンを作る回」**です🎮✨
 AIは便利だけど、放置すると **コスト💸 / 連打🌀 / 想定外の出力😇 / モデル変更で急に壊れる⚠️** が起きやすいので、Remote Configで“運用の柵（ガードレール）”を先に作っちゃいます。
@@ -41,6 +41,26 @@ FirebaseのAI SDK側でも、**本番前にRemote Configで「モデル名を遠
 ## ✅ ③ “守り”は2段構えが勝ち🏰
 
 ![Two-Layer Defense](./picture/firebase_analytics_performance_ts_study_012_defense_layers.png)
+
+```mermaid
+graph TD
+    subgraph Layer1 ["1. 運用のスイッチ (Remote Config)"]
+      RC["🎛️ Kill Switch / 制限値"]
+    end
+    
+    subgraph Layer2 ["2. サーバーの守り (Cloud Functions)"]
+      CF["🛡️ 認証/権限チェック"]
+      DB["📉 使用状況DB (Quota)"]
+    end
+    
+    subgraph Layer3 ["3. インフラの壁 (App Check)"]
+      AC["🧿 正規アプリ判定"]
+    end
+    
+    RC --> CF
+    AC --> CF
+    CF --> DB
+```
 
 * **UX用のソフト制限**：ボタンを灰色にして「今日はここまで🙂」
 * **本命のハード制限**：AI側APIで **レート制限**・**App Check** を効かせる

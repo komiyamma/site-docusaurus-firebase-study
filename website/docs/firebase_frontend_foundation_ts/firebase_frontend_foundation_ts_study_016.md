@@ -1,4 +1,4 @@
-﻿# 第16章：Storageで画像アップロードUIを作る 📷☁️✨
+# 第16章：Storageで画像アップロードUIを作る 📷☁️✨
 
 この章で作るのは「プロフィール画像アップロード」機能です🙂
 **選ぶ → プレビュー → アップロード（進捗バー） → 反映**まで、管理画面っぽく気持ちよく仕上げます💪✨
@@ -8,6 +8,17 @@
 ## 1) まず“仕組み”を超ざっくり理解する 🧠💡
 
 ![Firestore vs Storage](./picture/firebase_frontend_foundation_ts_study_016_01_firestore_vs_storage.png)
+
+```mermaid
+graph LR
+    subgraph Storage ["Cloud Storage (画像)"]
+        S[users/123/avatar.jpg]
+    end
+    subgraph DB ["Firestore (データ)"]
+        D[users/123]
+    end
+    D -- "avatarUrl: 'https://...'" --> S
+```
 
 * **Firestore**：文章・数値みたいな「データ」を保存する場所🗃️
 * **Storage（Cloud Storage for Firebase）**：画像・動画みたいな「ファイル」を置く場所📦
@@ -87,6 +98,17 @@ service firebase.storage {
 ## 5) 実装：アップロード“サービス関数”を作る 🔧✨
 
 ![Upload Task State Machine](./picture/firebase_frontend_foundation_ts_study_016_05_upload_state.png)
+
+```mermaid
+stateDiagram-v2
+    [*] --> idle
+    idle --> uploading: start
+    uploading --> paused: pause
+    paused --> uploading: resume
+    uploading --> done: success
+    uploading --> error: fail
+    error --> uploading: retry
+```
 
 UI（React）から直接Firebase Storageを叩くとコードが散りやすいので、先に **services** を作ります📦
 

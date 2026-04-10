@@ -1,4 +1,4 @@
-﻿# 第15章：評価（Evaluate）で“品質を数字で上げる”📊🔥
+# 第15章：評価（Evaluate）で“品質を数字で上げる”📊🔥
 
 この章はひとことで言うと、**「AIの出来を“気分”じゃなく“数字”で改善できる人」になる回**です😆✨
 Genkit は **Developer UI に Evaluate があり**、評価結果（スコア）から**該当トレース（実行ログ）に飛べる**ので、「どこがダメだったか→どう直すか」がめちゃ見やすいです👀🧪  ([GitHub][1])
@@ -179,6 +179,14 @@ genkit eval:flow ngCheckFlow --input eval/ngcheck.inputs.json --batchSize 10
 ## ステップ7：改善→再評価（ここが本番）🔁🔥
 
 ![firebase_ai_ts_study_015_improve_loop.png](./picture/firebase_ai_ts_study_015_improve_loop.png)
+
+```mermaid
+flowchart TD
+  Set["Dataset作成📄<br>(10ケース)"] --> Eval["Evaluate実行🧪<br>(Genkit UI/CLI)"]
+  Eval --> Analysis["結果分析📊<br>(誤NG・見逃し)"]
+  Analysis --> Fix["プロンプト修正✍️<br>(明確化・型固定)"]
+  Fix --> Eval
+```
 
 評価で「失敗が多い入力」を3つだけ選びます👇
 

@@ -1,4 +1,4 @@
-﻿# 第08章：Update① 更新する（updateDoc / setDoc merge）✏️🔁
+# 第08章：Update① 更新する（updateDoc / setDoc merge）✏️🔁
 
 この章のゴールはシンプル！
 **「ToDoのタイトルを編集して、Firestoreに安全に保存できる」**ようになることです😆🧩
@@ -23,6 +23,21 @@ Firestoreの更新は、だいたいこの3パターンで勝てます✌️
 ![setDoc Merge Flow](./picture/firebase_firestore_base_ts_study_008_04_merge_true.png)
 
 `setDoc()` が **デフォルトは上書き**で、`merge: true` で **部分反映**になる、というのが超重要ポイントです🧯([Firebase][2])
+
+```mermaid
+graph TD
+    subgraph Loss ["⚠️ 危険 (全置換)"]
+      S1["setDoc(ref, data)"]
+    end
+    
+    subgraph Safe ["✅ 安全 (部分更新)"]
+      U1["updateDoc(ref, data)"]
+      S2["setDoc(ref, data, {merge:true})"]
+    end
+    
+    S1 --> Msg1["既存フィールドが消える!"]
+    U1 & S2 --> Msg2["指定フィールドだけ書き換え"]
+```
 
 ---
 

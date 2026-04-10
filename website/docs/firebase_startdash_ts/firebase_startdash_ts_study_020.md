@@ -1,4 +1,4 @@
-﻿# 第20章：仕上げミニ課題：ログイン前トップ画面を完成させる🎨🏁
+# 第20章：仕上げミニ課題：ログイン前トップ画面を完成させる🎨🏁
 
 今日は「**作品っぽい**」ところまで持っていく回だよ〜！😄✨
 “動く”だけじゃなくて、**見た目・説明・導線（CTA）**が揃うと一気に完成度が上がる👍
@@ -31,6 +31,14 @@ npm -v
 
 ![Landing Page Wireframe](./picture/firebase_startdash_ts_study_020_01_wireframe.png)
 
+```mermaid
+graph TD
+    UI["TopPage.tsx"] --> Hero["Hero Section"]
+    UI --> Status["Firebase Status Bar"]
+    Hero --> Title["'React Firebase Starter'"]
+    Status --> Connected["🟢 Connected"]
+```
+
 最低限、これが入ってれば強い！
 
 * **Header**：アプリ名 + 右上にボタン（例：はじめる）🧭
@@ -47,6 +55,14 @@ npm -v
 
 ![File Structure Strategy](./picture/firebase_startdash_ts_study_020_02_file_structure.png)
 
+```mermaid
+graph TD
+    Root["Project Root"] --> Env[".env.local"]
+    Root --> Src["src/"]
+    Src --> Lib["lib/firebase.ts"]
+    Src --> Pages["pages/TopPage.tsx"]
+```
+
 `src` の中をこう分ける（超おすすめ）
 
 * `src/pages/TopPage.tsx`
@@ -58,6 +74,12 @@ npm -v
 ## Step B：Firebase 初期化を「失敗しても画面が死なない」形にする🌱🧯
 
 ![Vite Env Prefix](./picture/firebase_startdash_ts_study_020_03_vite_env_rule.png)
+
+```mermaid
+graph LR
+    Env["VITE_APP_ID"] -- Vite build --> Bundle["Available in React"]
+    Secret["API_SECRET"] -- Vite build --> Hidden["Discarded 🗑️"]
+```
 
 Viteの環境変数は **`VITE_` 接頭辞のものだけが `import.meta.env` で読める**（漏洩防止のため）だよ。([vitejs][2])
 Firebase公式のWebセットアップも “npmで入れて `initializeApp`” の流れ。([Firebase][3])
@@ -78,6 +100,13 @@ VITE_FIREBASE_APP_ID=1:xxxx:web:xxxx
 ### 2) `src/lib/firebase.ts` を作る🧩
 
 ![Initialization Logic](./picture/firebase_startdash_ts_study_020_05_init_logic.png)
+
+```mermaid
+graph TD
+    Logic{"getApps().length === 0?"}
+    Logic -- Yes --> Init["initializeApp()"]
+    Logic -- No --> Get["getApp()"]
+```
 
 「設定が足りない」も「初期化失敗」も、**文字列で返す**形にしておくと強い💪
 
@@ -130,6 +159,13 @@ export function initFirebase(): FirebaseInitResult {
 ## Step C：トップ画面（ページ）を作る⚛️🎨
 
 ![Simple UI Layout](./picture/firebase_startdash_ts_study_020_04_ui_mockup.png)
+
+```mermaid
+graph TD
+    App["App.tsx"] --> Theme["Tailwind Classes"]
+    App --> Firebase["Firebase Context"]
+    Theme --> Render["Render TopPage"]
+```
 
 `TopPage.tsx` で、Firebase状態を **小さく表示**しよう🌱
 
@@ -363,6 +399,13 @@ Viteのルール上、`VITE_` 以外は `import.meta.env` に出ないよ。([vi
 ## 5) AIを“実務の相棒”にする使い方（今日の範囲）🤖🧠
 
 ![AI Copy Assist](./picture/firebase_startdash_ts_study_020_06_ai_copy.png)
+
+```mermaid
+graph LR
+    User["Select Code 🖱️"] --> Cmd["Cmd+I / Agent 🤖"]
+    Cmd --> Prompt["'Make this UI look premium'"]
+    Prompt --> Diff["Review & Accept ✅"]
+```
 
 ## Gemini CLI / Agent に投げると強い質問テンプレ💬
 

@@ -1,4 +1,4 @@
-﻿# 第02章：プロジェクト＝アプリ？まず“入れ物”の考え方📦🧠
+# 第02章：プロジェクト＝アプリ？まず“入れ物”の考え方📦🧠
 
 この章のゴールはシンプルです👇
 **「いま自分がどのプロジェクト（＝入れ物）を触ってるか」を迷わず言えるようになる**こと！🧭✨
@@ -10,6 +10,15 @@
 
 ![Project Container](./picture/firebase_startdash_ts_study_002_01_container_concept.png)
 
+```mermaid
+graph TD
+    Project[Firebase Project 📦] --> Auth[Auth 🔐]
+    Project --> DB[(Firestore)]
+    Project --> Cloud[Cloud Storage 🖼️]
+    Project --> WebApp1[Web App A 🌐]
+    Project --> WebApp2[Web App B 🌐]
+```
+
 * **プロジェクト**＝アプリや機能（Auth/DB/Hosting/AIなど）をまとめて抱える“箱”📦
 * その箱の中に、**Web / iOS / Android**などの“個別アプリ（登録）”がぶら下がるイメージです🏷️📱💻
 * そして大事なポイント：**Firebaseのプロジェクトは、Google Cloudのプロジェクトでもある**（同じ箱を見てる）ということ🤝🌩️
@@ -20,6 +29,13 @@
 ## 2) 迷子の原因トップ3：「名前が3つある」問題😵‍💫🧩
 
 ![Three Project Identifiers](./picture/firebase_startdash_ts_study_002_02_id_types.png)
+
+```mermaid
+graph LR
+    P[Project 📦] --> N["Project Name (For Humans: 'My App')"]
+    P --> ID["Project ID (Globally Unique: 'myapp-12345')"]
+    P --> Num["Project Number (For APIs: '123456789')"]
+```
 
 プロジェクトには、似た言葉が3つ出てきます。ここを整理すると一気にラクです😆✨
 
@@ -49,6 +65,13 @@
 
 ![Project ID Usage](./picture/firebase_startdash_ts_study_002_03_id_usage.png)
 
+```mermaid
+graph TD
+    ID["Project ID: 'myapp-123'"] --> URL["https://myapp-123.web.app"]
+    ID --> DB[(Firestore path<br/>projects/myapp-123/..)]
+    ID --> CLI[firebase use myapp-123]
+```
+
 Project ID は、ただの文字列じゃなくて、いろんなサービスの“名前の一部”になりがちです😳
 たとえば **Cloud Storage のバケット名**などに使われたりします🪣([Firebase][3])
 
@@ -61,6 +84,15 @@ Project ID は、ただの文字列じゃなくて、いろんなサービスの
 ## 4) dev/prod を分ける理由：事故を“構造で”防ぐ🧯🚧
 
 ![Dev vs Prod Separation](./picture/firebase_startdash_ts_study_002_04_env_separation.png)
+
+```mermaid
+graph TD
+    subgraph Env [Environments]
+        Dev["Project: 'myapp-dev' 🧪<br/>Fake Data / Test Users"]
+        Prod["Project: 'myapp-prod' 🚀<br/>Real Data / Security"]
+        Dev -.->|Never cross| Prod
+    end
+```
 
 初心者ほど、最初からここを意識すると勝ちです🏆✨
 おすすめは **開発(dev)と本番(prod)は別プロジェクト**にすること。理由👇
@@ -80,6 +112,12 @@ Project ID は、ただの文字列じゃなくて、いろんなサービスの
 ### ① プロジェクト一覧 → 切り替え
 
 ![Console Navigation](./picture/firebase_startdash_ts_study_002_05_console_switch.png)
+
+```mermaid
+graph LR
+    Menu[Project Menu 🔽] --> Dev[myapp-dev ✅]
+    Menu --> Prod[myapp-prod]
+```
 
 1. Firebaseコンソールを開く🌐
 2. 画面上部の **プロジェクト選択（ドロップダウン）** を押す👇
@@ -132,6 +170,16 @@ Firebaseプロジェクト＝Google Cloudプロジェクト、という関係が
 
 ![AI in the Project Box](./picture/firebase_startdash_ts_study_002_06_ai_box.png)
 
+```mermaid
+graph TD
+    subgraph Project [Firebase Project]
+        Data[(Firestore)]
+        Rules[Security Rules]
+        AI[AI Prompt / API Keys]
+        Data & Rules & AI --> Env{Environment Context}
+    end
+```
+
 AI機能（Firebase AI Logic など）も、基本は **プロジェクト単位で設定・監視・利用量（クォータ）** が管理されます🧠
 しかもモデルには **提供終了（retirement）**があるので、devプロジェクトで検証してからprodへ…が安全です🧪🧯([Google Cloud Documentation][2])
 
@@ -167,6 +215,13 @@ gemini "Project IDは変更できる？削除したら同じIDを再利用でき
 ## 10) ミニ課題：自分用「命名ルール」作成📝🎯
 
 ![Naming Convention](./picture/firebase_startdash_ts_study_002_07_naming_rule.png)
+
+```mermaid
+graph TD
+    Start["{AppName}-{Env}"] --> Eval{Is it globally unique?}
+    Eval -- Yes --> P1["'chatapp-dev-123' ✅"]
+    Eval -- No --> P2["'test' ❌"]
+```
 
 次の4つを、メモ帳に1分で書いて完成です✅
 

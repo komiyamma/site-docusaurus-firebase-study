@@ -1,4 +1,4 @@
-﻿# 第01章：ゴールと完成イメージを固める 🗺️✨
+# 第01章：ゴールと完成イメージを固める 🗺️✨
 
 この章は、**“作るもの”を先に1枚で決めて**、次章以降の実装で迷子にならないための準備です🙂
 ここでやるのは **UIの完成形のイメージ固定** と **扱うデータ決め（Firestoreの下地）** だけ！🧱
@@ -27,9 +27,25 @@
 
 ![firebase_frontend_foundation_ts_study_001_01_standard_flow.png](./picture/firebase_frontend_foundation_ts_study_001_01_standard_flow.png)
 
+```mermaid
+flowchart LR
+    List["一覧 (Table)"] --> Detail["詳細 (Form)"]
+    Detail --> Save["保存 (Action)"]
+    Save --> Success["成功 🎉"]
+    Save --> Error["失敗 ❌"]
+```
+
 ---
 
 ## 2) 画面を“最低3ページ”に割る 🧭📄
+
+```mermaid
+flowchart TD
+  App["App"] --> Dash["/dashboard"]
+  App --> List["/items"]
+  App --> Detail["/items/:id"]
+  style App fill:#f9f,stroke:#333,stroke-width:2px
+```
 
 この教材のチェックは「3ページ以上に割れてる？」でしたね✅
 おすすめの3ページ構成はコレ👇（超王道で迷いません）

@@ -1,4 +1,4 @@
-﻿# 第01章：Firebaseって結局なにができるの？用途別マップ🙂🧭
+# 第01章：Firebaseって結局なにができるの？用途別マップ🙂🧭
 
 この章は「Firebaseの全体地図を、迷子にならないレベルで頭に入れる」がゴールです🗺️✨
 （まだ開発はほぼしません。まず“どこに何があるか”だけ掴めばOK！）
@@ -39,6 +39,14 @@
 
 ![Firebase Service Map](./picture/firebase_startdash_ts_study_001_01_service_map.png)
 
+```mermaid
+graph TD
+    App["あなたのWebアプリ 📱"] --> Auth["Firebase Auth 🔐<br/>(ログイン)"]
+    App --> FS["(Firestore 📦)<br/>(データ保存)"]
+    App --> Hosting["Hosting 🌐<br/>(公開)"]
+    App --> Storage["Cloud Storage 🖼️<br/>(画像)"]
+```
+
 > ポイント👉 Firebaseは「**Build（作る）**」「**Run（運用する）**」「**AI（AI機能とAI支援）**」で考えると、一気に見通しが良くなります🙂 ([Firebase][1])
 
 ---
@@ -46,6 +54,13 @@
 ## 2) AIは “2種類” ある（ここ超重要）🤖✨
 
 ![AI Types](./picture/firebase_startdash_ts_study_001_02_ai_types.png)
+
+```mermaid
+graph LR
+    Dev["あなた 🧑‍💻"] --> AI1["Gemini directly<br/>(Ideas/Docs)"]
+    Dev --> AI2["IDX / Genkit<br/>(Code/Features)"]
+    Dev --> AI3["Extensions<br/>(Pre-built)"]
+```
 
 ## A. アプリに入れるAI（ユーザー向け）🧠📱
 
@@ -65,6 +80,13 @@
 
 ![Tech Stack](./picture/firebase_startdash_ts_study_001_03_tech_stack.png)
 
+```mermaid
+graph TD
+    UI["UI: React ⚛️"] --> TS["Lang: TypeScript 🟦"]
+    TS --> Build["Build: Vite ⚡"]
+    Build --> Firebase["Backend: Firebase 🔥"]
+```
+
 この教材はReact+TypeScript中心なので、最低限これだけ押さえます🙂
 
 * Reactは **19系（例：v19.2.1が2025年12月）** の流れで進みます⚛️ ([react.dev][8])
@@ -83,6 +105,13 @@
 ## Step 1：左メニューを「Build / Run / AI」目線で眺める👀
 
 ![Console Navigation](./picture/firebase_startdash_ts_study_001_04_console_nav.png)
+
+```mermaid
+graph LR
+    P["Project Creation 🏗️"] --> A["Web App Reg 🌐"]
+    A --> S["Config Copy 📋"]
+    S --> D["Activate Services 🔐📦"]
+```
 
 * 「ログインっぽい」→ Authentication
 * 「DBっぽい」→ Firestore / Realtime Database
@@ -107,6 +136,13 @@
 ## 5) AIに聞くと最強な質問テンプレ💬🤖（コピペ用）
 
 ![AI Prompt Flow](./picture/firebase_startdash_ts_study_001_05_ai_prompt_flow.png)
+
+```mermaid
+graph LR
+    Plan["1. Overview📝"] --> Goal["2. Goal🎯"]
+    Goal --> Rule["3. Rules⚠️"]
+    Rule --> First["4. Steps👣"]
+```
 
 ## “作りたいアプリ → Firebase機能”を一発でマッピングする質問🗺️
 
@@ -141,6 +177,20 @@
 ## 6) 「作りたいアプリ」を1行で書いて、必要機能に丸を付ける🙂✅
 
 ![App Checklist](./picture/firebase_startdash_ts_study_001_06_app_checklist.png)
+
+```markdown
+    - [ ] Create Firebase Project
+    - [ ] Register Web App
+    - [ ] Copy config
+```
+*(As markdown checklist in mermaid is not fully standard, I'll use a graph mapping the checklist)*
+```mermaid
+graph TD
+    C1["1. Create Firebase Project"]
+    C2["2. Register Web App"]
+    C3["3. Copy Config"]
+    C1 --> C2 --> C3
+```
 
 ## ① 1行アイデア（例）
 

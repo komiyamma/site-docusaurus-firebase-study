@@ -1,4 +1,4 @@
-﻿# 第10章：Developer UIで“実行→追跡→評価”する👀🧪
+# 第10章：Developer UIで“実行→追跡→評価”する👀🧪
 
 この章は、**GenkitのDeveloper UI**を使って「AIフローを動かす → 中身を見る → まとめて評価する」の“改善ループ”を体に覚えさせる回です🔥
 Developer UIはローカルWebアプリで、実行中のコードに“くっついて”あなたのFlowやPrompt等を一覧化し、**対話的にテスト**できます。([Genkit][1])
@@ -240,6 +240,14 @@ Datasetページで **Run new evaluation** を押して、
 ## ミニ課題🎯📝：プロンプトを1回だけ改善して、差を説明しよう✨
 
 ![The Prompt Improvement Cycle](./picture/firebase_ai_ts_study_010_improvement_loop.png)
+
+```mermaid
+flowchart TD
+  Run["1. Run (実行)▶️<br>まずは単発テスト"] --> Inspect["2. Inspect (追跡)🔎<br>トレースで原因分析"]
+  Inspect --> Eval["3. Evaluate (評価)📊<br>Datasetで一斉テスト"]
+  Eval --> Fix["4. 改善 (Fix)✍️<br>プロンプト修正"]
+  Fix --> Run
+```
 
 ## やること（15〜25分）⏳
 

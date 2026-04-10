@@ -1,4 +1,4 @@
-﻿# 第4章：Rules言語の基本①（match / allow の読み方）🧩🛡️
+# 第4章：Rules言語の基本①（match / allow の読み方）🧩🛡️
 
 この章は、Rulesを“読める＆書ける”ようになるための最初の山場です⛰️✨
 ポイントはシンプル👇
@@ -19,6 +19,13 @@
 
 ![Firebase Security Rules Structure](./picture/firebase_security_role_ts_study_004_01_rule_structure.png)
 
+```mermaid
+graph TD
+    S["service cloud.firestore"] --> D["match /databases/{database}/documents"]
+    D --> M["match /path/to/doc"]
+    M --> A["allow read, write: if condition"]
+```
+
 ## ✅ ルールは “道（path）× 操作（method）× 条件（if）”
 
 Rulesの基本形はこう👇（Firestore版の骨組み）
@@ -30,6 +37,12 @@ Firestoreは最初に **service** と **/databases/{database}/documents** で土
 
 ![Match Targets Document](./picture/firebase_security_role_ts_study_004_02_match_document.png)
 
+```mermaid
+graph LR
+    Col["Collection: cities"] --- Doc["Document: SF"]
+    Rule["match /cities/{city}"] -- identifies --> Doc
+```
+
 match は **コレクションじゃなくて “ドキュメントのパス” を狙う**のが基本です。
 たとえば `/cities/{city}` は “citiesの中の1ドキュメント” を指す、って感じ。([Firebase][2])
 
@@ -38,6 +51,16 @@ match は **コレクションじゃなくて “ドキュメントのパス” 
 ## ✅ allow は「1つでもtrueがあれば勝ち」⚠️
 
 ![Allow Rule OR Logic](./picture/firebase_security_role_ts_study_004_03_allow_logic_or.png)
+
+```mermaid
+graph TD
+    R1["Rule 1: if false"]
+    R2["Rule 2: if true"]
+    Result{"Access Allowed?"}
+    R1 -- OR --> Result
+    R2 -- OR --> Result
+    Result -- Yes --> Grant["Access Granted ✅"]
+```
 
 同じドキュメントが複数の match に当たることがあります。
 その場合、**どれか1つでも allow 条件が true なら許可**されます（ゆるいルールが勝ちやすい）😱([Firebase][2])
@@ -50,6 +73,12 @@ match は **コレクションじゃなくて “ドキュメントのパス” 
 
 ![Wildcard Variable Capture](./picture/firebase_security_role_ts_study_004_04_wildcard_variable.png)
 
+```mermaid
+graph LR
+    Path["/cities/SF"] -- match /cities/{city} --> Var["city = 'SF'"]
+    Var -- used in --> If["if city == 'SF'"]
+```
+
 `{city}` みたいな `{}` は「なんでも1区切りぶん入るよ」って意味です。
 そして、その値は **変数** として if の中で使えます（例：city には "SF" とかが入る）。([Firebase][2])
 
@@ -58,6 +87,13 @@ match は **コレクションじゃなくて “ドキュメントのパス” 
 ## (2) サブコレは “自動では守られない” 🧨
 
 ![Subcollection Rules Independence](./picture/firebase_security_role_ts_study_004_05_subcollection_independence.png)
+
+```mermaid
+graph TD
+    Parent["match /posts/{id}"] -- rules only for --> PDoc["Post doc"]
+    Parent -. NO ACCESS .-> Child["comments collection"]
+    style Child fill:#f66,stroke:#333
+```
 
 親の match を書いても、**子（サブコレ）には効きません**。
 サブコレはサブコレで **明示的に match を書く**必要があります。([Firebase][2])
@@ -68,6 +104,14 @@ match は **コレクションじゃなくて “ドキュメントのパス” 
 
 ![Recursive Wildcard Scope](./picture/firebase_security_role_ts_study_004_06_recursive_wildcard.png)
 
+```mermaid
+graph TD
+    Rec["match /{all=**}"] -- applies to --> P["Root"]
+    Rec -- applies to --> C1["Subcol 1"]
+    Rec -- applies to --> C2["Subcol 2"]
+    style Rec fill:#f9c,stroke:#333
+```
+
 `{document=**}` みたいなやつは「下の階層ぜんぶ」をまとめてマッチします。
 便利だけど、**うっかり allow を緩くすると全階層が開通**しがちなので注意⚠️
 しかも Rules には “version 1/2” があり、再帰ワイルドカードの挙動が変わります。今は **rules_version = '2'** を明示しておくのが無難です。([Firebase][2])
@@ -77,6 +121,15 @@ match は **コレクションじゃなくて “ドキュメントのパス” 
 ## 4) allow の読み方：操作（method）をちゃんと区別する ✍️📖
 
 ![Read/Write Operation Granularity](./picture/firebase_security_role_ts_study_004_07_read_write_granularity.png)
+
+```mermaid
+graph TD
+    Read["read"] --> Get["get"]
+    Read --> List["list"]
+    Write["write"] --> Create["create"]
+    Write --> Update["update"]
+    Write --> Delete["delete"]
+```
 
 allow は「何を許可するか」を書きます。
 ざっくり便利メソッドはこの2つ👇

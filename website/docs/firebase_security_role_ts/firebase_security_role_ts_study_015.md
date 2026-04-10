@@ -1,4 +1,4 @@
-﻿# 第15章：Custom Claims入門（ロールを“トークンに埋める”）🎫🔐
+# 第15章：Custom Claims入門（ロールを“トークンに埋める”）🎫🔐
 
 この章はひとことで言うと👇
 **「管理者フラグ（ロール）を“ユーザーのIDトークン”に刻印して、アプリ全体の門番に使えるようにする」**回です✨
@@ -17,6 +17,13 @@ Rules側での参照はこんな感じ👇
 `request.auth.token.admin`（adminというクレームを見に行く） ([Firebase][1])
 ![Concept of Custom Claims.](./picture/firebase_security_role_ts_study_015_01_custom_claims_concept.png)
 
+```mermaid
+graph TD
+    Auth[Firebase Auth] -- Issuing ID Token ✅ --> User[User 身分証 🎫]
+    SDK[Admin SDK 🔧] -- Stamping... --> User
+    User -- "claims: { admin: true } ✨" --> Rules{Security Rules 🛡️}
+```
+
 ---
 
 ## 2) 重要ポイントだけ先に⚠️（ここを外すと事故る😱）
@@ -27,17 +34,40 @@ Custom Claims を付与できるのは **Admin SDK（サーバー側の特権環
 つまり、**Reactアプリ（ブラウザ）にAdmin SDKを入れて付与**みたいなのはNG🙅‍♂️（危険すぎ） ([Firebase][2])
 ![Where to apply Custom Claims.](./picture/firebase_security_role_ts_study_015_02_client_vs_server.png)
 
+```mermaid
+graph LR
+    Client[Client Browser 📱] -- "Cannot set claims ❌" --> Token
+    Server[Admin SDK / Functions ✈️] -- "Set claims ✅" --> Token[ID Token 🎫]
+```
+
 ## ✅ 付与しても、すぐ反映されない（トークン更新が必要）🔄
 
 Custom Claimsは **次に発行されるIDトークン**に入ります。
 なので付与直後は、ユーザー側で **トークンの強制更新**が必要になることが多いです（後で手を動かします） ([Firebase][2])
 ![The necessity of Token Refresh.](./picture/firebase_security_role_ts_study_015_03_token_refresh.png)
 
+```mermaid
+sequenceDiagram
+    participant S as Admin SDK
+    participant U as Client App
+    participant A as Auth Server
+    S->>A: setCustomUserClaims(uid, {admin:true})
+    U->>A: getIdToken(forceRefresh: true)
+    A-->>U: New Token with Admin Claim! 🎫✨
+```
+
 ## ✅ 入れられるサイズに上限がある（1000バイト）📦
 
 Custom Claimsは **最大1000バイト**。大きいデータやプロフィール全部を入れる場所じゃないです🙅‍♀️
 「admin: true」みたいな **小さいフラグ**向き！ ([Firebase][2])
 ![1000 Byte Limit on Claims.](./picture/firebase_security_role_ts_study_015_04_size_limit.png)
+
+```mermaid
+graph TD
+    Data[Claims Data] --> Box{1000 Bytes Limit 📦}
+    Box -- "OK (admin:true)" --> Pass[✅]
+    Box -- "Too Big (profile data...)" --> Fail[❌ Error]
+```
 
 ## ✅ 予約語っぽいクレーム名は使えない🧨
 
@@ -131,6 +161,13 @@ console.log("✅ admin=true を付与しました:", uid);
 ※ `firebase-admin` のセットアップや「認証情報ファイルが必要」という話は Admin SDKの公式手順にあります ([Firebase][3])
 ![Executing Admin SDK script.](./picture/firebase_security_role_ts_study_015_05_admin_sdk_script.png)
 
+```mermaid
+graph LR
+    Dev[Developer 🧑‍💻] -- Run Script --> SDK[Admin SDK 🔧]
+    JSON[Service Account Key 🔑] -- Auth --> SDK
+    SDK -- Update --> AuthSystem[Firebase Auth 🔐]
+```
+
 ---
 
 ## Step C：React側で「トークン強制更新」して確認する🔄✅
@@ -177,6 +214,14 @@ service cloud.firestore {
 ## 5) よくある事故パターン集😂💥（先に踏んでおこう）
 
 ![Common pitfalls with Custom Claims.](./picture/firebase_security_role_ts_study_015_06_common_accidents.png)
+
+```mermaid
+graph TD
+    P1[No Token Refresh 🔄]
+    P2[Exceeding 1000 Bytes 📦]
+    P3[Reserved Claim Names 🧨]
+    P1 & P2 & P3 --> Debug[Why is it not working? 😱]
+```
 
 ## 事故①：付与したのに admin が見えない😱
 

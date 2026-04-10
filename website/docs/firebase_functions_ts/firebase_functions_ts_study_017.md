@@ -1,4 +1,4 @@
-﻿# 第17章：AIを“裏側”に組み込む（Genkit連携の入口）🤖🔥
+# 第17章：AIを“裏側”に組み込む（Genkit連携の入口）🤖🔥
 
 この章では、**Functions（Callable）からAIを呼んで**、フロント（React）に返す「裏側AI」を作ります✨
 ポイントは **Genkit の Flow を `onCallGenkit` で包む**こと。これで **Callableとして公開**できて、さらに **ストリーミング（途中経過を小出し）**までいけます🚀 ([Firebase][1])
@@ -18,6 +18,13 @@
 
 ![Frontend vs Backend AI Safety](./picture/firebase_functions_ts_study_017_01_backend_ai_safety.png)
 
+```mermaid
+graph TD
+    Client[Client App] -- API Key 露出のリスク❌ --> AI[AI API]
+    Client -- 安全な呼び出し✅ --> FN[Functions]
+    FN -- Secret Manager🗝️ --> AI
+```
+
 フロント直呼びAIは、すぐ試せて便利なんだけど…👇
 
 * 🔑 **APIキーを守りやすい**（漏れにくい）
@@ -32,6 +39,24 @@
 ## 2) Genkit / onCallGenkit を超ざっくり理解🧠
 
 ![Genkit Components](./picture/firebase_functions_ts_study_017_02_genkit_structure.png)
+
+```mermaid
+graph LR
+    F[Flow] --- S[Schema]
+    F --- M[Model Integration]
+    F --- ST[Streaming]
+```
+---
+
+## 5) 「AIは間違う」前提のガード 3点セット🛡️🧠
+
+![Three Guard Rails](./picture/firebase_functions_ts_study_017_07_three_guards.png)
+
+```mermaid
+graph TD
+    G1[入口: 文字数/型制限] --> G2[処理: プロンプト固定]
+    G2 --> G3[出口: スキーマ検証]
+```
 
 * **Genkit**：JS/TS向けの “AIワークフロー枠” みたいなやつ（Flow・スキーマ・ストリーミング等）🧰
 * **Flow**：入力/出力の形（スキーマ）を決めて、AI呼び出しを1本の処理にする📦
@@ -63,6 +88,12 @@ npm i genkit @genkit-ai/google-genai
 
 ![Secret Manager](./picture/firebase_functions_ts_study_017_03_secret_manager.png)
 
+```mermaid
+graph LR
+    C[CLI] -- functions:secrets:set --> S[Secret Manager]
+    F[Functions] -- defineSecret --> S
+```
+
 コードに直書き❌。Secret Managerへ✅（Firebase推奨の流れ） ([Firebase][1])
 
 ```powershell
@@ -93,6 +124,12 @@ export const ai = genkit({
 ## Step 4：Flow（入力/出力スキーマ付き）を作る🧩
 
 ![Structured Input/Output](./picture/firebase_functions_ts_study_017_04_structured_io.png)
+
+```mermaid
+graph LR
+    In[Input text] -- Zod 検証 --> Flow[Flow]
+    Flow -- Output Schema --> Out[JSON Result]
+```
 
 `functions/src/flows/formatNote.ts`
 
@@ -164,6 +201,13 @@ ${input.text}
 ## Step 5：`onCallGenkit` でCallableとして公開する📞
 
 ![Callable Wrapper Security](./picture/firebase_functions_ts_study_017_05_callable_wrapper.png)
+
+```mermaid
+graph TD
+    Request --> Auth{Auth OK?}
+    Auth -- YES --> AC{App Check?}
+    AC -- YES --> Genkit[Genkit Flow]
+```
 
 `functions/src/index.ts`
 

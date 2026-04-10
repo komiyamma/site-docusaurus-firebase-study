@@ -1,4 +1,4 @@
-﻿# 第20章：整合性を“サーバー側”で守る（Functions / Cloud Run / AI）⚙️🤖
+# 第20章：整合性を“サーバー側”で守る（Functions / Cloud Run / AI）⚙️🤖
 
 この章は「**アプリが大きくなっても壊れない仕組み**」を作る回です💪✨
 Firestoreは便利だけど、**クライアント（ブラウザ）を信用しすぎる**と事故りやすいんだよね…😇💥
@@ -19,6 +19,17 @@ Firestoreは便利だけど、**クライアント（ブラウザ）を信用し
 DevToolsでリクエスト改造できるので **「commentCountを9999にする」** とか普通にできちゃう🥲🪛
 
 ![firebase_firestore_struncture_ts_study_020_01_client_vs_server.png](./picture/firebase_firestore_struncture_ts_study_020_01_client_vs_server.png)
+
+```mermaid
+graph LR
+    subgraph Client ["クライアント側 (信用不可) 🔓"]
+        C[ブラウザJS] -- "commentCount = 999" --> F[Firestore]
+    end
+    subgraph Server ["サーバー側 (信用) 🔐"]
+        T[Firestoreトリガー] --> Func[Cloud Functions]
+        Func -- "Transactionで+1" --> F
+    end
+```
 
 ---
 

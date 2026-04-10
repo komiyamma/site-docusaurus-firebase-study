@@ -1,4 +1,4 @@
-﻿# 第04章：Reactでカスタムイベント送信📣🧑‍💻
+# 第04章：Reactでカスタムイベント送信📣🧑‍💻
 
 この章は「ボタンを押した」「保存した」「AI整形した」みたいな**あなたのアプリ固有の行動**を、Analytics（GA4）に送れるようになる回です📊✨
 送れたら、Console の **DebugView** で「今まさに飛んでる！」を確認します👀🔥 ([Firebase][1])
@@ -50,6 +50,15 @@ GA4には、分析しやすいように **推奨イベント名**が用意され
 ## 手順1：Analyticsを“安全に初期化”する（ブラウザだけ）🌐
 
 ![firebase_analytics_performance_ts_study_004_safe_init.png](./picture/firebase_analytics_performance_ts_study_004_safe_init.png)
+
+```mermaid
+flowchart TD
+    Start["track(eventName, params)📣"] --> Check["isSupported()?🧪<br>(ブラウザ要件/SSR)"]
+    Check -- NO --> End["何もしない📴"]
+    Check -- YES --> Get["getAnalytics()を取得📥"]
+    Get --> Log["logEvent(a, name, params)送信📤"]
+    Log --> End
+```
 
 Reactでも、SSR混在（Next.jsなど）だと「サーバー側で落ちる」ことがあるので、`isSupported()` を挟んでおくのが安心です🧯 ([Firebase][2])
 

@@ -1,4 +1,4 @@
-﻿# 第19章：Gemini in Firebaseで“コンソール運用”を助けてもらう🧯🔧
+# 第19章：Gemini in Firebaseで“コンソール運用”を助けてもらう🧯🔧
 
 この章はひとことで言うと、**「Firebaseコンソールの操作・設定・トラブル対応を、Geminiに“相談しながら”進める力をつける回」**です💬✨
 Gemini in Firebaseは、Firebase製品の疑問に即答してくれたり、エラーを“人間語”に翻訳して次の一手を提案してくれたりします👀🧠（しかも**参考にした公式ドキュメント等の“出典”も返せる**のが強い！）([Firebase][1])
@@ -18,6 +18,13 @@ Gemini in Firebaseは、Firebase製品の疑問に即答してくれたり、エ
 ## 1) Gemini in Firebaseって、何ができるの？🤖📌
 
 ![Firebaseコンソールで Gemini に相談できる](./picture/firebase_ai_ts_study_019_gemini_role.png)
+
+```mermaid
+flowchart LR
+    Problem["詰まりポイント🧯<br>(エラー/設定不明)"] --> Gemini["Gemini in Firebase💬<br>(コンソール内)"]
+    Gemini -->|Source Citations| Docs["公式ドキュメント📚<br>(裏取り)"]
+    Docs --> Memo["運用メモ化📝<br>(手順書・Runbookへ)"]
+```
 
 できること（初心者が嬉しい順）👇
 

@@ -1,4 +1,4 @@
-﻿# 第16章：“インデックスエラー”を怖がらない（読む→直す）🛠️😤
+# 第16章：“インデックスエラー”を怖がらない（読む→直す）🛠️😤
 
 この章はね、結論から言うとこうです👇
 **「インデックスエラー＝Firestoreからの“宿題プリント”」** です📄✨
@@ -9,6 +9,16 @@
 ---
 
 ## 📖 読む：まず“インデックス”って何？（超やさしく）🧠📚
+
+![Index Error Link](./picture/firebase_firestore_base_ts_study_016_01_index_error.png)
+
+```mermaid
+graph TD
+    Code[Run Query] --> Err{Error: Index Required}
+    Err -- "Click link in console" --> Browser[Firebase Console]
+    Browser --> Create[Build Index]
+    Create --> Success[Query Works!]
+```
 
 ![Database Index Concept](./picture/firebase_firestore_base_ts_study_016_01_index_concept.png)
 

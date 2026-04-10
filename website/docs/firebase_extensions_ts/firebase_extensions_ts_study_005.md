@@ -1,4 +1,4 @@
-﻿# 第5章：パラメータ設計が9割（拡張は“設定”で化ける）🎛️✨
+# 第5章：パラメータ設計が9割（拡張は“設定”で化ける）🎛️✨
 
 この章はひとことで言うと👇
 **「Extensionsは“中身を読む”より先に、“設定（パラメータ）を設計できる”と勝ち」** です😎🧩
@@ -26,6 +26,23 @@
 3. **出力**（例：サムネ保存、公開/非公開、失敗時の置き場）
 
 ![Parameter Influence](./picture/firebase_extensions_ts_study_005_logic_flow.png)
+
+```mermaid
+graph TD
+    Trigger["📦 トリガー"] --> Logic{拡張ロジック}
+    
+    subgraph Params ["🎛️ パラメータで調整"]
+      P1["監視パス (INCLUDE)"]
+      P2["削除設定 (DELETE)"]
+      P3["公開設定 (MAKE_PUBLIC)"]
+    end
+    
+    P1 -.-> Trigger
+    P2 -.-> Logic
+    P3 -.-> Output
+    
+    Logic --> Output["🖼️ 出力"]
+```
 
 で、これ全部を **インストール時のパラメータ**が決めます。
 「あとでコード書けば調整できるっしょ？」が通りにくいのが拡張の特徴です🧩（もちろん拡張の外側で補助はできます🙆）

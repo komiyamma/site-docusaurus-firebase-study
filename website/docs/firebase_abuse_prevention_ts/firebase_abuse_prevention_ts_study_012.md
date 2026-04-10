@@ -1,4 +1,4 @@
-﻿# 第12章：AIを守る（Firebase AI Logic × App Check）🤖🧿
+# 第12章：AIを守る（Firebase AI Logic × App Check）🤖🧿
 
 この章でやるのはコレ👇✨
 
@@ -12,6 +12,13 @@
 ## 1) まず腹落ち：AIは “お金が燃えやすいAPI” 🔥💸
 
 ![AI Cost Risk](./picture/firebase_abuse_prevention_ts_study_012_01_ai_risk.png)
+
+```mermaid
+graph TD
+    R1[高単価 API 💸] --- Risk[破産リスク]
+    R2[ボット連打 🤖] --- Risk
+    R3[プロンプト悪用 🌀] --- Risk
+```
 
 FirestoreやStorageも狙われるけど、AIは特にヤバいです😇
 理由はシンプル👇
@@ -30,6 +37,13 @@ FirestoreやStorageも狙われるけど、AIは特にヤバいです😇
 
 Firebase AI Logic の大事ポイントはここ👇
 
+```mermaid
+flowchart LR
+    App["アプリ📱<br>(Gemini API Keyなし)"] -->|要求 + App Check トークン🎫| Proxy{"Firebase AI Logic<br>プロキシ🚪"}
+    Proxy --トークン検証＆<br>レート制限チェック--> Proxy
+    Proxy -->|API Key付与🔑| Gemini["Gemini API🤖"]
+```
+
 * アプリ → Firebase AI Logic の **プロキシ（中継）** を通って Gemini / Imagen に行く🚪
 * そのプロキシで **App Check トークンを検証できる**🧿✅
 * 特に Gemini Developer API を使う場合、**Gemini API key をアプリに埋め込まない運用**が超重要（キーはバックエンド側で使われる）🔐
@@ -42,6 +56,15 @@ Firebase AI Logic の大事ポイントはここ👇
 ## 3) 守りの基本セットは3つ🧰🧿
 
 ![Three Tools](./picture/firebase_abuse_prevention_ts_study_012_03_defense_tools.png)
+
+```mermaid
+graph LR
+    AC[App Check 🧿] -- "正規アプリ確認" --> All
+    LT[Limited-Use ⏱️] -- "使い捨てトークン" --> All
+    QT[Quota 🚦] -- "回数制限" --> All
+    subgraph All ["総合防御線"]
+    end
+```
 
 ## A. App Check（必須）🧿
 
@@ -65,6 +88,11 @@ Firebase AI Logic API には **“1ユーザーあたり/1分あたり” の上
 ## 4-1. まずは最小で “AI整形” 関数を作る🛠️
 
 ![Secure Client Code](./picture/firebase_abuse_prevention_ts_study_012_04_client_code.png)
+
+```mermaid
+graph LR
+    SDK[Firebase AI SDK] --- Opt[useLimitedUseAppCheckTokens: true]
+```
 
 ポイントは👇
 
@@ -171,6 +199,12 @@ export function MemoPolishButton(props: {
 
 ![Verification Process](./picture/firebase_abuse_prevention_ts_study_012_05_verification.png)
 
+```mermaid
+graph LR
+    M[Monitor 👀] --> E[Enforce 🧿]
+    E --> V[Verify 🧪]
+```
+
 ここ、めちゃ大事です🔥
 **守りは「効いてるか確認」しないと、ただの気分**になりがち😇
 
@@ -190,6 +224,13 @@ AI Logic は App Check 統合がサポートされていて、プロキシが Ap
 ## 6) レート制限（Quota）で “破産しない” を作る💸🚦
 
 ![Rate Limiting](./picture/firebase_abuse_prevention_ts_study_012_06_quota.png)
+
+```mermaid
+graph TD
+    User[User] --> Gate{Quota Gate 🚦}
+    Gate -- "< 100 RPM" --> OK[✅ Success]
+    Gate -- "> 100 RPM" --> Err[❌ 429 Error]
+```
 
 Firebase AI Logic API の quota は、ざっくりこう考えるとラク👇
 
@@ -214,6 +255,13 @@ Firebase AI Logic API の quota は、ざっくりこう考えるとラク👇
 ## 7) “構造化出力(JSON)” を使うと事故が減る🧾🤖
 
 ![Structured JSON](./picture/firebase_abuse_prevention_ts_study_012_07_structured_output.png)
+
+```mermaid
+graph LR
+    Raw[Raw Text] --> AI[Gemini API]
+    Schema[Schema] --> AI
+    AI -- JSON Response --> UI[UI rendering]
+```
 
 AIの戻りがただの文章だと👇が起きがち😵‍💫
 

@@ -1,4 +1,4 @@
-﻿# 第13章：アプリからFlowを呼ぶ（onCallGenkit）📣🔗
+# 第13章：アプリからFlowを呼ぶ（onCallGenkit）📣🔗
 
 ## この章のゴール🎯
 
@@ -11,6 +11,19 @@
 ## 1) まず全体像：なぜ onCallGenkit なの？🤔
 
 ![firebase_ai_ts_study_013_oncall_concept.png](./picture/firebase_ai_ts_study_013_oncall_concept.png)
+
+```mermaid
+sequenceDiagram
+    participant App as React SDK📱
+    participant Func as onCallGenkit (Cloud Functions)📣
+    participant Flow as Genkit Flow🎬
+    
+    App->>Func: call("ngCheck", data) + [Auth/AppCheck]🔐
+    Func->>Func: 認証 & App Check 検証🛡️
+    Func->>Flow: Flow実行▶️
+    Flow-->>Func: 結果返却
+    Func-->>App: JSONレスポンス✨
+```
 
 onCallGenkit は、Genkit の Flow を「呼び出し可能関数（Callable）」として公開する仕組みだよ〜という立ち位置です📌
 呼び出し側は「genkit/beta/client」または Cloud Functions のクライアントSDKから呼べて、認証情報も自動で付いてきます✅([Firebase][1])

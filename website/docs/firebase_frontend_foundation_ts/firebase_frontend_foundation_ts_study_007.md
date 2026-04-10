@@ -1,4 +1,4 @@
-﻿# 第07章：状態の3点セットを覚える 🔁😵‍💫（loading / error / data）
+# 第07章：状態の3点セットを覚える 🔁😵‍💫（loading / error / data）
 
 この章のゴールはシンプルです🙂
 **「画面が沈黙しない」**＝**読み込み中 / 失敗 / 成功（データあり）**を必ず出せるようにします✨
@@ -22,6 +22,16 @@
 2. **error**：ごめん、失敗した🙏（＋リトライ🔁）
 3. **data**：表示できた🎉
 4. **empty**：0件です🙂（※dataの中の分岐）
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Loading: 実行 (run)
+    Loading --> Success: 成功 (resolve)
+    Loading --> Error: 失敗 (reject)
+    Success --> Loading: 再実行
+    Error --> Loading: リトライ
+```
 
 この考え方は、Firestoreでも、Functionsでも、AI呼び出しでも全部同じです🧠✨
 Firestoreのリアルタイム購読でも、**エラーコールバックを渡して失敗を拾える**ので「沈黙防止」に直結します📡💥 ([Firebase][1])

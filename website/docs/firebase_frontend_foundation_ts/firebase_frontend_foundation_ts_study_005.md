@@ -1,4 +1,4 @@
-﻿# 第05章：管理画面レイアウトの基本 🧱📊
+# 第05章：管理画面レイアウトの基本 🧱📊
 
 この章で作るのは「どのページでも共通で使う“枠”」です🧩✨
 サイドバー＋ヘッダー＋メイン領域が固定されて、ページ中身だけが切り替わる“管理画面の型”を作ります😆
@@ -13,8 +13,18 @@
 2. **スクロールする場所は1つだけ**（メインだけスクロール）🌀
 3. **中身（ページ）は Outlet で差し替え**（枠は同じ）🔁
 
+```mermaid
+graph TD
+    AppShell["AppShell (レイアウト)"]
+    AppShell --> Sidebar["Sidebar (固定)"]
+    AppShell --> Content["右コンテンツ領域"]
+    Content --> Topbar["Topbar (固定)"]
+    Content --> Main["Main (スクロール可)"]
+    Main --> Outlet["Outlet (ページ差し替え口)"]
+```
+
 ここまでできると、Firestore一覧もフォームもAIボタンも「枠に乗せるだけ」になります🚀
-（Firebase AI Logic のUIボタンも、この枠に自然に置けます🤖✨） ([Firebase][2])
+（Firebase AI Logic のUIボタンも、this枠に自然に置けます🤖✨） ([Firebase][2])
 
 ---
 

@@ -1,4 +1,4 @@
-﻿# 第13章：ランキング設計（Top Nを気持ちよく出す）🥇✨
+# 第13章：ランキング設計（Top Nを気持ちよく出す）🥇✨
 
 ランキングって、見た目は「並べるだけ」なんだけど…裏ではけっこう“設計力”が出ます😇
 この章のゴールは **「Top N を速く・安定して・ズルされにくく」出せる形**を作ることです💪🔥
@@ -83,6 +83,23 @@ Firestoreは **保存されているフィールドを `orderBy()` で並べる*
 ## 2) 3つのランキング実装パターン（どれを選ぶ？）🤔
 
 ![Ranking Patterns](./picture/firebase_firestore_struncture_ts_study_013_04_ranking_patterns.png)
+
+```mermaid
+graph TD
+    subgraph PatternA ["パターンA: 直接並べ替え"]
+        P1[posts] -- orderBy('score') --> Display
+    end
+    subgraph PatternB ["パターンB: ランキング専用保持"]
+        P2[posts] --> Sync[同期処理]
+        Sync --> R[rankings]
+        R -- orderBy('score') --> Display
+    end
+    subgraph PatternC ["パターンC: 1ドキュメント集約"]
+        P3[posts] --> App[定期集約]
+        App --> D[daily_top_10]
+        D -- 配列を取得 --> Display
+    end
+```
 
 ## A. いちばんシンプル：`posts` をそのまま `orderBy`（まずはこれでOK）🥰
 

@@ -1,4 +1,4 @@
-﻿# 第07章：Node.jsとnpm：まず“動く土台”を確認🔩🧰
+# 第07章：Node.jsとnpm：まず“動く土台”を確認🔩🧰
 
 この章は **「React+TypeScriptを動かすための“土台”＝Node/npmがちゃんと動く」** をサクッと作る回だよ😊
 ここがグラつくと、後の章（Vite/React/Firebase SDK/AI系）で **エラー祭り** になるので、先にガッチリ固めよう💪✨
@@ -18,6 +18,13 @@
 
 ![Node.js and npm Concept](./picture/firebase_startdash_ts_study_007_01_node_npm_concept.png)
 
+```mermaid
+graph LR
+    OS["Windows / Mac"] --> Node["Node.js 🟢<br/>Execution Engine"]
+    Node --> JS["Run JS outside browser"]
+    Node --> NPM["npm 📦<br/>Package Manager"]
+```
+
 * **Node.js**：ブラウザじゃなくてもJavaScriptを動かせる実行環境💻
   → React開発では「開発サーバー」「ビルド」「CLIツール」を動かすエンジン役になるよ⚙️
 * **npm**：Nodeの世界の“アプリストア”みたいなもの📦
@@ -30,6 +37,13 @@
 ## 2) 2026年の「安全なNodeバージョン」🧯
 
 ![Node Version Safety](./picture/firebase_startdash_ts_study_007_02_node_versions.png)
+
+```mermaid
+graph TD
+    Node["Node.js Versions"] --> v18["v18 <br/>End of Life ⚠️"]
+    Node --> v20["v20 LTS <br/>Default/Safe 🌱"]
+    Node --> v22["v22 LTS <br/>Latest Safe 🌲"]
+```
 
 React+Vite周りは、**Nodeが古いと容赦なく動かない** です😇
 
@@ -70,6 +84,13 @@ npm -v
 
 ![Basic npm Commands](./picture/firebase_startdash_ts_study_007_03_npm_commands.png)
 
+```mermaid
+graph TD
+    Command["npm install <pkg>"] --> NodeModules["Puts in node_modules/"]
+    Command --> PkgJson["Updates package.json"]
+    Command --> Lock["Updates package-lock.json"]
+```
+
 ## 4-1. 依存を入れる
 
 * ふつうに入れる：
@@ -87,6 +108,13 @@ npm -v
 
 ![package-lock.json Purpose](./picture/firebase_startdash_ts_study_007_04_lock_file.png)
 
+```mermaid
+graph LR
+    DevA["Dev A"] -- npm i --> Lock["package-lock.json 🔒"]
+    Lock -- Exact versions --> DevB["Dev B"]
+    Lock -.- Note_Lock["Prevents #quot;It works on my machine#quot;"]
+```
+
 `package-lock.json` は **npmが自動生成**して、同じ依存ツリーを再現するためのもの🔒
 基本 **Gitにコミットする前提** だよ（チームでも未来の自分でも助かる）🫶 ([npm ドキュメント][4])
 
@@ -95,6 +123,13 @@ npm -v
 ## 5) `package.json` の読み方（最低ライン）👀
 
 ![package.json Anatomy](./picture/firebase_startdash_ts_study_007_05_package_json.png)
+
+```mermaid
+graph TD
+    Pkg["package.json 📄"] --> Scripts["scripts: 'npm run dev'"]
+    Pkg --> Deps["dependencies: Prod libs"]
+    Pkg --> DevDeps["devDependencies: Test/Build tools"]
+```
 
 見る場所はここだけでOK👇
 
@@ -108,6 +143,13 @@ npm -v
 ## 6) 5分で体験：Nodeで動かして、npmで1個入れる🧪✨
 
 ![Node Hands-on](./picture/firebase_startdash_ts_study_007_06_handson.png)
+
+```mermaid
+graph LR
+    Init["npm init -y"] --> Install["npm i cowsay"]
+    Install --> Run["npx cowsay 'Hello'"]
+    Run --> Output["Cow prints 'Hello' 🐄"]
+```
 
 ## 6-1. 新しい作業フォルダを作る📁
 
@@ -163,6 +205,13 @@ node index.mjs
 ## 7) Antigravity / Firebase Studio 側で詰まったとき🛸🧰
 
 ![Nix Environment](./picture/firebase_startdash_ts_study_007_07_nix_env.png)
+
+```mermaid
+graph TD
+    IDX["Project IDX ☁️"] --> Nix["Nix Config ❄️"]
+    Nix -- Define Node 20 --> Env["Docker/VM"]
+    Nix -- Define Extensions --> Env
+```
 
 クラウドIDE側は **Nixで環境を固定**できるタイプ。
 つまり「Nodeのバージョンをプロジェクトに同梱して、全員同じ環境にする」発想が強いよ📌 ([Firebase][5])

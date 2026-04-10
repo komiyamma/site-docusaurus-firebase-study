@@ -1,4 +1,4 @@
-﻿# 第18章　AIを開発に混ぜる：Firebase MCP × Geminiで加速🤖💨
+# 第18章　AIを開発に混ぜる：Firebase MCP × Geminiで加速🤖💨
 
 ## この章のゴール🎯
 
@@ -106,6 +106,14 @@ Firebase拡張を入れていると、事前プロンプトが **`/firebase:...`
 ### 4-2. AIへのお願い文（コピペOK）📝🤖
 
 ![_review_loop](./picture/firebase_local_dev_ts_study_018_review_loop.png)
+
+```mermaid
+graph LR
+    Ask["Human: #quot;Create Rules#quot;"] -- Prompt --> AI["AI generates Rules & Tests"]
+    AI -- Propose --> Review["Human: Review & Test in Emulator"]
+    Review -- "OK?" --> Pass["Commit & Deploy"]
+    Review -- "Fix required" --> Ask
+```
 
 （Gemini CLIやAntigravityのチャットにそのまま投げる）
 

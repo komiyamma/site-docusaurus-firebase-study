@@ -1,4 +1,4 @@
-﻿# 第06章：メールログイン：ログイン/ログアウトを通す🚪
+# 第06章：メールログイン：ログイン/ログアウトを通す🚪
 
 この章でやることはシンプル👇
 **「メール＋パスワードでログイン」→「ログアウト」→「UIが切り替わる」** を、ちゃんと“気持ちよく”通します🙂🌈
@@ -9,6 +9,13 @@
 ## ゴール🎯
 
 ![Authentication Cycle](./picture/firebase_login_ts_study_006_01_cycle.png)
+
+```mermaid
+graph LR
+    Logout[ログアウト状態 🚪] -- "signIn" --> Login[ログイン状態 👤]
+    Login -- "Auth persistence" --> Login
+    Login -- "signOut" --> Logout
+```
 
 * ログインフォームから **メールログイン**できる✅
 * ログアウトで **ログイン前UIに戻る**✅
@@ -30,6 +37,12 @@
 ## 1) 便利な「エラー翻訳」関数を用意😇🗺️
 
 ![Friendly Error Logic](./picture/firebase_login_ts_study_006_02_error_logic.png)
+
+```mermaid
+graph LR
+    E[auth/invalid-credential 💥] --> F{Friendly Logic}
+    F -- "Sanitize" --> Msg["メールかパスワードが違うみたい😵<br>もう一度試してね！"]
+```
 
 ログイン失敗は、基本 **「メールかパスワードが違う」** に寄せるのが安全です（理由は後述）。([Zenn][3])
 
@@ -63,6 +76,15 @@ export function toFriendlyAuthMessage(code: string): string {
 ## 2) ログインページ本体を実装✍️🚀
 
 ![Login Screen UI](./picture/firebase_login_ts_study_006_03_login_ui.png)
+
+```mermaid
+graph TD
+    subgraph LoginPart [ログイン画面🔐]
+        E[メールアドレス]
+        P[パスワード]
+        B[ログイン🚪]
+    end
+```
 
 `signInWithEmailAndPassword(auth, email, password)` を呼ぶだけ！([Firebase][1])
 
@@ -178,6 +200,13 @@ export function LogoutButton() {
 
 ![Conditional UI Switching](./picture/firebase_login_ts_study_006_04_app_switch.png)
 
+```mermaid
+graph TD
+    App[App.tsx] --> State{user?}
+    State -- "null" --> Login[LoginPage]
+    State -- "User Object" --> Main[Main Content & LogoutBtn]
+```
+
 （ルーターやガードは後の章で本格的にやるとして、まずは最短で成功体験🙂）
 
 ```tsx
@@ -223,6 +252,13 @@ export default function App() {
 
 ![Email Enumeration Protection](./picture/firebase_login_ts_study_006_05_security_mask.png)
 
+```mermaid
+graph LR
+    U1[User Not Found] --> Mask[Generic Error 🛡️]
+    U2[Wrong Password] --> Mask
+    Mask --> UI["メールかパスワードが違うみたい"]
+```
+
 最近の設定/仕様では、**メールアドレスが存在するかどうかを推測されないように**、ログイン失敗が “まとめて同じ扱い” になることがあります。
 そのため、アプリ側は「未登録です！」みたいに断定しないほうが安全です。([Zenn][3])
 
@@ -237,6 +273,12 @@ export default function App() {
 ## AIでUX強化🤖✨：失敗理由を“やさしく説明”ボタンにする
 
 ![AI Error Explanation](./picture/firebase_login_ts_study_006_06_ai_assist.png)
+
+```mermaid
+graph LR
+    Err[Error Msg] --> Btn[AIにコツを聞く🤖]
+    Btn -- Gemini --> Tip[やさしい確認手順 ✨]
+```
 
 ログイン失敗時に、ボタン1つで「何を確認すればいいか」を生成すると親切です🙂
 Firebase AI Logic の Web例は `firebase/ai` を使う形が公式です。([Firebase][2])
@@ -272,6 +314,12 @@ async function explainWithAI(errorMessage: string) {
 ## Antigravity / Gemini CLI を“第6章の相棒”にする🧠🛠️
 
 ![Gemini CLI Ecosystem](./picture/firebase_login_ts_study_006_07_cli_tools.png)
+
+```mermaid
+graph TD
+    CLI[Gemini CLI 💻] -- install --> Ext[Firebase Extension MCP]
+    Ext -- helps --> Code[Auth Implementation 🛠️]
+```
 
 ## ✅ Gemini CLI 側に Firebase の道具箱（MCP）を追加
 

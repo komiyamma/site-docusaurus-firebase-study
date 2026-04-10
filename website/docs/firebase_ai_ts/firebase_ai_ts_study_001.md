@@ -1,4 +1,4 @@
-﻿# 第01章：全体像「AIを“どこに置くか”」を先に決める🗺️🤖
+# 第01章：全体像「AIを“どこに置くか”」を先に決める🗺️🤖
 
 この章は、いきなり実装に突っ込む前に **「AIをどこで動かすのが安全でラクか」** を決める回です😊
 ここがフワッとしてると、あとで「鍵どうする？😱」「乱用された😇」「ログ足りない…」みたいな事故が起きやすいんですよね。
@@ -12,6 +12,19 @@
 AIの置き場所は、だいたいこの3パターンに整理できます👇
 
 ![App AI Logic](./picture/firebase_ai_ts_study_001_app_ai_logic.png)
+
+```mermaid
+flowchart TD
+    subgraph Client ["A. アプリ内AI (AI Logic)"]
+        App["UI体験📱<br>(要約/整形)"]
+    end
+    subgraph Server ["B. サーバー側AI (Genkit)"]
+        Cloud["複雑な台本🎬<br>(NGチェック/分岐)"]
+    end
+    subgraph Dev ["C. 開発支援AI"]
+        Tool["開発爆速化🚀<br>(Antigravity/CLI)"]
+    end
+```
 
 ## A. アプリ内AI（クライアント直呼び）📱💬
 

@@ -1,4 +1,4 @@
-﻿# 第03章：Tailwindで最低限きれいにする ✨🎽
+# 第03章：Tailwindで最低限きれいにする ✨🎽
 
 この章のゴールはシンプルです👇😆
 **「見た目が“管理画面っぽい”ダッシュボード（カード3枚）」を、Tailwindだけでサクッと作れる**ようになります📊✨
@@ -14,9 +14,32 @@
 
 ![firebase_frontend_foundation_ts_study_003_01_dashboard_goal](./picture/firebase_frontend_foundation_ts_study_003_01_dashboard_goal.png)
 
+```mermaid
+flowchart TD
+  App["App"] --> H["Header"]
+  App --> M["Main"]
+  App --> F["Footer"]
+  M --> C1["Card"]
+  M --> C2["Card"]
+  M --> C3["Card"]
+```
+
 ---
 
 ## 3-1 Tailwindの考え方（超ざっくり）🧠✨
+
+```mermaid
+mindmap
+  root((Tailwind CSS))
+    Utility First
+      既存のクラスを組み合わせる
+      CSSファイルを直接書かない
+    Purge
+      使ったクラスだけCSS化
+      最終ファイルが軽量
+    Responsive
+      prefix md:, lg: で簡単調整
+```
 
 Tailwindは「CSSをゴリゴリ書く」より、**クラス名を組み合わせてUIを組む**方式です🧩
 しかも、使ったクラスだけを拾ってCSSを生成するので、最終的なCSSがムダに膨らみにくいのが強みです⚡（仕組みとして“ソースをスキャンして必要な分だけ生成”します）([tailwindcss.com][1])

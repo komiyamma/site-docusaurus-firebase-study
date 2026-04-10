@@ -1,4 +1,4 @@
-﻿# 第16章：画面ガード：ログイン必須ページ（ルート保護）を作る🚧
+# 第16章：画面ガード：ログイン必須ページ（ルート保護）を作る🚧
 
 この章では「URL直打ちでも守れる」ログイン必須ページを作ります🙂
 **ポイントは3つ**だけ👇
@@ -15,6 +15,14 @@
 
 ![Route Guard Logic](./picture/firebase_login_ts_study_016_01_guard_logic.png)
 
+```mermaid
+graph TD
+    Req["ページリクエスト"] --> Guard{"Route Guard"}
+    Guard -- "loading: true ⏳" --> Wait["待機/Loading表示"]
+    Guard -- "user: null 🚪" --> Login["ログイン画面へリダイレクト"]
+    Guard -- "user: exists ✅" --> Allow["コンテンツ表示"]
+```
+
 たとえば **/mypage** を「ログイン必須」にすると…
 
 1. 未ログインで /mypage を開く
@@ -26,6 +34,13 @@
 ## 1) まずは “認証の状態” を 2つ持つ（user と loading）🦴
 
 ![Auth State Context](./picture/firebase_login_ts_study_016_02_auth_state.png)
+
+```mermaid
+graph LR
+    Provider["AuthProvider"] -- "user, loading" --> Hook["useAuth"]
+    Hook --> Guard["ProtectedLayout"]
+    Hook --> Profile["MyPage"]
+```
 
 前章までで作った **AuthProvider** がある前提でOKですが、最低限こういう形になっていれば勝ちです🙂
 （ここが弱いと、ガードがチラついたり無限リダイレクトしがち💦）
@@ -114,6 +129,15 @@ export function ProtectedLayout() {
 
 ![Router Structure Map](./picture/firebase_login_ts_study_016_03_router_map.png)
 
+```mermaid
+graph TD
+    Root["/"] --> Home["Home"]
+    Root --> Login["/login"]
+    Root --> Protected["Protected Layout 🔐"]
+    Protected --> MyPage["/mypage"]
+    Protected --> Sett["/settings"]
+```
+
 `createBrowserRouter` の構成例です。
 （React Router v7 は Node 20 以上が要件として明記されています）([React Router][3])
 
@@ -175,6 +199,19 @@ export default function App() {
 
 ![Redirect with State](./picture/firebase_login_ts_study_016_04_redirect_flow.png)
 
+```mermaid
+sequenceDiagram
+    participant U as ユーザー
+    participant G as ProtectedLayout
+    participant L as LoginPage
+    participant M as MyPage
+
+    U ->> G: /mypage にアクセス
+    G ->> L: Navigate (state: {from: /mypage}) 🚀
+    L ->> L: ログイン成功
+    L ->> M: Navigate (to: /mypage) 🔁
+```
+
 `ProtectedLayout` が `state.from` を渡してるので、ログイン画面でそれを読んで戻ります🙂
 
 **src/routes/LoginPage.tsx（戻り先だけ抜粋）**
@@ -216,12 +253,33 @@ export function LoginPage() {
 
 ![Flicker Bug](./picture/firebase_login_ts_study_016_05_flicker_bug.png)
 
+```mermaid
+graph TD
+    subgraph Bad [悪い例 👻]
+        B1["user: null"] --> B2["即リダイレクト"]
+        B2 --> B3["一瞬ログイン画面が見える"]
+    end
+    subgraph Good [良い例 ✅]
+        G1["loading: true"] --> G2["Loading画面"]
+        G2 --> G3["確定後にページ表示"]
+    end
+```
+
 原因：`loading` を見ずに `user==null` で即リダイレクトしてる
 対策：**必ず loading を先に処理**（この章の実装はOK👍）
 
 ## B) 無限リダイレクト♾️
 
 ![Infinite Redirect Loop](./picture/firebase_login_ts_study_016_06_infinite_loop.png)
+
+```mermaid
+graph TD
+    subgraph Loop [無限ループ ♾️]
+        P["Protected ZONE"] --> L["LoginPage"]
+        L -- "user: null" --> N["Navigate to /login"]
+        N --> P
+    end
+```
 
 原因：ログイン画面まで守ってしまってる（/login も Protected の子に入れてる）
 対策：/login は **保護ゾーンの外**に置く✅
@@ -264,6 +322,12 @@ export function MyPage() {
 ## 7) AIでUX強化（この章の“おまけ”🤖💬）
 
 ![AI Explaining Security](./picture/firebase_login_ts_study_016_07_ai_explanation.png)
+
+```mermaid
+graph LR
+    Page["マイページ"] --> AI{"AI Advisor 🤖"}
+    AI -- Gemini --> UX["「個人データを守るために<br>ログインが必要です🔐」"]
+```
 
 ログインが必要な理由って、ユーザーにとっては「なんで？」になりがちです🙂
 そこで **Firebase AI Logic** を使って、やさしい説明文をその場で生成しちゃいます✨

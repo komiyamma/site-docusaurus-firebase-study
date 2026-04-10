@@ -1,4 +1,4 @@
-﻿# 第03章：ランタイムと言語の選び方（Node / Python / それ以外）🧩
+# 第03章：ランタイムと言語の選び方（Node / Python / それ以外）🧩
 
 この章は「何で書くのが一番ラクで、事故りにくい？」を決める回です🙂✨
 ここで迷いが消えると、以降の **HTTP / イベント / スケジューラー** がスイスイ進みます🚀
@@ -22,6 +22,15 @@
 ## 2) 迷わない結論：まずは Node.js（TypeScript）でOK ✅🟦
 
 ![Node Version Status](./picture/firebase_functions_ts_study_003_02_node_status.png)
+
+```mermaid
+graph LR
+    subgraph Status ["Node.js サポート状況 (2025-2026)"]
+        N22[Node 22] --- S1[Active / 推奨 🟩]
+        N20[Node 20] --- S2[LTS / 安定 🟨]
+        N18[Node 18] --- S3[Deprecated / 回避 🟥]
+    end
+```
 
 Cloud Functions（FirebaseのFunctions）は、現時点で **Node.js 20 と 22 をフルサポート**していて、**Node.js 18 は 2025年初頭に deprecated** になっています📌([Firebase][1])
 さらに公式の管理ドキュメントでも、サポート対象は **22 / 20 /（18はdeprecated）** と明記されています。([Firebase][2])
@@ -117,6 +126,15 @@ Pythonが向くのは例えば👇
 ## 6) 「それ以外の言語」…C#/.NET はどうする？🟪
 
 ![C#/.NET Strategy](./picture/firebase_functions_ts_study_003_06_dotnet_strategy.png)
+
+```mermaid
+flowchart TD
+    Choice{何で書きたい？}
+    Choice -- Node.js / Python --> Firebase[Firebase Functions]
+    Choice -- C# / .NET / その他 --> Run[Cloud Run functions]
+    Firebase -- 密連携 --> App[Firebase App / Auth / DB]
+    Run -- HTTP連携 --> App
+```
 
 ここが超大事ポイントです👇
 

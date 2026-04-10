@@ -1,4 +1,4 @@
-﻿# 第16章：“うざくならない”制御（まとめる・間引く・寿命を付ける）😇⏳
+# 第16章：“うざくならない”制御（まとめる・間引く・寿命を付ける）😇⏳
 
 この章のゴールはシンプルです👇
 **「通知の価値は落とさず、通知の回数だけ賢く減らす」**を実装します📣✨
@@ -16,6 +16,23 @@
 そこで、制御のツマミ（レバー）を3つ使います👇
 
 ![3 Annoyances vs 3 Solutions](./picture/firebase_notification_fcm_ts_study_016_annoyance_vs_solution.png)
+
+```mermaid
+graph TD
+    subgraph Pain [Annoyances 😵‍💫]
+        A1["Burst/Spam"]
+        A2["Stale/Old"]
+        A3["Stacking Up"]
+    end
+    subgraph Solution [Solutions 🛡️]
+        S1["Digest / Cooldown"]
+        S2["TTL (Time to Live)"]
+        S3["Update / Collapse"]
+    end
+    A1 --> S1
+    A2 --> S2
+    A3 --> S3
+```
 
 ## ① まとめる（Digest）🧺
 
@@ -53,6 +70,16 @@ Web Pushは `webpush.headers.TTL`、iOSは `apns-expiration`、Androidは `andro
 
 ![Notification Stacking vs Updating](./picture/firebase_notification_fcm_ts_study_016_collapse_tag.png)
 
+```mermaid
+graph LR
+    subgraph Default [Stacking Up 📚]
+        N1["Msg 1"] --- N2["Msg 2"] --- N3["Msg 3"]
+    end
+    subgraph Managed [Updating ✨]
+        T1["Msg 1"] -- tag/collapse --> T2["Msg 1 Updated"]
+    end
+```
+
 ---
 
 ## 手を動かす：2分ウィンドウでまとめて、24時間TTLを付ける🧩🛠️
@@ -74,6 +101,18 @@ Web Pushは `webpush.headers.TTL`、iOSは `apns-expiration`、Androidは `andro
 * `sentAt`：送ったら入れる（重複送信防止）
 
 ![Notification Bucket Data Structure](./picture/firebase_notification_fcm_ts_study_016_bucket_structure.png)
+
+```mermaid
+classDiagram
+    class NotifyBucket {
+        +string uid
+        +string postId
+        +int count
+        +timestamp sendAt
+        +timestamp latestAt
+        +timestamp sentAt
+    }
+```
 
 ---
 
@@ -151,6 +190,14 @@ export const onCommentCreated = onDocumentCreated(
 
 ![Buffering Logic Flow](./picture/firebase_notification_fcm_ts_study_016_buffering_logic.png)
 
+```mermaid
+graph TD
+    New["New Comment 💬"] --> Bucket{"Bucket Exists?"}
+    Bucket -- No --> Create["Create Bucket<br/>Set sendAt = now + 2m"]
+    Bucket -- Yes --> Update["Increment count<br/>Update latestAt"]
+    style Create fill:#f9f,stroke:#333
+```
+
 * **“すぐ送らない”**で、まず箱に積む
 * `sentAt` で **二重送信を防ぐ**（超大事）🧯
 
@@ -159,6 +206,14 @@ export const onCommentCreated = onDocumentCreated(
 ## 手順3：スケジュール関数で、期限が来た箱だけ送る📤⏱️
 
 ![Scheduled Sending Trigger](./picture/firebase_notification_fcm_ts_study_016_scheduler_trigger.png)
+
+```mermaid
+graph LR
+    Cron["onSchedule ⏰<br/>Every 1 min"] --> Query["Find Due Buckets<br/>sendAt <= Now"]
+    Query --> Loop["For each bucket"]
+    Loop --> Send["FCM sendEach 🚀"]
+    Send --> Mark["Set sentAt = now ✅"]
+```
 
 送るときに、**TTL（24h）** と **上書きキー（collapseKey / tag）** を付けます。
 
@@ -274,6 +329,14 @@ export const sendDueDigests = onSchedule("every 1 minutes", async () => {
 * 古い通知は **24時間で自然消滅**⏰([Firebase][1])
 
 ![Time To Live (TTL)](./picture/firebase_notification_fcm_ts_study_016_ttl_bomb.png)
+
+```mermaid
+graph LR
+    FCM["FCM Service"] -- Send with TTL --> Network["Network / Queue"]
+    Network -- Time Passes ⏳ --> Expired{"TTL Expired?"}
+    Expired -- Yes --> Drop["Dropped 🗑️"]
+    Expired -- No --> Deliver["Reached Device 📲"]
+```
 * Android/Webは **同じ通知枠が更新される**（増殖しない）🏷️([Firebase][3])
 * Androidは **collapseKeyで最新寄せ**（キー増やしすぎ注意）📱([Firebase][2])
 
@@ -284,6 +347,12 @@ export const sendDueDigests = onSchedule("every 1 minutes", async () => {
 今の `body` は固定文でした。ここを「2分間の出来事」から短文生成に変えると一気にプロっぽいです😎✨
 
 ![AI Summarizing Multiple Comments](./picture/firebase_notification_fcm_ts_study_016_ai_summarize_batch.png)
+
+```mermaid
+graph LR
+    Comments["5 Comments 💬💬💬💬💬"] --> AI{"AI Logic 🤖"}
+    AI -- Summarize --> Summary["You have 5 new comments from Alice and others! ✨"]
+```
 
 例）
 

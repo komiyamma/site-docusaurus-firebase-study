@@ -1,4 +1,4 @@
-﻿# 第3章：ID設計（自動ID vs 意味のあるID）🆔
+# 第3章：ID設計（自動ID vs 意味のあるID）🆔
 
 この章は「**ドキュメントIDをどう決めるか**」を、事故りにくい判断軸で身につける回です😊✨
 FirestoreのIDは“検索”じゃなくて“参照”を強くする道具…ここがポイントです🔗
@@ -8,6 +8,12 @@ FirestoreのIDは“検索”じゃなくて“参照”を強くする道具…
 ## まず超重要：IDは“検索キー”じゃないよ🔎🙅‍♂️
 
 ![ID as Reference vs Search Key](./picture/firebase_firestore_struncture_ts_study_003_01_id_search_vs_ref.png)
+
+```mermaid
+graph LR
+    ID[Document ID] -- "Reference (Fast)" --> Doc[Doc Content]
+    Content[Field: title] -- "Query/Index (Search)" --> Doc
+```
 
 Firestoreで「このデータ欲しい！」ってなる場面は大きく2種類👇
 

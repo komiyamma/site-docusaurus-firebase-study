@@ -1,4 +1,4 @@
-﻿# 第04章：要約・整形・言い換えの“型”を作る🧩📝
+# 第04章：要約・整形・言い換えの“型”を作る🧩📝
 
 この章は「AIにお願いする文章」を、その場しのぎじゃなく **“テンプレ（型）”** にして、**毎回それっぽく安定して出す**のがゴールだよ😆✨
 （ここで作った型は、後の章で **Genkit Flow** に持っていくと“そのまま資産”になる👍）
@@ -14,6 +14,17 @@ AIへの指示を、こう分けるとブレが激減するよ👇
 1. **System Instruction（固定）**：人格・絶対ルール（守るやつ）
 2. **Task Template（固定）**：今回の仕事のやり方（要約/整形/言い換えの型）
 3. **User Input（可変）**：ユーザーが入れた日報本文（データ扱い）
+
+```mermaid
+flowchart TD
+    subgraph Prompt ["生成プロンプトの構成"]
+        S["System Instruction<br>(人格・絶対ルール)"]
+        T["Task Template<br>(型: 目的/制約/形式)"]
+        U["User Input<br>(ユーザー日報データ)"]
+        
+        S --- T --- U
+    end
+```
 
 Firebase AI Logic の Web SDK でも、`systemInstruction` を渡して「固定ルール」を別枠にできるのがポイント✨ ([Firebase][1])
 

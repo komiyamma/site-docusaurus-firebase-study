@@ -1,4 +1,4 @@
-﻿# 第15章：インデックス実践（エラー→作成→改善の流れ）🔧
+# 第15章：インデックス実践（エラー→作成→改善の流れ）🔧
 
 この章は「インデックス怖い😵→インデックス便利😆」に変える回です✨
 わざとエラーを起こして、**エラーを読んで→作って→速くする**を“手順として”体に入れます💪🔥
@@ -16,6 +16,20 @@
 ## ✅ エラーが出たら勝ち（チャンス）🎯
 
 ![Error Workflow](./picture/firebase_firestore_struncture_ts_study_015_01_error_workflow.png)
+
+```mermaid
+sequenceDiagram
+    participant C as クライアント (App)
+    participant F as Firestore サーバー
+    participant Console as Firebase Console
+
+    C->>F: 複数条件クエリを実行
+    F-->>C: エラー (Index Required) & リンク
+    C->>Console: エラー内のリンクをクリック
+    Console->>Console: Create Index ボタンを押す
+    Console-->>F: ビルド開始 (数分待ち...)
+    F-->>C: クエリが通るようになる！🎉
+```
 
 Firestore のドキュメントにある通り、**複合インデックスが足りない時はエラーに“作成リンク”が含まれる**ので、それを踏むのが最短ルートです🚀
 

@@ -1,4 +1,4 @@
-﻿# 第04章：最小セットアップ（CLI初期化→1個デプロイ）🌱
+# 第04章：最小セットアップ（CLI初期化→1個デプロイ）🌱
 
 ## この章のゴール🎯
 
@@ -11,6 +11,14 @@
 ## 0) 先に知っておく“最重要”ポイント💡
 
 ![Blaze Plan Requirement](./picture/firebase_functions_ts_study_004_01_blaze_warning.png)
+
+```mermaid
+flowchart TD
+    Plan{プラン確認}
+    Plan -- Spark (無料) --> Error[デプロイ不可 ❌]
+    Plan -- Blaze (従量) --> OK[デプロイ成功 ✅]
+    OK -- 無料枠内 --> Zero[請求 $0]
+```
 
 * **デプロイには Blaze（従量課金）プランが必要**です（無料枠だけだとデプロイ自体が進みません）💸🧯 ([Firebase][1])
 * Firebase Functions の Node.js ランタイムは **20 / 22 が現役**で、**18 は非推奨**の扱いです（なので迷ったら22寄りが安心）🟩 ([Firebase][1])
@@ -47,6 +55,13 @@ firebase --version
 
 2nd gen を扱うには CLI と `firebase-functions` を新しめに保つのが大事で、公式ガイドでも一定以上のバージョンを前提に説明されています🔧 ([Firebase][2])
 
+```mermaid
+flowchart LR
+    N[Node.js 確認] --> C[CLI インストール]
+    C --> V[バージョン確認]
+    V --> L[firebase login]
+```
+
 ## 1-3. ログイン🔑
 
 ```bash
@@ -69,6 +84,15 @@ cd my-firebase-functions
 ## 2-2. 初期化コマンド🛠️
 
 ![Firebase Init Wizard](./picture/firebase_functions_ts_study_004_03_init_flow.png)
+
+```mermaid
+flowchart TD
+    Init[firebase init functions] --> SelProject[プロジェクト選択]
+    SelProject --> SelLang[Language: TypeScript]
+    SelLang --> ESLint{ESLint: Yes}
+    ESLint --> Dep{Install Deps: Yes}
+    Dep --> Done[初期化完了!]
+```
 
 ```bash
 firebase init functions

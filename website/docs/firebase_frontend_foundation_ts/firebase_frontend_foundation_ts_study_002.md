@@ -1,4 +1,4 @@
-﻿# 第02章：プロジェクト雛形を作る ⚡🧱（Vite × React × TypeScript）
+# 第02章：プロジェクト雛形を作る ⚡🧱（Vite × React × TypeScript）
 
 この章では「まず動く！」を最速で作ります😆✨
 React+TSの雛形を作って、開発サーバーを起動して、編集が即反映（ホットリロード）されるところまでいきます🔥
@@ -10,11 +10,27 @@ React+TSの雛形を作って、開発サーバーを起動して、編集が即
 **Reactのコンポーネント**＝「画面の部品」🧩
 ボタン、カード、ヘッダー…全部コンポーネントとして分けられます。
 
+```mermaid
+graph TD
+  App["App (親)"] --> Header["Header (子)"]
+  App --> Sidebar["Sidebar (子)"]
+  App --> Main["Main (子)"]
+  Main --> Card1["Card"]
+  Main --> Card2["Card"]
+```
+
 ![firebase_frontend_foundation_ts_study_002_01_components](./picture/firebase_frontend_foundation_ts_study_002_01_components.png)
 
 **状態（state）**＝「画面が覚えてる値」🧠
 たとえば「ログイン中か」「読み込み中か」「入力フォームの中身」みたいなやつです。
 状態が変わると、Reactがいい感じに画面を更新します🔁✨
+
+```mermaid
+flowchart LR
+  State["Stateが変わる"] --> React{"Reactが検知"}
+  React --> Diff["差分を計算"]
+  Diff --> UI["画面が自動更新 ✨"]
+```
 
 ![firebase_frontend_foundation_ts_study_002_02_state](./picture/firebase_frontend_foundation_ts_study_002_02_state.png)
 

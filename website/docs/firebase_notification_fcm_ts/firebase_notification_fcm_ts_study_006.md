@@ -1,4 +1,4 @@
-﻿# 第6章：Web Pushの要！Service Workerを“味方”にする🧑‍🚒🧩
+# 第6章：Web Pushの要！Service Workerを“味方”にする🧑‍🚒🧩
 
 この章はひとことで言うと、「**アプリが開いてない時（バックグラウンド）でも通知を受け取って表示できるようにする**」回です🔔✨
 その主役が **Service Worker（SW）** です。
@@ -19,6 +19,19 @@
 ## SWは「裏方の常駐係」🕵️‍♂️
 
 ![Service Worker as a Background Guard](./picture/firebase_notification_fcm_ts_study_006_sw_role.png)
+
+```mermaid
+graph TD
+    subgraph Browser ["Web Browser"]
+        React["React App (Frontend)"]
+        SW["Service Worker (Background)"]
+    end
+    FCM["FCM Server"] -- "Push Message" --> Browser
+    Browser -- "Focus: Foreground" --> React
+    Browser -- "Hidden: Background" --> SW
+    React -- "onMessage()" --> UI["Show Toast/Banner"]
+    SW -- "onBackgroundMessage()" --> OS["Show OS Notification"]
+```
 
 ブラウザで Push 通知を扱うには、Push API + Service Worker が基本セットです。
 Firebaseの Web 通知（FCM）も同じで、**HTTPS配信**が前提になります🔐（Service Worker 自体が HTTPS 前提の仕組み）([Firebase][1])

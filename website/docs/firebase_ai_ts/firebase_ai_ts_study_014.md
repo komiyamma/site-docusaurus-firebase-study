@@ -1,4 +1,4 @@
-﻿# 第14章：ログ・トレースの“残し方”を決める🧯🧾
+# 第14章：ログ・トレースの“残し方”を決める🧯🧾
 
 この章はひとことで言うと、**「AIの挙動を“あとから説明できる”ようにする設計」**を固める回です🙂✨
 AIは、同じ入力でも揺れたり、外部要因（モデル更新・混雑・タイムアウト）で結果が変わったりします。だからこそ **ログ（出来事の記録）＋トレース（処理の足跡）** が超大事です🧭
@@ -8,6 +8,22 @@ AIは、同じ入力でも揺れたり、外部要因（モデル更新・混雑
 ## 1) まず結論：ログ設計は「3つの箱」で考える📦📦📦
 
 ![firebase_ai_ts_study_014_logging_boxes.png](./picture/firebase_ai_ts_study_014_logging_boxes.png)
+
+```mermaid
+flowchart LR
+  subgraph Logging ["1. Cloud Logging (出来事)🪵"]
+    L["jsonPayload<br>(requestIdで検索)"]
+  end
+  subgraph Trace ["2. Cloud Trace (足跡)🧵"]
+    T["Latency計測<br>(Span紐づけ)"]
+  end
+  subgraph UserDB ["3. 履歴DB (体験)🗂️"]
+    D["Firestore<br>(ユーザーの履歴)"]
+  end
+  
+  L <-->|TraceID| T
+  L <-->|RequestID| D
+```
 
 ## ✅ 箱A：Cloud Logging（まずここが本丸）🪵
 

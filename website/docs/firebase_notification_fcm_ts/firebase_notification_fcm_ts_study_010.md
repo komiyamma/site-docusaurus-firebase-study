@@ -1,4 +1,4 @@
-﻿# 第10章：バックグラウンド受信（通知を表示してクリック対応）🔔👉
+# 第10章：バックグラウンド受信（通知を表示してクリック対応）🔔👉
 
 この章のゴールはこれ👇
 **「アプリを閉じてても/別タブでも通知が出る」→「押したら“該当コメント”に飛べる」** を完成させることです✨
@@ -157,6 +157,23 @@ messaging.onBackgroundMessage((payload) => {
 ## Step 3) React 側で “NAVIGATE メッセージ” を受けてルーティングする⚛️📨➡️🧭
 
 ![Service Worker to React Communication](./picture/firebase_notification_fcm_ts_study_010_postmessage.png)
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant SW as Service Worker
+    participant React as React App (Vite)
+
+    User->>SW: Click Notification
+    SW->>SW: clients.matchAll()
+    alt Existing Tab Found
+        SW->>React: focus()
+        SW->>React: postMessage({ type: 'NAVIGATE', url })
+        React->>React: useNavigate(url)
+    else No Tab Found
+        SW->>SW: clients.openWindow(url)
+    end
+```
 
 通知クリック → SW が `postMessage({type:"NAVIGATE", url})` を投げてます。
 それを React 側で受け取って、ルータで移動します✨

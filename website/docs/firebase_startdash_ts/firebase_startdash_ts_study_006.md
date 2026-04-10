@@ -1,4 +1,4 @@
-﻿# 第06章：Gemini CLIの超入門：ターミナルで“聞きながら進む”💻🤖
+# 第06章：Gemini CLIの超入門：ターミナルで“聞きながら進む”💻🤖
 
 この章では、ターミナルから **Gemini CLI** を使って、
 「調べる→要約→次の一手→コードたたき台→詰まり解消」までを一気に体験します🚀✨
@@ -26,6 +26,12 @@ Gemini CLIは、ターミナルの中で動くAIエージェントです🤖
 ## 2) セットアップ（最短）🚀
 
 ![Installing Gemini CLI](./picture/firebase_startdash_ts_study_006_01_install_gemini.png)
+
+```mermaid
+graph LR
+    Term["Terminal"] -- "npm install -g gemini-cli" --> CLI["Gemini CLI 💻"]
+    CLI -- "gemini login" --> Cloud["Google Cloud ☁️"]
+```
 
 ## A. すぐ使う（ターミナルで起動）🕹️
 
@@ -55,6 +61,13 @@ Gemini CLIの推奨要件として **Node.js 20+**、Windowsは **Windows 11（2
 ## 3) 使い方の基本：まずはこの3パターンだけ覚える🧩✨
 
 ![Three Usage Patterns](./picture/firebase_startdash_ts_study_006_02_usage_patterns.png)
+
+```mermaid
+graph TD
+    User["User"] --> T1["1. Console AI 💬<br/>Light Help"]
+    User --> T2["2. Gemini CLI 🧱<br/>Rules & Boilerplate"]
+    User --> T3["3. App AI Logic 🤖<br/>Functions calling Imagen/Gemini"]
+```
 
 ## ① ふつうに会話（いちばん使う）💬
 
@@ -86,6 +99,14 @@ gemini --include-directories ../docs,../shared
 ## 4) 「聞き方」テンプレ3つ💬✨（これだけで強い）
 
 ![Prompt Templates](./picture/firebase_startdash_ts_study_006_03_prompt_templates.png)
+
+```mermaid
+graph TD
+    Temp["Templates"] --> Setup["Setup Project"]
+    Temp --> Fix["Fix Bug"]
+    Temp --> Feature["Add Feature"]
+    Temp --> Rules["Write Rules"]
+```
 
 Gemini CLIで詰まらないコツは、質問に“材料”を添えること🍳
 おすすめテンプレはこれ👇
@@ -145,6 +166,13 @@ Gemini CLIは **GEMINI.md** をプロジェクト文脈として使えます。(
 
 ![.geminiignore Security](./picture/firebase_startdash_ts_study_006_04_geminiignore.png)
 
+```mermaid
+graph TD
+    CLI["Gemini CLI"] --> Check{"Check .geminiignore"}
+    Check -- Match --> Block["Ignore 🚫 (.env)"]
+    Check -- No Match --> Send["Send to API ☁️"]
+```
+
 Gemini CLIには **.geminiignore** があり、AIに読ませないファイルを指定できます。([Gemini CLI][5])
 最低限これを入れておくのが安全です👇
 
@@ -171,6 +199,13 @@ Gemini CLIには、フォルダを「信頼する/しない」みたいな安全
 ## 6) ハンズオン：FirebaseのWeb初期化「最小コード」を“聞いて”作る🧪🔥
 
 ![Hands-on Workflow](./picture/firebase_startdash_ts_study_006_05_handson_flow.png)
+
+```mermaid
+graph LR
+    P["Write Prompt"] --> C["CLI Exec"]
+    C --> Rev["Review Rules"]
+    Rev --> T["Run Tests"]
+```
 
 ここがこの章のメインイベント🎆
 「自分で全部調べる」のではなく、**質問で最小解**を取りに行きます。
@@ -221,6 +256,14 @@ export const firebaseApp = initializeApp(firebaseConfig);
 ## 7) FirebaseのAIも絡める：AI Logicを“設計だけ先に”やってみる🤖🧠
 
 ![AI Logic Design](./picture/firebase_startdash_ts_study_006_06_ai_design.png)
+
+```mermaid
+graph TD
+    Device["Client📱"] -- "Req" --> Func["Firebase Functions ✈️"]
+    Func -- "Vertex API" --> Gen["Gemini API ✨"]
+    Gen --> Func
+    Func --> Device
+```
 
 Firebaseには **Firebase AI Logic** があり、Gemini/Imagenモデルを使ったAI機能をアプリに組み込みやすくする位置づけです。([Firebase][6])
 この章では実装はまだ早いので、Gemini CLIに「設計案だけ」作らせるのが超おすすめ👍

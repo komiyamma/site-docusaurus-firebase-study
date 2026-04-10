@@ -1,4 +1,4 @@
-﻿# 第04章：reCAPTCHA Enterprise って何？いつ使う？🏢🔐
+# 第04章：reCAPTCHA Enterprise って何？いつ使う？🏢🔐
 
 この章は「**reCAPTCHA v3で始めたけど、運用が本気になってきた**」ときに迷いがちな **Enterprise** を、ちゃんと“判断できる”ようになる回です🙂✨
 （ミニアプリ題材：メモ＋画像＋AI整形📝📷🤖）
@@ -24,6 +24,19 @@
 * **Enterprise**：**より運用前提**（設定・監視・スコア段階・課金まわり）。しきい値0.5推奨。TTLのデフォルトは **1時間**。([Firebase][1])
 
 そして大きい差がこれ👇
+
+```mermaid
+flowchart TB
+  subgraph V3["reCAPTCHA v3"]
+    direction LR
+    V3A["しきい値 0.5推奨"] --- V3B["TTL 1日(デフォ)"]
+  end
+  subgraph ENT["reCAPTCHA Enterprise"]
+    direction LR
+    E1["スコア 0.1刻み"] --- E2["運用で柔軟に調整"]
+    E2 --- E3["TTL 1時間(デフォ)"]
+  end
+```
 
 * **スコア段階（granularity）**
   Essentialsが4段階、Standard/Enterpriseが11段階…みたいに“細かく運用できる度”が違います📈([Google Cloud Documentation][3])
@@ -59,6 +72,19 @@
 
 ![Billing Unlock](./picture/firebase_abuse_prevention_ts_study_004_03_billing_gate.png)
 
+```mermaid
+graph LR
+    subgraph Locked ["No Billing (Limited)"]
+        L1["0.1/0.3/0.7/0.9のみ"]
+    end
+    Gate{"Billing Account"}
+    subgraph Unlocked ["Billing Connected"]
+        U1["0.1刻み全開放"]
+        U2["Security Review"]
+    end
+    Locked --> Gate --> Unlocked
+```
+
 Enterpriseは、**請求アカウントを紐付ける前**だと、使えるスコア段階が限定されます（例：0.1/0.3/0.7/0.9 など）＆App Check側で設定できるしきい値も制限されます。([Firebase][1])
 
 さらに、Billing追加後には **自動のセキュリティレビューが走る**とも書かれています。([Firebase][1])
@@ -80,6 +106,13 @@ Enterpriseは、**請求アカウントを紐付ける前**だと、使えるス
 
 ![Console Setup Steps](./picture/firebase_abuse_prevention_ts_study_004_04_setup_checklist.png)
 
+```mermaid
+graph TD
+    S1["API 有効化"] --> S2["Site Key 作成"]
+    S2 --> S3["ドメイン登録"]
+    S3 --> S4["App Check 設定"]
+```
+
 1. reCAPTCHA Enterprise API を有効化（促されたらON）✅([Firebase][1])
 2. **Website-type key** を作成し、ドメインを登録🌐
 3. **「Use checkbox challenge」を選ばない**（ここハマりがち！）🚫☑️([Firebase][1])
@@ -90,6 +123,13 @@ Enterpriseは、**請求アカウントを紐付ける前**だと、使えるス
 ## B. アプリ側（コード）⚛️
 
 ![Code Structure](./picture/firebase_abuse_prevention_ts_study_004_05_code_structure.png)
+
+```mermaid
+graph TD
+    App["Firebase Init"] --> AC["App Check Init"]
+    AC -- Provider: Enterprise --> OK["Ready"]
+    OK --> S["Services Firestore/AI..."]
+```
 
 `services/firebase.ts` みたいな“1箇所”に寄せるのがコツです📦✨
 
@@ -146,14 +186,29 @@ export const appCheck = initializeAppCheck(app, {
 * **ドメイン登録ミス**：`localhost` や本番ドメイン入れ忘れでハマる🌐💥
 * **checkbox challenge を選んでしまう**：Enterpriseキー作成時に要注意🚫☑️([Firebase][1])
 * **しきい値を上げすぎる**：Botは減るけど、ユーザーも消える😇（まず0.5）([Firebase][1])
-* **TTL短すぎ**：安全だけど、再判定が増えて遅延・クォータ・コストに刺さる⏳💸([Firebase][1])
-* **AIは特に守る**：AIは“守り＋監視＋制限”が超大事（本番チェックリストでもApp Check推奨）🤖🧿([Firebase][4])
+* **TTL短すぎ**：安全だけど、再判定が増えて遅延・クォータ・コストに刺さる⏳💸
+
+```mermaid
+graph TD
+    Decision{"Enterprise?"}
+    Decision -- Tuning (0.1刻み) --> YES["Yes"]
+    Decision -- Monitoring (運用) --> YES
+    Decision -- AI Cost Safety --> YES
+    Decision -- Scale (1M+) --> YES
+```
 
 ---
 
 ## おまけ：AIで判断と実装を速くする🚀🤖
 
 ![AI & Remote Config](./picture/firebase_abuse_prevention_ts_study_004_06_ai_integration.png)
+
+```mermaid
+graph LR
+    AC["App Check"] -- 認証済み --> AI["AI Logic"]
+    RC["Remote Config"] -- モデル切替 --> AI
+    RL["Rate Limit"] -- 流量制限 --> AI
+```
 
 * 「Enterpriseにするか」迷ったら、AIに **判断材料の洗い出し**をさせるのが強いです🧠✨
 * さらにAI機能側は、**Remote Configで“モデル名などをアプリ更新なしで変えられる”**のが推奨されていて、運用と相性が良いです🎛️([Firebase][4])

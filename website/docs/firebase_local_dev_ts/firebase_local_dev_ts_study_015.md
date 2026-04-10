@@ -1,4 +1,4 @@
-﻿# 第15章　連携テスト②：Firestoreイベント → Functions自動処理⚡📨
+# 第15章　連携テスト②：Firestoreイベント → Functions自動処理⚡📨
 
 ## この章のゴール🎯✨
 
@@ -11,6 +11,14 @@
 ## まずイメージ図🧠🗺️（これが“イベント駆動”）
 
 ![_event_cycle](./picture/firebase_local_dev_ts_study_015_event_cycle.png)
+
+```mermaid
+graph TD
+    React["React App (addDoc)"] -- "Write" --> FS["Firestore (Doc Created)"]
+    FS -- "onDocumentCreated Trigger" --> Func["Cloud Functions"]
+    Func -- "Format Text / Admin SDK" --> FS2["Firestore (Update Doc)"]
+    FS2 -- "onSnapshot / Real-time" --> React2["React App (UI Updated)"]
+```
 
 1. Reactでメモ追加📝
 2. Firestoreに新規ドキュメント作成📄

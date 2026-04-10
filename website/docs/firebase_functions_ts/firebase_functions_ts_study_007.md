@@ -1,4 +1,4 @@
-﻿# 第07章：HTTPでJSONを正しく扱う（入力と出力）📦
+# 第07章：HTTPでJSONを正しく扱う（入力と出力）📦
 
 この章は「APIっぽい！」を一段上げる回です🌐🔥
 `POST /echo` を作って、**JSONの入力→検証→JSONで返す**、さらに **200/400 を使い分け**できるようになります🙂
@@ -8,6 +8,14 @@
 ## 7-1. まず大事な前提：FunctionsのHTTPは“Expressっぽい”🧩
 
 ![API Processing Flow](./picture/firebase_functions_ts_study_007_01_concept_flow.png)
+
+```mermaid
+graph LR
+    U[Request] --> P[Functions Parse]
+    P -- "Content-Type見て自動解析" --> B[req.body]
+    B --> L[Logic / 検証]
+    L --> R[res.json]
+```
 
 FirebaseのHTTP関数は `onRequest()` で作れて、`(req, res)` を受け取って返します🌟
 サンプルでも `req.body` をそのまま使っているので、**Request/Response は Express 互換**だと思ってOKです👌 ([Firebase][1])
@@ -78,6 +86,18 @@ APIはこれだけ守ると一気に安定します💪
 ## 7-4. 実装（TypeScript / `onRequest`）🛠️✨
 
 ![Validation Funnel](./picture/firebase_functions_ts_study_007_04_validation_funnel.png)
+
+```mermaid
+flowchart TD
+    Req[Request] --> Method{POST?}
+    Method -- No --> E405[405 Error]
+    Method -- Yes --> CT{application/json?}
+    CT -- No --> E415[415 Error]
+    CT -- Yes --> Val{バリデーション}
+    Val -- NG --> E400[400 Error]
+    Val -- OK --> Logic[ビジネスロジック]
+    Logic --> End[200 Success]
+```
 
 > ここでは **1ファイルで完結**させます（初心者向けに迷子防止🎈）
 > 分割したい人は、後半の「おまけ」を見てね🙂
@@ -181,6 +201,12 @@ export const echo = onRequest(async (req, res) => {
 ## 7-5. Windowsで叩いて確認しよう🪟🔫（安全なテスト）
 
 ![PowerShell Testing](./picture/firebase_functions_ts_study_007_06_powershell_test.png)
+
+```mermaid
+graph LR
+    P[PowerShell] -- Invoke-RestMethod --> F[Functions URL]
+    F -- JSON (200/400) --> P
+```
 
 ### ✅ PowerShell（おすすめ）💙
 

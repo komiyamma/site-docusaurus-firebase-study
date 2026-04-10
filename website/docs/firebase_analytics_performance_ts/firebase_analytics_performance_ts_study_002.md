@@ -1,4 +1,4 @@
-﻿# 第02章：Analyticsの全体像（Google Analytics/GA4）🧠📊
+# 第02章：Analyticsの全体像（Google Analytics/GA4）🧠📊
 
 この章は「**FirebaseのAnalyticsって、結局なに？どこに集まって、どこで見るの？**」をスッキリさせる回です🧩✨
 （ここを曖昧にしたまま進むと、あとで **“見えてると思ったら見えてない”** が起きがち😇）
@@ -20,6 +20,19 @@
 ## まずは全体図 🗺️✨（ここが今日のメイン）
 
 ![firebase_analytics_performance_ts_study_002_data_flow.png](./picture/firebase_analytics_performance_ts_study_002_data_flow.png)
+
+```mermaid
+graph LR
+    App["📱 App (Web/App)"] -->|Event/Stream| DS["🌊 Data Stream<br>(入口ゲート)"]
+    DS --> Prop["📦 GA4 Property<br>(分析の箱/倉庫)"]
+    Prop --> Report["📊 UI レポート / 探索"]
+    
+    subgraph Firebase
+      Project["🏠 Firebase Project"] --- App
+    end
+    
+    Project <-->|1:1 リンク| Prop
+```
 
 イメージはこれです👇
 

@@ -1,4 +1,4 @@
-﻿# 第09章：Update② よく使う“便利更新”（done切替・配列・数値）✅📈
+# 第09章：Update② よく使う“便利更新”（done切替・配列・数値）✅📈
 
 この章は「編集画面を開かずに、サクッと更新する」技をまとめて身につける回です😆✨
 ToDoアプリが一気に“それっぽく”なります！
@@ -37,6 +37,21 @@ ToDoアプリが一気に“それっぽく”なります！
 
 「いいね +1」「閲覧数 +1」みたいなのは `increment(1)` が最強です🔥
 複数人が同時に押しても“足し算として安全に積み上がる”のがうれしいポイント！ ([Firebase][1])
+
+```mermaid
+sequenceDiagram
+    participant App as 📱 アプリ
+    participant FB as 🔥 Firestore(Server)
+    
+    Note over FB: 現在値: 10
+    App->>FB: updateDoc( { likes: increment(1) } )
+    
+    rect rgb(240, 240, 240)
+    Note over FB: サーバー側で計算<br>10 + 1 = 11
+    end
+    
+    FB-->>App: ✅ 完了 (11)
+```
 
 ただし注意：**超高頻度**で同じドキュメントを叩き続けると、カウンタは“混み合い”ます🚧
 その場合は「分散カウンタ（distributed counters）」という設計を使います（今は“知識として知っておく”でOK🙆‍♂️） ([Firebase][3])

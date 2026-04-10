@@ -1,4 +1,4 @@
-﻿# 第12章：運用の基本（ログ・失敗・リトライ）🪵🧯
+# 第12章：運用の基本（ログ・失敗・リトライ）🪵🧯
 
 この章はね、ひとことで言うと👇
 **「拡張がコケた時に、パニックにならずに“見る→直す→再発防止”できるようになる」** 章だよ😎✨
@@ -75,6 +75,19 @@ firebase help functions:log
 
 ここからが本題😆
 ログを見たら、まずエラーを “型” に当てはめると解決が速いよ🏎️💨
+
+```mermaid
+graph TD
+    Error["🚨 エラー発生!"] --> Log["🔍 ログを確認"]
+    Log --> Type{"エラーの型は?"}
+    
+    Type -- "403/Permission" --> Role["🔐 権限不足<br>(IAM確認)"]
+    Type -- "Invalid Path/Size" --> Param["🎛️ パラメータミス<br>(再設定)"]
+    Type -- "Not an Image" --> Input["📦 入力ミス<br>(UIで弾く)"]
+    Type -- "Timeout/RateLimit" --> Retry["🌐 一時的要因<br>(リトライ有効)"]
+    
+    Role & Param & Input & Retry --> Fix["✅ 修正・再実行"]
+```
 
 ## ① 権限（Permission denied / 403）🔐
 

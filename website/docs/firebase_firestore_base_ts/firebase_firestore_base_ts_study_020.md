@@ -1,4 +1,4 @@
-﻿# 第20章：総合ミニ課題（ToDo/メモ完成）＋AIで“実用っぽさ”を足す🎯🤖✨
+# 第20章：総合ミニ課題（ToDo/メモ完成）＋AIで“実用っぽさ”を足す🎯🤖✨
 
 この章はゴールがシンプルです👇
 **「CRUD＋リアルタイム＋クエリ＋ページング」が一通り動く ToDo/メモアプリを“完成品”にする**＆**AIで便利さを一段上げる**🤖💨
@@ -7,7 +7,16 @@
 
 ## 1) この章で“完成”にする機能一覧 ✅
 
-![Final App Overview](./picture/firebase_firestore_base_ts_study_020_01_final_app.png)
+![Final App Architecture](./picture/firebase_firestore_base_ts_study_020_01_final_arch.png)
+
+```mermaid
+graph TD
+    UI[App UI] --> Hook[useTodos Hook]
+    Hook --> SDK[Firestore SDK]
+    SDK <--> DB[(Cloud Firestore)]
+    Hook --> AI[AI Logic / Gemini]
+    AI <--> Logic[(Firebase AI Logic)]
+```
 
 ## 必須（ここまでの総復習）🧠✨
 

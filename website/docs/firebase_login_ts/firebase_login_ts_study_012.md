@@ -1,4 +1,4 @@
-﻿# 第12章：Popup/Redirectの使い分け：詰まりどころ回避の知恵🧠
+# 第12章：Popup/Redirectの使い分け：詰まりどころ回避の知恵🧠
 
 この章では、**Googleログインを「Popup基本＋Redirectも備える」**にして、環境差で詰まらない構成にします😌🌈
 （特に最近は、ブラウザの**Cookie/ストレージ制限**が強くなってきてるので、ここを押さえると安心度が跳ねます🛡️）
@@ -16,6 +16,16 @@
 ## 1) Popup と Redirect、なにが違うの？🤔🪟➡️
 
 ![Popup vs Redirect](./picture/firebase_login_ts_study_012_01_popup_vs_redirect.png)
+
+```mermaid
+graph LR
+    subgraph Popup [Popup 🪟]
+        P[別窓で表示] --> R1[今のページに残る]
+    end
+    subgraph Redirect [Redirect ➡️]
+        D[一旦ページを離れる] --> R2[ドメイン間を往復]
+    end
+```
 
 ## Popup（signInWithPopup）🪟
 
@@ -35,6 +45,14 @@
 ## 2) 迷ったらこの方針でOK🙆‍♂️🧭
 
 ![Fallback Strategy](./picture/firebase_login_ts_study_012_02_fallback_strategy.png)
+
+```mermaid
+graph TD
+    Start[ログイン開始] --> TryPopup[signInWithPopup]
+    TryPopup -- 成功 ✅ --> End[完了]
+    TryPopup -- "失敗/ブロック ❌" --> TryRedirect[signInWithRedirect 🛟]
+    TryRedirect --> Back[getRedirectResult で結果取得]
+```
 
 * **基本はPopup**（PCならこれが一番ラク）🪟✨
 * **Popupが無理なときだけRedirectへ**（逃げ道として用意）➡️🛟
@@ -72,6 +90,14 @@ export const googleProvider = new GoogleAuthProvider();
 ## 3-2) “賢いGoogleログイン”関数を作る🪄
 
 ![Smart Login Logic](./picture/firebase_login_ts_study_012_03_smart_login.png)
+
+```mermaid
+graph TD
+    Call[signInWithGoogleSmart] --> TryP{Try Popup}
+    TryP -- Error --o Hand[isPopupTrouble?]
+    Hand -- Yes --> CallR[signInWithRedirect]
+    Hand -- No --> Throw[Error Throw]
+```
 
 ```ts
 // src/features/auth/signInWithGoogleSmart.ts
@@ -158,6 +184,17 @@ export function GoogleSignInButton() {
 
 ![Redirect Return Handling](./picture/firebase_login_ts_study_012_04_redirect_return.png)
 
+```mermaid
+sequenceDiagram
+    participant App
+    participant FB as Firebase Auth
+
+    App ->> FB: signInWithRedirect
+    FB ->> App: (戻ってくる)
+    App ->> FB: getRedirectResult 🔁
+    FB -->> App: ログイン結果 (User/Error)
+```
+
 Redirectは **戻ってきたあと** に結果を拾わないと「なんか起きたけど分からん😇」になりがちです。
 
 ## 4-1) AuthProvider（または起動時のどこか）で getRedirectResult を呼ぶ🧠
@@ -217,6 +254,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 ![Redirect Cookie Trap](./picture/firebase_login_ts_study_012_05_cookie_trap.png)
 
+```mermaid
+graph TD
+    Trap[3rd-party Cookie Block 🍪🚫]
+    Trap -- "Failed" --> Err[Auth State 失踪]
+    Trap -- "Fix: Option 1" --> Hosting[Firebase Hosting サブドメイン]
+```
+
 ## 5-1) ブラウザのストレージ制限でRedirectが詰まることがある🍪🚫
 
 Firebase公式が「redirect sign-in をスムーズにするため cross-origin iframe を使うが、第三者ストレージをブロックするブラウザでは動かない」と明記しています⚠️ ([Firebase][5])
@@ -244,6 +288,12 @@ Firebase AI LogicのWeb例では、`firebase/ai` から `getAI` / `getGenerative
 ## 6-1) “エラー説明をAIに作らせる”関数（例）📝
 
 ![AI Trouble Explainer](./picture/firebase_login_ts_study_012_06_ai_explainer.png)
+
+```mermaid
+graph LR
+    Prob[Auth Trouble] --> AI{AI Logic 🤖}
+    AI -- Gemini --> UX[やさしい解決ヒント ✨]
+```
 
 ```ts
 // src/features/ai/explainAuthTrouble.ts
@@ -281,6 +331,13 @@ export async function explainAuthTrouble(params: {
 ## 7) Antigravity / Gemini CLI で“詰まりどころ”を潰す🧑‍💻🧠🚀
 
 ![Antigravity Smart Login Mission](./picture/firebase_login_ts_study_012_07_antigravity_mission.png)
+
+```mermaid
+graph TD
+    M[Mission Control 🛰️] --> Plan[Login Flow Plan]
+    Plan --> Code[Redirect/Popup Logic]
+    Code --> Test[Verify Return handling]
+```
 
 * **Google Antigravity**は「agentic IDE」として、調査→実装→テスト生成まで流れで支援する、という説明があります🤖🛠️ ([Google Codelabs][8])
 

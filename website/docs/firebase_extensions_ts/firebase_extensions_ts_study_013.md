@@ -1,4 +1,4 @@
-﻿# 第13章：料金の感覚（どこで課金が起きる？）💸🧠
+# 第13章：料金の感覚（どこで課金が起きる？）💸🧠
 
 この章のゴールはこれ👇
 **「Extensionsは“入れるだけ”だけど、どこでお金が発生するかを説明できる」** ようになること！😎✨
@@ -18,6 +18,25 @@
 ## Resize Images の “課金ポイント地図” 🧩📷➡️🖼️
 
 Resize Images は、ざっくり言うと **「Storageに画像が来たら、Functionsで加工して、またStorageに保存する」** って流れ。だから課金ポイントも素直👇 ([Firebase][2])
+
+```mermaid
+graph TD
+    Upload["📤 アップロード<br>(Storage操作料)"] --> Trig["🔔 トリガー起動<br>(Functions起動料)"]
+    Trig --> Proc["⚙️ 加工処理<br>(Functions CPU/メモリ/時間)"]
+    Proc --> Save["💾 保存<br>(Storage容量/操作料)"]
+    Save --> View["👀 表示・配信<br>(Network転送量)"]
+    
+    subgraph Storage ["Storage関連"]
+      Upload
+      Save
+      View
+    end
+    
+    subgraph Functions ["Functions関連"]
+      Trig
+      Proc
+    end
+```
 
 ## ① Cloud Storage（保存＋操作＋配信）🪣📦🌍
 

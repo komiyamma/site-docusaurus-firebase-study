@@ -1,4 +1,4 @@
-﻿# 第9章：フォアグラウンド受信（アプリ内通知の気持ちよさ）📲✨
+# 第9章：フォアグラウンド受信（アプリ内通知の気持ちよさ）📲✨
 
 この章のゴールはこれ👇
 **アプリを見てる最中（フォアグラウンド）にFCMが届いたら、OS通知じゃなく「アプリ内のやさしい通知（トースト）」で気持ちよく反応する**こと！😄🍞
@@ -147,6 +147,15 @@ export function useFcmForeground() {
 ## ステップB：トーストUI（邪魔しない通知）を作る🍞✨
 
 ![Toast Notification Lifecycle](./picture/firebase_notification_fcm_ts_study_009_toast_lifecycle.png)
+
+```mermaid
+graph LR
+    FCM((FCM)) -- "onMessage" --> Hook[useFcmForeground]
+    Hook -- "Update State" --> notices[notices state]
+    notices -- "Trigger useEffect" --> Toasts[ToastStack]
+    Toasts -- "SetTimeout (4.5s)" --> Cleanup[Remove Toast]
+    Toasts -- "Render" --> UI["Toast UI (White/Dark)"]
+```
 
 ## 4) `src/components/ToastStack.tsx`
 

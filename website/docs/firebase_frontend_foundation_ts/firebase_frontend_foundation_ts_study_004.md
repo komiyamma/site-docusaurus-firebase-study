@@ -1,4 +1,4 @@
-﻿# 第04章：ルーティングでページ分割する 🧭✨（React Routerで「URL＝画面」を作る）
+# 第04章：ルーティングでページ分割する 🧭✨（React Routerで「URL＝画面」を作る）
 
 この章では、管理画面アプリを **「/dashboard」「/users」「/settings」** に分割して、**URL直打ち＆リロードでも崩れない** “ページ遷移の土台” を作ります🚀
 （2026-02-16時点の最新ルート設計として、React Router **v7系（latest 7.13.0）** 前提で進めます）([reactrouter.com][1])
@@ -19,6 +19,16 @@ ReactのSPAは基本 **1枚のHTML（index.html）** で動きます。
 つまり **URL＝アプリの状態** です（どの画面を見てるか、どのユーザーを開いてるか、など）📌
 
 ![firebase_frontend_foundation_ts_study_004_01_routing_concept](./picture/firebase_frontend_foundation_ts_study_004_01_routing_concept.png)
+
+```mermaid
+graph LR
+    U1["/dashboard"] --> C1[DashboardPage]
+    U2["/users"] --> C2[UsersPage]
+    U3["/settings"] --> C3[SettingsPage]
+    style U1 fill:#e1f5fe,stroke:#01579b
+    style U2 fill:#e1f5fe,stroke:#01579b
+    style U3 fill:#e1f5fe,stroke:#01579b
+```
 
 ---
 

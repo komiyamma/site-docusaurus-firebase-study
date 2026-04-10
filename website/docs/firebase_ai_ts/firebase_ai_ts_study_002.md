@@ -1,4 +1,4 @@
-﻿# 第02章：AI Logicの“安全に呼べる仕組み”を理解する🔐🧠
+# 第02章：AI Logicの“安全に呼べる仕組み”を理解する🔐🧠
 
 この章のゴールはこれ👇
 
@@ -18,11 +18,20 @@ AI Logic は、アプリに入れる **クライアントSDK**と、裏側の **
 
 **イメージ図**🗺️
 
-* React アプリ
-  → AI Logic SDK（`firebase/ai`）
-  → Firebase 側のプロキシ（Firebase AI Logic API）
-  → どっちかの Gemini API（後述）
-  → 返答
+* 返答
+
+```mermaid
+sequenceDiagram
+    participant App as Reactアプリ📱
+    participant Proxy as AI Logic プロキシ🛡️
+    participant Gemini as Gemini API🤖
+    
+    App->>Proxy: AIリクエスト + App Checkトークン🎫
+    Proxy->>Proxy: トークン検証 ＆ レート制限チェック🚦
+    Proxy->>Gemini: 要求転送 (APIキー秘匿🔑)
+    Gemini-->>Proxy: 生成結果
+    Proxy-->>App: 結果を返却✨
+```
 
 AI Logic は「**App Check を統合できる**」「**APIキーをアプリに埋めない設計にできる**」みたいな“事故りやすい部分”を、最初からガードしやすい形にしてます。([Firebase][1])
 

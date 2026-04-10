@@ -1,4 +1,4 @@
-﻿# 第11章　Functions Emulator：裏側コードをローカルで動かす⚙️🔥
+# 第11章　Functions Emulator：裏側コードをローカルで動かす⚙️🔥
 
 この章は「裏側（Functions）」を **デプロイせずに** ローカルで動かして、**URL叩いて動作確認できる**ところまで持っていきます🚀
 （“本番に上げる前に、まずローカルで安全に壊す🧪” が正義！）
@@ -42,6 +42,19 @@
 ## 2-1. `hello` 関数を追加する🧩
 
 ![http_flow](./picture/firebase_local_dev_ts_study_011_http_flow.png)
+
+```mermaid
+sequenceDiagram
+    participant Browser
+    participant FE as Functions Emulator
+    participant Code as functions/src/index.ts
+
+    Browser->>FE: GET /PROJECT/REGION/hello?name=Komiyanma
+    FE->>Code: Pass req, res objects
+    Code->>Code: Logic (simpleFormat, etc)
+    Code-->>FE: res.json({ ok: true, message: ... })
+    FE-->>Browser: HTTP 200 JSON Response
+```
 
 Functions のコード（TypeScript想定）に、まず **超シンプルなHTTP関数**を追加します。
 

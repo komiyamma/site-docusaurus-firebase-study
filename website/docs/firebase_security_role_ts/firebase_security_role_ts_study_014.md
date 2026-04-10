@@ -1,4 +1,4 @@
-﻿# 第14章：ロール設計の基本（管理者/一般ユーザーをどう分ける？）👮‍♂️👩‍💻
+# 第14章：ロール設計の基本（管理者/一般ユーザーをどう分ける？）👮‍♂️👩‍💻
 
 この章のゴールはこれだけ！👇
 **「誰が・何を・どこまでできるか」を、あとからブレない形で決める**ことです🧠🔐
@@ -17,6 +17,13 @@ RulesやCustom Claimsは“実装”の話だけど、**設計（言葉の定義
 ロールを増やすより、**「権限」をちゃんと名前で固定**するほうが事故らないです✅🙂
 
 ![Visual definition of RBAC terms.](./picture/firebase_security_role_ts_study_014_01_rbac_terms.png)
+
+```mermaid
+graph TD
+    User["User 👤"] -- role --> Role["Role: Admin/User 👮"]
+    Role -- contains --> Perm["Permissions: create/edit/delete 🛠️"]
+    Perm -- applied to --> Res["Resource: posts/comments 📦"]
+```
 
 ---
 
@@ -51,6 +58,14 @@ RulesやCustom Claimsは“実装”の話だけど、**設計（言葉の定義
 * **高**：他人のデータ変更 / 公開・削除 / 権限変更
 ![Risk levels in operation.](./picture/firebase_security_role_ts_study_014_02_risk_levels.png)
 
+```mermaid
+graph LR
+    Low["Low Risk: Read 📖"]
+    Med["Med Risk: Own Edit ✏️"]
+    High["High Risk: Delete/Admin 💥"]
+    Low --> Med --> High
+```
+
 👉 高リスク操作は、**ロールを分ける価値が高い**です👮‍♂️✨
 
 ---
@@ -63,6 +78,14 @@ RulesやCustom Claimsは“実装”の話だけど、**設計（言葉の定義
 * editor（運用担当）✍️
 * admin（管理者）👑
 ![The three primary roles.](./picture/firebase_security_role_ts_study_014_03_three_roles.png)
+
+```mermaid
+graph TD
+    Admin["Admin 👑"]
+    Editor["Editor ✍️"]
+    User["User 🙂"]
+    Admin --> Editor --> User
+```
 
 「moderator」「staff」「support」…って増やしたくなるけど、**増やすほどRulesが複雑化**してバグります😵‍💫
 
@@ -83,6 +106,15 @@ RulesやCustom Claimsは“実装”の話だけど、**設計（言葉の定義
 
 ![Access Control Matrix.](./picture/firebase_security_role_ts_study_014_04_role_matrix.png)
 
+```mermaid
+classDiagram
+    class Roles {
+        +User: Create("own"), Read("public")
+        +Editor: Publish, Edit("all")
+        +Admin: Delete, ManageRoles
+    }
+```
+
 👉 「✅の理由」を1行で書いておくと、未来の自分が助かります🥹📝
 
 ---
@@ -98,6 +130,11 @@ RulesやCustom Claimsは“実装”の話だけど、**設計（言葉の定義
 
 この「意味の固定」ができたら、Rulesに落とすのが楽になります✅
 ![Fixing the meaning of roles.](./picture/firebase_security_role_ts_study_014_05_role_meaning_anchor.png)
+
+```mermaid
+graph LR
+    Contract["Role Contract 📜"] -- "Fixed meaning" --> Rules["Security Rules 🛡️"]
+```
 
 ---
 
@@ -115,6 +152,17 @@ Rulesでは、認証情報（カスタムクレーム含む）を **auth.token**
 > なので、第14章は「ロールの意味を決める章」
 > 次の第15〜16章で「実際にトークンへ入れてRulesで分岐する章」になります🎫➡️🛡️
 ![Location of role data vs enforcement.](./picture/firebase_security_role_ts_study_014_06_token_vs_rules.png)
+
+```mermaid
+graph LR
+    subgraph Auth_Token["Auth Token (Claims)"]
+        T["{ role: 'admin' }"]
+    end
+    subgraph Enforcement["Enforcement (Rules)"]
+        R["if token.role == 'admin'"]
+    end
+    Auth_Token -- provides --> Enforcement
+```
 
 ---
 

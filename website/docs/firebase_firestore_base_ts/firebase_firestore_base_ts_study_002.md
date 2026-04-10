@@ -1,4 +1,4 @@
-﻿# 第02章：コレクション/ドキュメントの感覚をつかむ📚🧠
+# 第02章：コレクション/ドキュメントの感覚をつかむ📚🧠
 
 この章は「Firestoreの世界観」を体に入れる回だよ〜！😆✨
 CRUDの前にここがふわっとしてると、あとでずっと迷子になるので、今日は“感覚づくり”を勝ちにいく✊🔥
@@ -24,6 +24,18 @@ Firestoreは **テーブル**じゃなくて、基本はこういう“住所”
 * コレクション：`todos`
 * ドキュメントID：`todoId`
 * ドキュメントの住所（パス）：`todos/{todoId}`
+
+```mermaid
+graph LR
+    Root["/ (Root)"] --> Col["📦 todos<br>(Collection)"]
+    Col --> Doc["📝 AI_Study_001<br>(Document ID)"]
+    
+    subgraph Fields ["📄 ドキュメントの中身 (Fields)"]
+      Doc --- Title["title: '型を覚える'"]
+      Doc --- Done["done: true"]
+      Doc --- Tags["tags: ['TS', 'Firestore']"]
+    end
+```
 
 Firestoreでは、データは **ドキュメント（＝1件）**として保存され、それが **コレクション（＝箱）**に入るよ📦📄
 そしてドキュメントの中身は **キーと値のセット（フィールド）**だよ🔑✨ ([Firebase][1])

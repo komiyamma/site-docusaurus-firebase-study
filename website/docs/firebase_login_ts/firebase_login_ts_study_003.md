@@ -1,4 +1,4 @@
-﻿# 第03章：React側のAuth土台：SDK導入＆初期化（モジュラー流儀）🧩
+# 第03章：React側のAuth土台：SDK導入＆初期化（モジュラー流儀）🧩
 
 この章でやるのはシンプル！
 **「Firebaseをアプリに組み込む“配線”」**を作って、次章以降でログイン処理をガンガン足せる状態にします💪✨
@@ -6,6 +6,16 @@
 ---
 
 ![Project Structure](./picture/firebase_login_ts_study_003_05_file_structure.png)
+
+```mermaid
+graph TD
+    Root["Project Root"]
+    Root --> Env[".env.local"]
+    Root --> Src["src"]
+    Src --> Lib["lib"]
+    Lib --> FB["firebase.ts"]
+    Lib --> FBAI["firebase-ai.ts"]
+```
 
 ## 0) 今日できあがるもの 🎯
 
@@ -20,6 +30,13 @@
 ---
 
 ![NPM Install](./picture/firebase_login_ts_study_003_01_install.png)
+
+```mermaid
+graph LR
+    CMD["npm i firebase"] -- Fetch --> Reg["NPM Registry"]
+    Reg -- Download --> NM["node_modules"]
+    NM -- v12.x --> App
+```
 
 ## 1) SDKをインストール 📦✨
 
@@ -41,6 +58,12 @@ npm ls firebase
 
 ![Config Source](./picture/firebase_login_ts_study_003_02_config_source.png)
 
+```mermaid
+graph LR
+    Cons["Firebase Console"] -- Copy ✂️ --> Code["firebaseConfig Obj"]
+    Code -- Identification --> Service["Firebase Backend"]
+```
+
 ## 2) Firebase設定（firebaseConfig）を用意する 🔧
 
 Firebaseコンソールの「Webアプリ」の設定で出てくる **firebaseConfig** を使います。
@@ -52,6 +75,12 @@ Firebaseコンソールの「Webアプリ」の設定で出てくる **firebaseC
 ---
 
 ![Env Var Injection](./picture/firebase_login_ts_study_003_03_env_injection.png)
+
+```mermaid
+graph LR
+    Env[".env.local"] -- VITE_... --> Vite["Vite Compiler"]
+    Vite -- "Build Time injection" --> Runtime["import.meta.env"]
+```
 
 ## 3) `.env.local` に設定値を入れる（Vite想定）🧪
 
@@ -70,6 +99,13 @@ VITE_FIREBASE_APP_ID=1:1234567890:web:xxxxxxxxxxxx
 ---
 
 ![Singleton Guard](./picture/firebase_login_ts_study_003_04_singleton_guard.png)
+
+```mermaid
+graph TD
+    Start["Initialization Request"] --> Exist{"getApps() > 0?"}
+    Exist -- Yes --> Reuse["Reuse Existing App"]
+    Exist -- No --> Init["initializeApp"]
+```
 
 ## 4) `firebase.ts` を作る（ここが“背骨”🦴）🧩
 
@@ -148,6 +184,12 @@ npm run dev
 
 ![Firebase AI Integration](./picture/firebase_login_ts_study_003_06_ai_integration.png)
 
+```mermaid
+graph LR
+    FB["firebase.ts"] -- provides app instance --> AI["firebase-ai.ts"]
+    AI -- provides model --> UX["Friendly Errors / AI UI"]
+```
+
 ## 7) 🤖AIサービスも“同じ配線”でつながる（超うれしいポイント）✨
 
 FirebaseのAI（Firebase AI Logic）は、Webだと `firebase/ai` から使います。([Firebase][4])
@@ -191,6 +233,12 @@ export const model = getGenerativeModel(ai, { model: "gemini-2.5-flash" });
 ---
 
 ![Debugging Init](./picture/firebase_login_ts_study_003_07_debugger.png)
+
+```mermaid
+graph LR
+    Code["console.log('app.name')"] --> Console["Browser Console"]
+    Console -- "[DEFAULT] ✅" --> Success["Initialization OK"]
+```
 
 ## 9) ミニ課題 🎮✅
 

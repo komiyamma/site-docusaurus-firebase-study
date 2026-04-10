@@ -1,4 +1,4 @@
-﻿# 第13章　環境変数と秘密情報：ローカルでも事故らない🧪🔐
+# 第13章　環境変数と秘密情報：ローカルでも事故らない🧪🔐
 
 この章は「**ローカルで動いてるのに、うっかり本番の秘密を触った**」「**APIキーをGitに入れてしまった**」みたいな事故を、先に潰す回です😇🧯
 結論から言うと――
@@ -44,6 +44,20 @@
 ## 2) `.env` の基本ルール🙂🧾
 
 ![_env_hierarchy](./picture/firebase_local_dev_ts_study_013_env_hierarchy.png)
+
+```mermaid
+graph TD
+    subgraph Files ["Priority (Higher is Bottom)"]
+        A[".env"]
+        B[".env.dev / .env.prod"]
+        C[".env.local (Emulator Override)"]
+        D[".secret.local (Local Secrets)"]
+    end
+    A --> B
+    B --> C
+    C --> D
+    style D fill:#f96,stroke:#333
+```
 
 Cloud Functions for Firebase は **dotenv形式**の `.env` を読み込めて、コード側は `process.env` で参照できるよ🧩([Firebase][1])
 さらに **プロジェクト（またはエイリアス）別**に `.env.dev` / `.env.prod` みたいに分けられるのが便利✨([Firebase][1])

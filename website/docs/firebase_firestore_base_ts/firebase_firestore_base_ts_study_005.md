@@ -1,4 +1,4 @@
-﻿# 第05章：Create① 追加する（addDoc / setDoc の気持ち）➕📄
+# 第05章：Create① 追加する（addDoc / setDoc の気持ち）➕📄
 
 この章は「フォームからToDoを追加できる！」を最速で体験する回です 😆✨
 Firestoreの **“追加” は2系統**あります：
@@ -45,6 +45,16 @@ ToDoの追加は基本これでOKです。
 
 * 👍 “同じIDに上書き/更新” を作りやすい
 * ⚠️ 同じIDに `setDoc` すると **上書き**になりやすい（注意！）
+
+```mermaid
+graph TD
+    Start["❓ IDはどうする?"] --> Q1{"特定のIDで固定したい?"}
+    Q1 -- "YES (users/{uid} 等)" --> setDoc["🛠️ setDoc<br>(固定ID保存)"]
+    Q1 -- "NO (何でもいい)" --> addDoc["🪄 addDoc<br>(自動ID生成)"]
+    
+    addDoc --> Result1["ランダムなIDが付く"]
+    setDoc --> Result2["既存があれば上書き<br>無ければ新規作成"]
+```
 
 ---
 

@@ -1,4 +1,4 @@
-﻿# 第04章：🤖AIと一緒に学ぶ：聞き方テンプレ（超初心者向け）💬✨
+# 第04章：🤖AIと一緒に学ぶ：聞き方テンプレ（超初心者向け）💬✨
 
 この章のゴールはシンプルです👇
 **AIの回答を「読める説明」じゃなくて「そのまま手順として実行できる形」**で引き出せるようになること！🚀✨
@@ -8,6 +8,15 @@
 ## 1) まず覚える！AIに通じる「黄金5点セット」📌🧠
 
 ![Five Elements of a Prompt](./picture/firebase_startdash_ts_study_004_01_prompt_elements.png)
+
+```mermaid
+graph TD
+    P["Prompt 📝"] --> Role["1. Role 🎭: #quot;You are an expert...#quot;"]
+    P --> App["2. App 📱: #quot;React+TS Firebase App#quot;"]
+    P --> Req["3. Requirement 🎯: #quot;Design Rules for...#quot;"]
+    P --> Context["4. Context 🗂️: #quot;Using v9 SDK, Vite...#quot;"]
+    P --> Out["5. Output 📦: #quot;Code + Tests#quot;"]
+```
 
 AIに質問するとき、これだけ入れると一気に精度が上がります👇
 
@@ -24,6 +33,13 @@ AIに質問するとき、これだけ入れると一気に精度が上がりま
 ## 2) そのまま使える！質問テンプレ集（コピペOK）🧩📋
 
 ![Template Collection](./picture/firebase_startdash_ts_study_004_02_prompt_templates.png)
+
+```mermaid
+graph LR
+    Dev["Dev 🧑‍💻"] --> Setup["Setup Temp 🏗️"]
+    Dev --> Rules["Rules Temp 🛡️"]
+    Dev --> Error["Error Eval 🐞"]
+```
 
 ### A. 「最小で動かしたい」テンプレ（最強）🔥
 
@@ -85,6 +101,13 @@ AIに質問するとき、これだけ入れると一気に精度が上がりま
 
 ![AI Agent Roles](./picture/firebase_startdash_ts_study_004_03_ai_roles.png)
 
+```mermaid
+graph TD
+    AI["AI Agent"] --> Arch["Architect 🏗️: Design DB"]
+    AI --> Coder["Coder 💻: Write SDK calls"]
+    AI --> Sec["Security 🛡️: Audit Rules"]
+```
+
 Antigravityは「エージェントが計画して、コード書いて、調べてくれる」方向の作りです🛸
 なので、**1回の質問で全部**より、**役割で分ける**のが勝ち筋です！ ([Google Codelabs][1])
 
@@ -106,6 +129,12 @@ Antigravityは「エージェントが計画して、コード書いて、調べ
 ## 4) Gemini CLI流：ターミナルで“聞きながら進む”💻🤖
 
 ![Gemini CLI Interaction](./picture/firebase_startdash_ts_study_004_04_gemini_cli.png)
+
+```mermaid
+graph LR
+    Term["Terminal💻"] -- "gemini /firestore:..." --> Cloud["Gemini Cloud 🧠"]
+    Cloud -- "Generates firestore.rules" --> Term
+```
 
 Gemini CLIは、**npmで入れる / npxで即実行**みたいな導入が用意されています📦✨ ([Gemini CLI][2])
 さらに、MCPサーバー連携など「外部ツールとつなぐ」思想も強めです🔌 ([Gemini CLI][3])
@@ -131,6 +160,15 @@ gemini
 
 ![Firebase AI Tools](./picture/firebase_startdash_ts_study_004_05_firebase_ai_ecosystem.png)
 
+```mermaid
+graph TD
+    subgraph AI_Tools [Firebase AI Assistance]
+        CLI["Gemini CLI"]
+        Console["Console AI"]
+        MCP["Firebase MCP/Antigravity"]
+    end
+```
+
 ここ超大事！「AIは外部ツール」だけじゃなく、**Firebase側にもAI導線**が増えてます🔥
 
 * **Gemini in Firebase**：FirebaseのUIやツール上で、開発を助ける協力型アシスタント💬✨ ([Firebase][5])
@@ -147,6 +185,13 @@ gemini
 ## 6) ハンズオン：AIに「最小アプリ完成の手順書」を作らせよう🚀📘
 
 ![AI Workflow](./picture/firebase_startdash_ts_study_004_06_handson_flow.png)
+
+```mermaid
+graph TD
+    Error["Copy Error Log 💥"] --> Prompt["Paste into Temp 📝"]
+    Prompt --> AI["Ask Agent 🤖"]
+    AI --> Fix["Apply Fix ✅"]
+```
 
 やることはこれだけ👇（10〜20分コース）
 
@@ -184,6 +229,14 @@ AIの回答を見たら、こう変換してね👇
 ## 7) ミニ課題：自分専用「質問スニペ集」を作る📝✨
 
 ![Personal Snippet File](./picture/firebase_startdash_ts_study_004_07_prompt_snippet.png)
+
+```mermaid
+graph TD
+    Notepad[".txt / .md File 📄"] --> P1["Setup Prompts"]
+    Notepad --> P2["Debug Prompts"]
+    Notepad --> P3["Rules Prompts"]
+    style Notepad fill:#f9d,stroke:#333
+```
 
 Windowsのメモ帳でもOK！`ai-prompts.md` みたいなファイルを作って、ここまでのテンプレを貼るだけ👍
 最後に、あなた用に1個だけ追記👇

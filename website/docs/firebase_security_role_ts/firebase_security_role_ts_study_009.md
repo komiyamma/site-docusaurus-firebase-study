@@ -1,4 +1,4 @@
-﻿# 第9章：最小権限② “書く”の制御（create / update / delete を分ける）✍️🧯
+# 第9章：最小権限② “書く”の制御（create / update / delete を分ける）✍️🧯
 
 この章のテーマはズバリ👇
 **「書き込み権限を “まとめて許可” しないで、事故を未然に止める」** です😎🛡️
@@ -8,6 +8,13 @@
 ## 1) まず、ここだけ覚えればOKな結論✨
 
 ![firebase_security_role_ts_study_009_01_three_way_split.png](./picture/firebase_security_role_ts_study_009_01_three_way_split.png)
+
+```mermaid
+graph TD
+    Write[write] --> Create[create: New🆕]
+    Write --> Update[update: Edit✏️]
+    Write --> Delete[delete: Remove🗑️]
+```
 
 Firestore の “書く” は3種類あります👇
 
@@ -33,6 +40,13 @@ Firestore の “書く” は3種類あります👇
 
 ![firebase_security_role_ts_study_009_02_risk_types.png](./picture/firebase_security_role_ts_study_009_02_risk_types.png)
 
+```mermaid
+graph LR
+    C[Create] -- Spam 😵 --> DB[(DB)]
+    U[Update] -- Privilege Escalation 😱 --> DB
+    D[Delete] -- Data Loss 🔥 --> DB
+```
+
 * **create**：変なデータを作られる（スパム・巨大データ・型崩れ）😵
 * **update**：権限フィールドを書き換えられる（role / isAdmin など）😱
 * **delete**：データ消滅（復旧が地獄）😭🔥
@@ -40,6 +54,22 @@ Firestore の “書く” は3種類あります👇
 ## 理由B：見えるデータが違う（＝検査できる範囲が違う）🔍
 
 ![firebase_security_role_ts_study_009_03_data_visibility.png](./picture/firebase_security_role_ts_study_009_03_data_visibility.png)
+
+```mermaid
+graph TD
+    subgraph Create
+        C1[request.resource ✔️]
+        C2[resource ❌]
+    end
+    subgraph Update
+        U1[request.resource ✔️]
+        U2[resource ✔️]
+    end
+    subgraph Delete
+        D1[request.resource ❌]
+        D2[resource ✔️]
+    end
+```
 
 * **resource.data**：今DBにある “元データ”
 * **request.resource.data**：これから書き込まれる “新データ”
@@ -56,6 +86,13 @@ Firestore の “書く” は3種類あります👇
 
 ![firebase_security_role_ts_study_009_04_doc_structure.png](./picture/firebase_security_role_ts_study_009_04_doc_structure.png)
 
+```mermaid
+graph TD
+    Post[Post Doc] --> UID[uid: Owner]
+    Post --> Title[title / body]
+    Post --> Status[status: draft/public]
+```
+
 `posts/{postId}` に、こんな形で保存する想定👇
 
 * `uid`：作成者のuid👤
@@ -69,6 +106,14 @@ Firestore の “書く” は3種類あります👇
 ## 4) ルール実装（create / update / delete を分ける）🧩🔐
 
 ![firebase_security_role_ts_study_009_05_rules_logic.png](./picture/firebase_security_role_ts_study_009_05_rules_logic.png)
+
+```mermaid
+graph TD
+    Op{Operation}
+    Op -- create --> O1[Check UID + fields ✅]
+    Op -- update --> O2[Check Owner + diff ✅]
+    Op -- delete --> O3[Check isAdmin 👑]
+```
 
 ポイントはこの3つです👇
 ✅ **create：本人のuidで作るだけ許可**
@@ -137,6 +182,12 @@ service cloud.firestore {
 
 ![firebase_security_role_ts_study_009_06_verification.png](./picture/firebase_security_role_ts_study_009_06_verification.png)
 
+```mermaid
+graph LR
+    Valid[Valid Auth/Data] -- Success ✅ --> DB[(Firestore)]
+    Invalid[Wrong UID/Admin] -- Deny 🛑 --> Rules{Rules}
+```
+
 ## ① create だけOKを体験🆕
 
 * 自分の `uid` で作る → ✅通る
@@ -158,6 +209,13 @@ service cloud.firestore {
 ## 6) ルールをテストで固める（ここが一番大事）🧪🧯
 
 ![firebase_security_role_ts_study_009_07_testing_arch.png](./picture/firebase_security_role_ts_study_009_07_testing_arch.png)
+
+```mermaid
+graph TD
+    T[Test Code] --> E[Emulator 🧪]
+    E --> V1[Alice can/cannot...]
+    E --> V2[Admin can...]
+```
 
 Firestore のルールは **エミュレータ + 単体テスト** で安全に確認できます✅ ([Firebase][5])
 テスト用ライブラリは **@firebase/rules-unit-testing** が公式ルートです🧰 ([Firebase][6])

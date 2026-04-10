@@ -1,4 +1,4 @@
-﻿# 第20章：デプロイと運用の入口 🌍🚀（Hosting / App Hosting / CI/CD / 監視 / ロールバック）
+# 第20章：デプロイと運用の入口 🌍🚀（Hosting / App Hosting / CI/CD / 監視 / ロールバック）
 
 この章では「作った管理画面っぽいReactアプリ」を **ネットに公開して**、**安全に更新して**、**困ったら戻せる** ところまでやります 😆✨
 “作れた！”から“動かし続けられる！”へ進化させよう〜💪🔥
@@ -18,6 +18,15 @@
 ## 1) まず結論：Hosting と App Hosting、どっち？🤔
 
 ![Hosting vs App Hosting](./picture/firebase_frontend_foundation_ts_study_020_01_hosting_vs_app_hosting.png)
+
+```mermaid
+flowchart TD
+    App{どんなアプリ？}
+    App -- SPA / 静的ファイル --> Hosting[Firebase Hosting]
+    App -- SSR / フルスタック --> AppHosting[Firebase App Hosting]
+    Hosting -- 配信 --> CDN[Google CDN]
+    AppHosting -- 自動ビルド --> Run[Cloud Run]
+```
 
 ざっくりこうです👇
 
@@ -141,6 +150,14 @@ firebase hosting:channel:delete dev
 
 ![Hosting Rollback](./picture/firebase_frontend_foundation_ts_study_020_04_rollback_flow.png)
 
+```mermaid
+graph LR
+    V1[Ver 1] --> V2[Ver 2]
+    V2 -- 異常発生! --> V3[Ver 1にロールバック]
+    style V2 fill:#f66
+    style V3 fill:#6f6
+```
+
 Hostingは「デプロイ＝リリースが積み上がる」感じなので、戻せるのが安心ポイント😌✨ ([Firebase][2])
 
 CLIで戻すなら（代表例）👇
@@ -156,6 +173,19 @@ firebase hosting:rollback
 ## 5) 自動化：PRでプレビュー、マージで本番（GitHub連携）🤝🚀
 
 ![GitHub Integration Workflow](./picture/firebase_frontend_foundation_ts_study_020_05_github_integration.png)
+
+```mermaid
+sequenceDiagram
+    participant D as Developer
+    participant G as GitHub
+    participant H as Firebase Hosting
+
+    D ->> G: PR作成 / Commit
+    G ->> G: Actions起動 (CI)
+    G ->> H: deploy to Preview Channel
+    H -->> G: URL返却
+    G -->> D: Comment (Check this!)
+```
 
 Firebase Hostingは **GitHubのPRと連携してプレビューURLをコメントしてくれる** 流れが用意されてます👏 ([Firebase][1])
 

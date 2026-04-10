@@ -1,4 +1,4 @@
-﻿# 第14章：インデックスの超基本（何が速くなる？何が増える？）🧭🛠️
+# 第14章：インデックスの超基本（何が速くなる？何が増える？）🧭🛠️
 
 ## この章のゴール🎯
 
@@ -23,6 +23,19 @@ Firestoreは、基本的に**どのクエリもインデックスを使って高
 ## 2) インデックスは2種類だけ覚えればOK✅
 
 ![Index Types](./picture/firebase_firestore_struncture_ts_study_014_01_index_types.png)
+
+```mermaid
+graph LR
+    subgraph Single ["単一フィールドインデックス🧱"]
+        A[フィールドA] --> S1[Ascending]
+        A --> S2[Descending]
+        A --> S3[Array-contains]
+    end
+    subgraph Composite ["複合インデックス🧩"]
+        C1[フィールドA + フィールドB] --> Comp
+        C2[フィールドA + フィールドC] --> Comp
+    end
+```
 
 ## A. 単一フィールドインデックス（Single-field）🧱
 

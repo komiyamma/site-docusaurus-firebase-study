@@ -1,4 +1,4 @@
-﻿# 第10章：Delete 削除する（deleteDoc）🗑️💥
+# 第10章：Delete 削除する（deleteDoc）🗑️💥
 
 この章のゴールはシンプル！
 **ToDo一覧に「🗑️削除」ボタンを付けて、確認ダイアログ付きで安全に消せる**ようにします😎✨
@@ -41,6 +41,18 @@ import { doc, deleteDoc } from "firebase/firestore";
 2. 一覧の各行に「🗑️削除」ボタンを付ける🧷
 3. 押したら確認 → OKなら `deleteDoc()` 実行💥
 4. 成功したら画面から消える（state更新 or 再取得）✨
+
+```mermaid
+graph TD
+    Click["🗑️ 削除ボタン"] --> Confirm{"window.confirm?"}
+    Confirm -- "Cancel" --> End["🚫 何もしない"]
+    Confirm -- "OK" --> Loading["🌀 ボタン無効化<br>(deletingId)"]
+    
+    Loading --> DB["🔥 deleteDoc()"]
+    DB --> Success["✅ State更新<br>(filterで除外)"]
+    
+    Success --> Toast["📣 削除完了トースト"]
+```
 
 ---
 

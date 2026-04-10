@@ -1,4 +1,4 @@
-﻿# 第13章：Firestore詳細フォームで更新できるようにする 📝🛠️
+# 第13章：Firestore詳細フォームで更新できるようにする 📝🛠️
 
 この章は「管理画面っぽい動き」のど真ん中です😆✨
 **一覧の1行をクリック → 詳細ページへ → フォーム編集 → 保存 → 一覧に戻って反映**まで通します🚀
@@ -8,6 +8,14 @@
 ## まず全体像（ここだけ覚えれば勝ち）🧠✨
 
 ![Update Flow Overview](./picture/firebase_frontend_foundation_ts_study_013_01_update_flow.png)
+
+```mermaid
+flowchart LR
+    List[一覧画面] -- ID付きURLへ --> Detail[詳細画面]
+    Detail -- getDoc --> Form[フォーム表示]
+    Form -- 入力 --> Update[updateDoc]
+    Update -- 成功 --> ListRef[一覧に反映]
+```
 
 詳細フォーム更新は、この3点セットで回ります👇
 
@@ -86,6 +94,13 @@ export type UserDoc = {
 ## Firestoreアクセスは “service” に寄せる（超おすすめ）📦✨
 
 ![Service Layer Isolation](./picture/firebase_frontend_foundation_ts_study_013_03_service_layer.png)
+
+```mermaid
+graph TD
+    UI[Page / Component] --> S[Service関数<br/>getUser / updateUser]
+    S --> F[Firebase SDK]
+    F --> DB[(Firestore)]
+```
 
 画面に直書きすると散らかります😵‍💫
 「Firestore操作は usersService に集める」と、後で泣かないです👍

@@ -1,4 +1,4 @@
-﻿# 第12章：リアルタイム購読①（onSnapshotで“勝手に更新”）⚡👀
+# 第12章：リアルタイム購読①（onSnapshotで“勝手に更新”）⚡👀
 
 この章は、**「一覧を見てるだけで勝手に更新される」**を体に入れる回です😆✨
 やることはシンプルで、前の章までの `getDocs()` を **`onSnapshot()` に置き換えるだけ**！💪
@@ -127,7 +127,17 @@ export function TodoList() {
 
 ---
 
-![Multi-Tab Sync](./picture/firebase_firestore_base_ts_study_012_04_sync_demo.png)
+![onSnapshot Logic](./picture/firebase_firestore_base_ts_study_012_01_onsnapshot_logic.png)
+
+```mermaid
+graph LR
+    UserA[User A] -- "Write (updateDoc)" --> DB[(Firestore)]
+    DB -- "Auto Push" --> UserB[User B]
+    DB -- "Auto Push" --> UserC[User C]
+    UserB -- "UI Refresh" --> ScreenB[Screen B]
+    UserC -- "UI Refresh" --> ScreenC[Screen C]
+    style DB fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ## 4) ミニ課題：別タブで「増える」体験しよう 🪄🧪
 

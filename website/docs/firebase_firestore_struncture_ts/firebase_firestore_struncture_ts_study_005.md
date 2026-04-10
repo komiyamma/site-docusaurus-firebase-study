@@ -1,4 +1,4 @@
-﻿# 第5章：サブコレの落とし穴（削除・移動・集計）💥🧩🗑️
+# 第5章：サブコレの落とし穴（削除・移動・集計）💥🧩🗑️
 
 サブコレ（例：`posts/{postId}/comments/{commentId}`）って、設計が気持ちよく整理できて最高なんだけど…
 運用フェーズで **「え、そうなの！？」** となりがちな地雷が3つあります👇💣
@@ -16,6 +16,16 @@
 ## 落とし穴①：親ドキュメントを消しても、サブコレは消えない😇
 
 ![Orphan Documents on Parent Delete](./picture/firebase_firestore_struncture_ts_study_005_01_orphan_documents.png)
+
+```mermaid
+graph TD
+    Parent[Parent Doc] -- "deleteDoc" --> Deleted((X))
+    Parent -- "Has" --> Sub[Subcollection]
+    Sub --> Child[Child Doc]
+    Child -- "Still exists!" --> Ghost[Orphan]
+    style Parent fill:#f96
+    style Child fill:#9f9
+```
 
 アプリのコードで `deleteDoc(postRef)` しても、**サブコレのドキュメントは自動で消えません**。
 つまり「記事は消えたのにコメントだけ残る（孤児化）」が起きます。([Google Cloud Documentation][1])

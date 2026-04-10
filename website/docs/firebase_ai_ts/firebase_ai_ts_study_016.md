@@ -1,4 +1,4 @@
-﻿# 第16章：Antigravityで“調査→実装→テスト”をミッション化する🛸🧠
+# 第16章：Antigravityで“調査→実装→テスト”をミッション化する🛸🧠
 
 この章は、「やること多すぎて詰む😵‍💫」を防ぐための回です。
 Antigravityの強みは **“作業をミッション（小さな任務）に分けて、複数エージェントで並行処理し、成果物（Artifacts）でレビューできる”** ところにあります。([Google Developers Blog][1])
@@ -10,6 +10,14 @@ Antigravityの強みは **“作業をミッション（小さな任務）に分
 ## 1) まず覚える5語だけ🧠✨
 
 ![firebase_ai_ts_study_016_antigravity_concepts.png](./picture/firebase_ai_ts_study_016_antigravity_concepts.png)
+
+```mermaid
+flowchart LR
+    Control["Mission Control🎛️<br>(司令塔)"] -->|ミッション発行| Agent["Agent🛸<br>(作業担当者)"]
+    Agent -->|計画作成| Plan["Implementation Plan🗺️"]
+    Plan -->|承認| Exec["実行・テスト🧪"]
+    Exec -->|成果物| Artifacts["Artifacts📦<br>(DoD確認)"]
+```
 
 * **Mission Control（エージェントマネージャー）**：ミッションを投げて、進捗を眺めて、レビューする司令塔🎛️
   （複数エージェントを生成・監視・操作できる）([Google Codelabs][2])

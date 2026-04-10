@@ -1,4 +1,4 @@
-﻿# 第11章：認証状態で画面を切り替える 🔐🚧（ログイン監視 → ガード → ログアウト）
+# 第11章：認証状態で画面を切り替える 🔐🚧（ログイン監視 → ガード → ログアウト）
 
 この章は「**ログインしてる人だけ管理画面を見れる**」を、React側で“ちゃんと気持ちよく”作る回です😆✨
 （リロードしてもログインが保たれて、未ログインなら `/login` に飛ぶやつ！）
@@ -21,6 +21,21 @@ Nodeは `v24` が Active LTS（2026-02-09更新）になっています🟢 ([no
 ## まず超重要：認証は“最初の数瞬”だけ不確定 😵‍💫
 
 ![Auth State Timeline](./picture/firebase_frontend_foundation_ts_study_011_auth_state_timeline.png)
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant R as React App
+    participant F as Firebase Auth
+
+    B ->> R: Access /dashboard
+    R ->> F: current user?
+    F -->> R: null (まだわからん)
+    Note over R: ready: false (スピナー表示)
+    F -) R: onAuthStateChanged (確定通知)
+    Note over R: ready: true
+    R ->> B: ダッシュボード表示 (確定)
+```
 
 Firebase Authは、ページ読み込み直後に `currentUser` がすぐ取れない瞬間があります。
 だから「**最初に1回、Authの状態確定イベントを待つ**」のが正解です✅
@@ -98,6 +113,15 @@ export function useAuth() {
 ## Step 2：ルートガード（ProtectedRoute）を作る 🚧🛡️
 
 ![Protected Route Logic](./picture/firebase_frontend_foundation_ts_study_011_protected_route_logic.png)
+
+```mermaid
+flowchart TD
+    Start[アクセス /dashboard] --> Ready{ready?}
+    Ready -- No --> Loading[スピナー表示⏳]
+    Ready -- Yes --> Authed{isAuthed?}
+    Authed -- No --> Login[Navigate to /login 🚧]
+    Authed -- Yes --> Page[ダッシュボード表示 🎉]
+```
 
 📁 `src/routes/ProtectedRoute.tsx`
 

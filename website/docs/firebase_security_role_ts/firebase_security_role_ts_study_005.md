@@ -1,4 +1,4 @@
-﻿# 第5章：Rules言語の基本②（request / resource / 変更差分）🔍🛡️✨
+# 第5章：Rules言語の基本②（request / resource / 変更差分）🔍🛡️✨
 
 この章のテーマはこれ👇
 **「今あるデータ（resource）と、これから書き込まれようとしてるデータ（request.resource）を区別して、更新の“差分”で安全に制御する」**です😆💡
@@ -8,6 +8,12 @@
 ## 1) まずは超重要3点セットを覚える📌😺
 
 ![Resource vs Request.Resource](./picture/firebase_security_role_ts_study_005_01_resource_vs_request.png)
+
+```mermaid
+graph LR
+    R[resource.data] -- "Existing (Old) 📦" --> Logic{Rules Logic}
+    RR[request.resource.data] -- "Proposed (New) ✨" --> Logic
+```
 
 ## ✅ resource（今DBにある“既存データ”）
 
@@ -20,6 +26,14 @@
 ## ✅ request（リクエストの情報）
 
 ![Request Object Anatomy](./picture/firebase_security_role_ts_study_005_02_request_object.png)
+
+```mermaid
+graph TD
+    Request[request] --> Auth[auth]
+    Request --> Method[method: get/update...]
+    Request --> Time[time: server-side ⌚]
+    Request --> Res[resource: new data]
+```
 
 * `request.method` は操作の種類（`get/list/create/update/delete`） ([Firebase][2])
 * `request.time` はサーバーが受け取った時刻（サーバー時刻チェックに使える） ([Firebase][2])
@@ -39,6 +53,22 @@
 ## 2) create / update / delete で「見えるもの」が違う⚠️🧠
 
 ![Data Visibility by Operation](./picture/firebase_security_role_ts_study_005_03_operation_visibility.png)
+
+```mermaid
+graph TD
+    subgraph Create
+        C1[request.resource ✔️]
+        C2[resource ❌]
+    end
+    subgraph Update
+        U1[request.resource ✔️]
+        U2[resource ✔️]
+    end
+    subgraph Delete
+        D1[request.resource ❌]
+        D2[resource ✔️]
+    end
+```
 
 ここ、事故りやすいので丁寧にいくよ〜😊
 
@@ -62,6 +92,14 @@
 ## 3) “差分”を取る最強ワザ：Map.diff() 🧩✨
 
 ![Map Diff Logic](./picture/firebase_security_role_ts_study_005_04_map_diff.png)
+
+```mermaid
+graph LR
+    D[diff] --> C[changedKeys]
+    D --> A[addedKeys]
+    D --> R[removedKeys]
+    D --> AF[affectedKeys]
+```
 
 Firestore Rules では **Map同士の差分**が取れるよ！
 `request.resource.data.diff(resource.data)` みたいに書くと、**MapDiff** が返る💡 ([The Firebase Blog][4])
@@ -94,6 +132,14 @@ MapDiff にはこういう便利メソッドがある👇 ([Firebase][5])
 ## 4-2. ルールを書いてみる（差分で update を縛る）🔒✍️
 
 ![Secure Update Filtering](./picture/firebase_security_role_ts_study_005_05_secure_update.png)
+
+```mermaid
+graph TD
+    Update[Update Request] --> Diff{affectedKeys}
+    Diff -- "Only title/body?" --> hasOnly{hasOnly}
+    hasOnly -- Yes --> Allow[Allow ✅]
+    hasOnly -- No --> Deny[Deny 🛑]
+```
 
 ```rules
 rules_version = '2';
@@ -136,6 +182,14 @@ service cloud.firestore {
 ポイント解説だよ😊👇
 
 ![Update Validation Checklist](./picture/firebase_security_role_ts_study_005_06_update_checklist.png)
+
+```mermaid
+graph TD
+    Check[Checklist] --> C1[Is Owner?]
+    Check --> C2[Is Locked?]
+    Check --> C3[Allowed Keys?]
+    Check --> C4[Server Time?]
+```
 
 * `request.resource.data.diff(resource.data).affectedKeys()` で「変えたキーの集合」を取る ([Firebase][5])
 * `hasOnly(...)` で「このキー以外は絶対変えるな！」ができる✨ ([The Firebase Blog][4])
@@ -180,6 +234,12 @@ service cloud.firestore {
 ## 8-1. “叩き台”はAI、決定は人間🧑‍⚖️✅
 
 ![AI Rules Drafting & Human Review](./picture/firebase_security_role_ts_study_005_07_ai_review_workflow.png)
+
+```mermaid
+graph LR
+    AI[AI Drafts Rules 🤖] --> Human[Human Review 🧑‍⚖️]
+    Human -- "Check Logic / Edge cases" --> Final[Final Secure Rules ✅]
+```
 
 Firebase の **AIプロンプトカタログ**には、Rules作成用のプロンプトが用意されてるよ📚✨
 しかも **Antigravity / Gemini CLI などのエージェント**向けに使える前提で整備されてる！ ([Firebase][6])

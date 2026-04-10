@@ -9,6 +9,13 @@
 
 ![Blaze Plan Warning](./picture/firebase_storage_ts_study_002_01_blaze_warning.png)
 
+```mermaid
+graph TD
+    User[Developer 🧑‍💻] --> Console[Firebase Console]
+    Console -- Turn on Storage --> Req{Requires Blaze?}
+    Req -- 2024 Oct+ --> Blaze[Pay-as-you-go Plan 💳]
+```
+
 ### ✅ 2026年2月3日以降、Cloud Storage を使うなら Blaze が必須になった⚠️
 
 **2026-02-03 から**、デフォルトバケット含め Cloud Storage リソースへアクセスを維持するには、プロジェクトが **Blaze（従量課金）** である必要があるよ。([Firebase][1])
@@ -28,6 +35,13 @@
 ## 2) 課金の正体を “3つだけ” 覚える🧠✨
 
 ![Three Cost Factors](./picture/firebase_storage_ts_study_002_02_cost_factors.png)
+
+```mermaid
+graph TD
+    Cost[Storage Costs 💸] --> GB[Storage Size 🪣<br/>$0.026/GB]
+    Cost --> Bandwidth[Bandwidth 🌐<br/>$0.12/GB Out]
+    Cost --> Ops[Operations ⚙️<br/>~$0.05/10k]
+```
 
 画像アップロード周りでお金が動くのは主にこれ👇
 
@@ -60,6 +74,13 @@ Firebase コンソールで確認するよ👇
 
 ![Budget Alert Setup](./picture/firebase_storage_ts_study_002_03_budget_alert.png)
 
+```mermaid
+graph LR
+    GCP[GCP Billing ☁️] --> Budget[Create Budget 💰]
+    Budget -- E.g. $10 --> Alert[Email Alert 🔔]
+    Alert --> You[You 🧑‍💻]
+```
+
 これが **最強の保険**。予算で“止まる”わけじゃないけど、**気づける**のが大事！([Google Cloud Documentation][4])
 
 やること👇
@@ -79,6 +100,14 @@ Firebase コンソールで確認するよ👇
 ### Step C：Firebase 側で “増え方” を毎日見える化📊
 
 ![Monitoring Dashboard](./picture/firebase_storage_ts_study_002_04_monitoring.png)
+
+```mermaid
+graph TD
+    Dash[Firebase Console 🏠] --> Usage[Usage Tab 📈]
+    Usage --> StorageBox[Storage Usage]
+    StorageBox --> Bytes[Stored Bytes]
+    StorageBox --> BW[Downloaded Bytes]
+```
 
 Cloud Storage の使用状況は Firebase コンソールでも追えるよ📷
 
@@ -101,6 +130,13 @@ Rules の評価回数（ALLOW/DENY/ERROR）を監視できるのが便利！🛡
 ## 4) よくある “課金事故” パターン集🔥（先に潰そう）
 
 ![Cost Accident Patterns](./picture/firebase_storage_ts_study_002_05_accident_patterns.png)
+
+```mermaid
+graph TD
+    Accident[Huge Bill 😱] --> A1[Big file loop 🔄<br/>Missing client cache]
+    Accident --> A2[Raw 10MB Images 📸<br/>Not compressed]
+    Accident --> A3[Open Rules 🌍<br/>Hacker bot downloads]
+```
 
 ### 事故①：画像URLが拡散してダウンロード爆増🌐💥
 

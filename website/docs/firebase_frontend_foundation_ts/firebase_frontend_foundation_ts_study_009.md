@@ -1,4 +1,4 @@
-﻿# 第09章：UIに一貫性を出すコツ 🎨✨（色・余白・角丸・影を“固定ルール”にする）
+# 第09章：UIに一貫性を出すコツ 🎨✨（色・余白・角丸・影を“固定ルール”にする）
 
 この章のゴールはシンプルです🙂
 **「どの画面を見ても同じアプリに見える」**ように、**見た目のルールを決めて、コードでブレにくくする**ことです💪✨
@@ -10,9 +10,28 @@
 
 ![Design Pillars](./picture/firebase_frontend_foundation_ts_study_009_design_pillars.png)
 
+```mermaid
+graph TD
+    T[トークン定義 @theme] --> C[共通部品 Button/Card]
+    C --> S[状態の統一 hover/loading]
+    S --> UI[一貫性のある画面 🎉]
+```
+
 1. **デザイントークン**（色/余白/角丸/影/文字）を固定する🎯
 2. **共通コンポーネント**（Button/Input/Card…）に寄せる🧱
 3. **状態の見た目**（hover/focus/disabled/loading/error）を統一する🚦
+
+```mermaid
+graph LR
+    subgraph Theme ["@theme"]
+        D["--color-primary: #4f7cff"]
+    end
+    subgraph Gen ["Tailwind生成"]
+        U1[bg-primary]
+        U2[text-primary]
+    end
+    Theme --> Gen
+```
 
 Tailwind v4 は、デザイントークンを **`@theme` でCSS変数として宣言**して、そこからユーティリティ（`bg-*` とか）を生やせます🌱
 この「トークン→クラス」構造が、一貫性づくりと相性バツグンです✨ ([Tailwind CSS][1])

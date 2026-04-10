@@ -1,4 +1,4 @@
-﻿# 第02章：2nd genを選ぶ理由（ざっくりでOK）🚀
+# 第02章：2nd genを選ぶ理由（ざっくりでOK）🚀
 
 ## この章のゴール🎯
 
@@ -19,6 +19,14 @@
 ## 2nd genって何者？🧠
 
 ![2nd Gen Architecture](./picture/firebase_functions_ts_study_002_01_concept.png)
+
+```mermaid
+graph LR
+    subgraph 2ndGen ["Functions (2nd gen)"]
+        R[Cloud Run] -- 実行の土台 --> C[コンテナ]
+        E[Eventarc] -- イベント配信 --> R
+    end
+```
 
 ざっくり言うと、
 
@@ -70,7 +78,7 @@ AI系とか、ちょい重め処理って「少し時間がほしい」ことあ
 2nd genはCloud Runの世界なので、デプロイが「サービス運用っぽく」なる✨
 
 * **複数リビジョン**や**段階リリース（トラフィック分割）**ができる🛣️
-* **ロールバック**もしやすい💫 ([Firebase][1])
+* **ロールバック**もしやすい💫
 
 （本格運用の入口として、かなり嬉しいやつ！）
 
@@ -87,6 +95,13 @@ AI系とか、ちょい重め処理って「少し時間がほしい」ことあ
 ## でも！2nd gen万能じゃない（ここ超大事）⚠️
 
 ![1st vs 2nd Gen Scope](./picture/firebase_functions_ts_study_002_05_gen_comparison.png)
+
+```mermaid
+flowchart TD
+    Start{何を使う？}
+    Start -- HTTP / Firestore / Schedule --> 2nd[2nd Gen 🚀]
+    Start -- Analytics / 昔のAuthイベント --> 1st[1st Gen 👈]
+```
 
 「基本は2nd gen」でOKなんだけど、**一部は1st genにしか無い/差がある**ところがあるよ👀
 

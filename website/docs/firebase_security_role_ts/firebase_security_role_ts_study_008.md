@@ -1,4 +1,4 @@
-﻿# 第8章：最小権限① “読む”の制御（get と list の感覚）📖🔒
+# 第8章：最小権限① “読む”の制御（get と list の感覚）📖🔒
 
 この章はズバリ👇
 **「1件だけ読める」と「一覧で読める」は別モノ**って体に覚えさせて、**“うっかり全公開😱”を最小権限で潰す**回です🛡️✨
@@ -17,6 +17,12 @@
 
 ![Read Breakdown](./picture/firebase_security_role_ts_study_008_01_read_breakdown.png)
 
+```mermaid
+graph TD
+    Read[read] --> Get[get: Single doc 📄]
+    Read --> List[list: Collection query 📚]
+```
+
 Firestoreの“読む”は大きく2種類👇
 
 * `get`：**1件取得**（ドキュメントIDを指定して読む）
@@ -29,6 +35,12 @@ Firestoreの“読む”は大きく2種類👇
 ## 2) “listが怖い”理由：一度開けると吸い出しが速い🚨💨
 
 ![List Risk](./picture/firebase_security_role_ts_study_008_02_list_risk.png)
+
+```mermaid
+graph LR
+    Hacker[Hacker 💻] -- getDocs --> List[Full Collection 📚]
+    List -- "Scraping💨" --> Leak[Data Breach! 💥]
+```
 
 たとえば「ログインしてたら読める」で `allow read: if request.auth != null` みたいにしていると…
 
@@ -73,6 +85,20 @@ service cloud.firestore {
 
 ![Get vs List Code](./picture/firebase_security_role_ts_study_008_03_get_vs_list.png)
 
+```mermaid
+graph LR
+    subgraph SDK
+        Doc[getDoc]
+        Docs[getDocs]
+    end
+    subgraph Rules
+        Get[allow get]
+        List[allow list]
+    end
+    Doc --> Get
+    Docs --> List
+```
+
 Firestore（Web SDK）だと、だいたいこう覚えるとラクです👇
 
 * `getDoc(doc(...))` → **get**
@@ -108,6 +134,14 @@ export async function tryList() {
 ## 手札A：公開データだけ一覧OK（`published == true`）🌍📣
 
 ![Safe List Strategy](./picture/firebase_security_role_ts_study_008_04_safe_list.png)
+
+```mermaid
+graph TD
+    Query["query(..., where('public','==',true))"]
+    Rules["allow list: if resource.data.public == true"]
+    Query -- "Must Match" --> Rules
+    Rules -- Reject if missing filter --> Error[Permission Denied 🛑]
+```
 
 「公開済みだけ読める」なら、listを許しても被害が小さいです。
 
@@ -180,6 +214,14 @@ service cloud.firestore {
 
 ![Rules are Not Filters](./picture/firebase_security_role_ts_study_008_05_rules_not_filters.png)
 
+```mermaid
+graph TD
+    subgraph Logic [Rules Logic]
+        I[Inspect Potential Set] --> R{Safe for ALL?}
+        R -- No --> Deny[Deny entire Query 🛑]
+    end
+```
+
 Firestoreはクエリを評価するとき、**結果に出そうな集合（potential result set）**に対してRulesチェックします。
 だから「たまたま今は全部自分の投稿だけ」でも、クエリが“他人の投稿を含む可能性”がある形だと **失敗**します。([Firebase][2])
 
@@ -190,6 +232,12 @@ Firestoreはクエリを評価するとき、**結果に出そうな集合（pot
 ## 8) Emulatorでテスト（ここで“安心”を作る）🧪✅
 
 ![Emulator Testing](./picture/firebase_security_role_ts_study_008_06_emulator_test.png)
+
+```mermaid
+graph LR
+    Code[Rules / Code] --> E[Emulator 🧪]
+    E --> V[Verify get/list separately ✅]
+```
 
 Rulesは「書いた気になる」のが一番危ないです😱
 なのでEmulator + 単体テストで固めましょう！
@@ -221,6 +269,12 @@ test("getはOK / listは公開だけOK", async () => {
 ## 9) AI活用：Rules＆テストの叩き台を爆速で作る🤖⚡
 
 ![AI Rules Draft](./picture/firebase_security_role_ts_study_008_07_ai_draft.png)
+
+```mermaid
+graph LR
+    Prompts[AI Prompts] -- Generate --> Draft[Rules/Tests Draft 🧱]
+    Draft -- Review --> Dev[Human Developer 🧑‍⚖️]
+```
 
 ## 使いどころ🎯
 

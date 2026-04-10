@@ -1,4 +1,4 @@
-﻿# 第20章：改善サイクル完成（AIも使って回す）🔁🤖🏁
+# 第20章：改善サイクル完成（AIも使って回す）🔁🤖🏁
 
 この章はゴール回🏁✨
 ここまで作ってきた **Analytics / Remote Config / A/B / Performance** を「バラバラの道具」じゃなく、**改善を回す“1つの型”**にまとめます🧩
@@ -28,6 +28,22 @@
 5. **遅さも見る**：Performanceで「体感」を数値化⚡
 6. **判断して広げる**：勝った案をロールアウト🏁
 7. **次の1周へ**：また仮説を立てて回す🔁
+
+```mermaid
+graph TD
+    Obs["📊 1. 観測 (現状)"] --> Hypo["💡 2. 仮説立て"]
+    Hypo --> Config["🎛️ 3. 安全配信 (RC)"]
+    Config --> AB["🧪 4. 比較 (A/B)"]
+    AB --> Perf["⚡ 5. 体感計測 (Perf)"]
+    Perf --> Roll["🏁 6. 判断・全開放"]
+    Roll --> Obs
+    
+    subgraph AI-Support ["🤖 AIが加速させる仕事"]
+        Hypo
+        Config
+        Roll
+    end
+```
 
 ---
 

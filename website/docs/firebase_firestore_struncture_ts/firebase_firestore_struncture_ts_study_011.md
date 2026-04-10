@@ -1,4 +1,4 @@
-﻿# 第11章：Aggregation Queries（Count / Sum / Avg）で“その場集計”📊
+# 第11章：Aggregation Queries（Count / Sum / Avg）で“その場集計”📊
 
 この章は「一覧で *“全◯件”* を出したい」「合計いいね数だけ知りたい」「平均だけほしい」みたいな **“件数・合計・平均だけ取る”** 技を、Firestoreでスマートにやる回です😄✨
 Firestoreは **集計結果だけ** を返してくれるので、全部のドキュメントを読んで数えるより **速くて安くなりやすい** です💰⚡ ([Firebase][1])
@@ -18,9 +18,36 @@ Firebase の Cloud Firestore には、次の“読み取り時集計（read-time
 
 ![Three Aggregation Functions](./picture/firebase_firestore_struncture_ts_study_011_01_aggregation_functions.png)
 
+```mermaid
+mindmap
+  root((集計クエリ<br/>Aggregation))
+    count
+      件数を数える
+      インデックスのみ使用
+    sum
+      数値を合計
+      数値フィールドが対象
+    average
+      平均を計算
+      null/非数値は無視
+```
+
 ---
 
 ## 2) “使いどころ”はここ！✅（日報/記事/コメントの例つき）
+
+```mermaid
+sequenceDiagram
+    participant C as クライアント (JS SDK)
+    participant F as Firestore サーバー
+    participant I as インデックス
+
+    C->>F: getCountFromServer(query)
+    F->>I: 条件に合うエントリをスキャン
+    I-->>F: 件数のみ返却
+    F-->>C: { count: 1234 } ⚡
+    Note over C,F: ドキュメント本体は転送されない！
+```
 
 あなたの題材（日報/記事/コメント3階層）で超よくあるのはこのへん👇
 

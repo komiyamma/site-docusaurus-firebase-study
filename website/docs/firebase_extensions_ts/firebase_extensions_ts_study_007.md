@@ -1,4 +1,4 @@
-﻿# 第7章：CLIで入れる（再現性のある運用へ）💻🔁
+# 第7章：CLIで入れる（再現性のある運用へ）💻🔁
 
 この章はひとことで言うと👇
 **「Extensions を “手で入れる” から “手順として残して、いつでも再現できる” に進化させる章」** だよ🧩✨
@@ -31,6 +31,23 @@ CLI運用にすると、こうなる👇
 * 設定が **ファイルに残る** → 迷子になりにくい🧭
 * Git管理できる → **レビューできる**👀✅
 * いつでも同じ手順で再現 → **環境分離が強い**🧪🏭
+
+```mermaid
+graph TD
+    subgraph Local ["💻 ローカル開発環境"]
+      Install["ext:install<br>(対話形式)"] --> Manifest["📜 extension.manifest<br>(台本)"]
+      Env[".env.dev / .env.prod<br>(環境別設定)"]
+    end
+    
+    subgraph Cloud ["☁️ Firebase プロジェクト"]
+      DevProj["🧪 検証環境 (dev)"]
+      ProdProj["🏭 本番環境 (prod)"]
+    end
+    
+    Manifest & Env --> Deploy["🚀 firebase deploy<br>--only extensions"]
+    Deploy --> DevProj
+    Deploy --> ProdProj
+```
 
 ---
 
