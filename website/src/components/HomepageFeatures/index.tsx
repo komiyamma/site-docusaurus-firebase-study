@@ -15,114 +15,64 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Docker基本',
+    title: 'スタートダッシュ',
     Svg: CategorySvg,
     description: (
       <>
-        Dockerの基本概念から、イメージ・コンテナの操作、Dockerfileの書き方までを学びます。
+        Firebaseのプロジェクト作成から、エミュレータエンジンのセットアップ、TypeScript環境の構築までを学びます。
       </>
     ),
-    link: '/docs/docker_base_ts/docker_base_ts_index',
+    link: '/docs/firebase_startdash_ts/firebase_startdash_ts_index',
   },
   {
-    title: 'ランタイム固定',
+    title: 'Firestore基礎',
     Svg: CategorySvg,
     description: (
       <>
-        Node.jsやnpmのバージョンを固定し、開発環境と本番環境の差異をなくす手法を学びます。
+        NoSQLデータベースであるFirestoreの基本操作、データ構造の設計、型安全な開発手法を学びます。
       </>
     ),
-    link: '/docs/docker_runtime_fix_ts/docker_runtime_fix_ts_index',
+    link: '/docs/firebase_firestore_base_ts/firebase_firestore_base_ts_index',
   },
   {
-    title: 'Compose活用',
+    title: 'ログイン',
     Svg: CategorySvg,
     description: (
       <>
-        Docker Composeを用いた複数コンテナの管理と、開発効率を高める設定方法を学びます。
+        Firebase Authenticationを用いた認証システムの構築と、セッション管理、セキュリティ実装を学びます。
       </>
     ),
-    link: '/docs/docker_devcompose_cmd_ts/docker_devcompose_cmd_ts_index',
+    link: '/docs/firebase_login_ts/firebase_login_ts_index',
   },
   {
-    title: '開発体験強化',
+    title: 'Functions',
     Svg: CategorySvg,
     description: (
       <>
-        Dev Containersの活用や、高速なフィードバックループを実現する開発環境の構築を学びます。
+        Cloud Functionsを用いたバックエンドロジックの実装と、他サービスとの連携を学びます。
       </>
     ),
-    link: '/docs/docker_developer_experience_ts/docker_developer_experience_ts_index',
+    link: '/docs/firebase_functions_ts/firebase_functions_ts_index',
   },
   {
-    title: '依存とキャッシュ',
+    title: 'Hosting',
     Svg: CategorySvg,
     description: (
       <>
-        ビルドキャッシュの最適化や、マルチステージビルドを用いた効率的なイメージ作成を学びます。
+        ウェブアプリケーションのデプロイ、カスタムドメイン設定、GitHub Actionsによる自動化を学びます。
       </>
     ),
-    link: '/docs/docker_depend_cache_ts/docker_depend_cache_ts_index',
+    link: '/docs/firebase_hosting_ts/firebase_hosting_ts_index',
   },
   {
-    title: 'データ管理',
+    title: 'Storage',
     Svg: CategorySvg,
     description: (
       <>
-        VolumeやBind Mountを用いたデータの永続化と、データベースの運用方法を学びます。
+        画像や動画などのファイル管理、アップロード、ダウンロード、セキュリティ制限の実装を学びます。
       </>
     ),
-    link: '/docs/docker_data_handling_ts/docker_data_handling_ts_index',
-  },
-  {
-    title: '安全な隔離',
-    Svg: CategorySvg,
-    description: (
-      <>
-        セキュリティを考慮したユーザー設定や、最小限の権限での実行方法を学びます。
-      </>
-    ),
-    link: '/docs/docker_safe_isolation_ts/docker_safe_isolation_ts_index',
-  },
-  {
-    title: 'ローカル公開',
-    Svg: CategorySvg,
-    description: (
-      <>
-        ポート公開やネットワーク設定、リバースプロキシを用いたローカル環境の構築を学びます。
-      </>
-    ),
-    link: '/docs/docker_local_exposure_ts/docker_local_exposure_ts_index',
-  },
-  {
-    title: 'デプロイ',
-    Svg: CategorySvg,
-    description: (
-      <>
-        本番環境へのデプロイ戦略や、CI/CDパイプラインへの組み込み方法を学びます。
-      </>
-    ),
-    link: '/docs/docker_deploy_ts/docker_deploy_ts_index',
-  },
-  {
-    title: '観測性',
-    Svg: CategorySvg,
-    description: (
-      <>
-        コンテナのログ監視や、ヘルスチェックの設定方法を学びます。
-      </>
-    ),
-    link: '/docs/docker_observability_ts/docker_observability_ts_index',
-  },
-  {
-    title: 'オーケストレーション',
-    Svg: CategorySvg,
-    description: (
-      <>
-        複数のDockerホストを管理するオーケストレーションツールの基礎を学びます。
-      </>
-    ),
-    link: '/docs/docker_multi_orch_ts/docker_multi_orch_ts_index',
+    link: '/docs/firebase_storage_ts/firebase_storage_ts_index',
   },
 ];
 
