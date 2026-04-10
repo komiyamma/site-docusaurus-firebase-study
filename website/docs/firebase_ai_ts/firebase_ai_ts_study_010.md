@@ -201,7 +201,7 @@ Dev UIでDatasetを作り、評価を回せます。手順はこう👇([Genkit]
 
 ![Creating a Test Dataset](./picture/firebase_ai_ts_study_010_create_dataset.png)
 
-* Dev UI（[http://localhost:4000）で](http://localhost:4000）で) **Datasets** を開く
+* Dev UI（[http://localhost:4000](http://localhost:4000)）で **Datasets** を開く
 * **Create Dataset**
 * datasetIdを付ける（例：ngCheckDataset）
 * Dataset typeは **Flow** を選ぶ
