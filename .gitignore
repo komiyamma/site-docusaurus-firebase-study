@@ -1,0 +1,34 @@
+# Node.js / Docusaurus
+node_modules/
+website/node_modules/
+
+# Docusaurus build/cache
+website/build/
+website/.docusaurus/
+website/.cache/
+website/*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Env
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Visual Studio
+.vs/
+
