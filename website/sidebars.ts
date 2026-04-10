@@ -32,22 +32,26 @@ function generateProjectSidebar(folder: string) {
   });
 }
 
-const dockerSidebars = [
-  ['dockerBaseTsSidebar', 'docker_base_ts'],
-  ['dockerRuntimeFixTsSidebar', 'docker_runtime_fix_ts'],
-  ['dockerDevcomposeCmdTsSidebar', 'docker_devcompose_cmd_ts'],
-  ['dockerDeveloperExperienceTsSidebar', 'docker_developer_experience_ts'],
-  ['dockerDependCacheTsSidebar', 'docker_depend_cache_ts'],
-  ['dockerDataHandlingTsSidebar', 'docker_data_handling_ts'],
-  ['dockerSafeIsolationTsSidebar', 'docker_safe_isolation_ts'],
-  ['dockerLocalExposureTsSidebar', 'docker_local_exposure_ts'],
-  ['dockerDeployTsSidebar', 'docker_deploy_ts'],
-  ['dockerObservabilityTsSidebar', 'docker_observability_ts'],
-  ['dockerMultiOrchTsSidebar', 'docker_multi_orch_ts'],
+const firebaseSidebars = [
+  ['firebaseStartdashTsSidebar', 'firebase_startdash_ts'],
+  ['firebaseFrontendFoundationTsSidebar', 'firebase_frontend_foundation_ts'],
+  ['firebaseLoginTsSidebar', 'firebase_login_ts'],
+  ['firebaseFirestoreBaseTsSidebar', 'firebase_firestore_base_ts'],
+  ['firebaseFirestoreStructureTsSidebar', 'firebase_firestore_struncture_ts'],
+  ['firebaseSecurityRoleTsSidebar', 'firebase_security_role_ts'],
+  ['firebaseStorageTsSidebar', 'firebase_storage_ts'],
+  ['firebaseFunctionsTsSidebar', 'firebase_functions_ts'],
+  ['firebaseHostingTsSidebar', 'firebase_hosting_ts'],
+  ['firebaseLocalDevTsSidebar', 'firebase_local_dev_ts'],
+  ['firebaseNotificationFcmTsSidebar', 'firebase_notification_fcm_ts'],
+  ['firebaseAnalyticsPerformanceTsSidebar', 'firebase_analytics_performance_ts'],
+  ['firebaseAbusePreventionTsSidebar', 'firebase_abuse_prevention_ts'],
+  ['firebaseAiTsSidebar', 'firebase_ai_ts'],
+  ['firebaseExtensionsTsSidebar', 'firebase_extensions_ts'],
 ] as const;
 
 const sidebars: SidebarsConfig = Object.fromEntries(
-  dockerSidebars.map(([sidebarId, folder]) => [sidebarId, generateProjectSidebar(folder)]),
+  firebaseSidebars.map(([sidebarId, folder]) => [sidebarId, generateProjectSidebar(folder)]),
 );
 
 export default sidebars;

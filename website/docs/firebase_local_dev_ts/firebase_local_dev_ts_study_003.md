@@ -1,4 +1,4 @@
-﻿# 第3章　起動コマンド入門：まずは動かす！🚀🧪
+# 第3章　起動コマンド入門：まずは動かす！🚀🧪
 
 この章のゴール🎯
 「エミュレータを起動する → ブラウザのUIで“動いてる”を確認する → 必要なものだけ起動できる（`--only`）」まで行ければOKです🙆‍♂️✨
@@ -70,7 +70,7 @@ firebase emulators:start --only auth,firestore,functions
 起動に成功すると、ターミナルにだいたいこんな雰囲気のメッセージが出ます👇
 
 * “All emulators ready! …”
-* “View Emulator UI at [http://localhost:4000”](http://localhost:4000”) ([Firebase][5])
+* “View Emulator UI at [http://localhost:4000](http://localhost:4000)” ([Firebase][5])
 
 ### Step C：ブラウザで Emulator UI を開く🌐👀
 

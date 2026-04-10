@@ -7,9 +7,9 @@ import * as path from 'path';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Dockerの学習教材',
-  tagline: 'Dockerの学習教材',
-  favicon: 'img/docker_logo.svg',
+  title: 'Firebaseの学習教材',
+  tagline: 'Firebaseの学習教材',
+  favicon: 'img/firebase_logo.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
@@ -17,7 +17,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://docker-study.komiyamma.net',
+  url: 'https://firebase-study.komiyamma.net',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -25,9 +25,9 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'komiyamma', // Usually your GitHub org/user name.
-  projectName: 'site-docker-study', // Usually your repo name.
+  projectName: 'site-firebase-study', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
 
   i18n: {
     defaultLocale: 'ja',
@@ -37,6 +37,9 @@ const config: Config = {
   markdown: {
     format: 'detect',  // .md は CommonMark、.mdx は MDX として処理
     mermaid: true,
+    hooks: {
+      onBrokenMarkdownImages: 'warn',
+    },
     // 外部の .memo ファイルからページの description を読み込む
     parseFrontMatter: async (params) => {
       // デフォルトのパーサーを使用
@@ -123,75 +126,99 @@ const config: Config = {
       title: '',
       logo: {
         alt: 'Home',
-        src: 'img/docker_logo_white.svg',
-        srcDark: 'img/docker_logo_white.svg',
+        src: 'img/firebase_logo.svg',
+        srcDark: 'img/firebase_logo.svg',
       },
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'dockerBaseTsSidebar',
+          sidebarId: 'firebaseStartdashTsSidebar',
           position: 'left',
-          label: 'Docker基本',
+          label: 'スタートダッシュ',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerRuntimeFixTsSidebar',
+          sidebarId: 'firebaseFrontendFoundationTsSidebar',
           position: 'left',
-          label: 'ランタイム固定',
+          label: 'フロント基礎',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerDevcomposeCmdTsSidebar',
+          sidebarId: 'firebaseLoginTsSidebar',
           position: 'left',
-          label: 'Compose活用',
+          label: 'ログイン',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerDeveloperExperienceTsSidebar',
+          sidebarId: 'firebaseFirestoreBaseTsSidebar',
           position: 'left',
-          label: '開発体験強化',
+          label: 'Firestore基礎',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerDependCacheTsSidebar',
+          sidebarId: 'firebaseFirestoreStructureTsSidebar',
           position: 'left',
-          label: '依存とキャッシュ',
+          label: 'Firestore構造',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerDataHandlingTsSidebar',
+          sidebarId: 'firebaseSecurityRoleTsSidebar',
           position: 'left',
-          label: 'データ管理',
+          label: 'セキュリティ',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerSafeIsolationTsSidebar',
+          sidebarId: 'firebaseStorageTsSidebar',
           position: 'left',
-          label: '安全な隔離',
+          label: 'ストレージ',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerLocalExposureTsSidebar',
+          sidebarId: 'firebaseFunctionsTsSidebar',
           position: 'left',
-          label: 'ローカル公開',
+          label: 'Functions',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerDeployTsSidebar',
+          sidebarId: 'firebaseHostingTsSidebar',
           position: 'left',
-          label: 'デプロイ',
+          label: 'Hosting',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerObservabilityTsSidebar',
+          sidebarId: 'firebaseLocalDevTsSidebar',
           position: 'left',
-          label: '観測性',
+          label: 'ローカル開発',
         },
         {
           type: 'docSidebar',
-          sidebarId: 'dockerMultiOrchTsSidebar',
+          sidebarId: 'firebaseNotificationFcmTsSidebar',
           position: 'left',
-          label: 'オーケストレーション',
+          label: '通知(FCM)',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'firebaseAnalyticsPerformanceTsSidebar',
+          position: 'left',
+          label: '分析・パフォ',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'firebaseAbusePreventionTsSidebar',
+          position: 'left',
+          label: '悪用防止',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'firebaseAiTsSidebar',
+          position: 'left',
+          label: 'AI',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'firebaseExtensionsTsSidebar',
+          position: 'left',
+          label: 'Extensions',
         },
         // { to: '/blog', label: 'Blog', position: 'left' },
         {
@@ -202,7 +229,7 @@ const config: Config = {
           target: '_self',
         },
         {
-          href: 'https://github.com/komiyamma/site-docusaurus-docker-study',
+          href: 'https://github.com/komiyamma/site-docusaurus-firebase-study',
           label: 'GitHub',
           position: 'right',
         },
